@@ -12,4 +12,4 @@ modReferences = Daybreak@2.2.0
 
 buildIgnore = lib\*, .vs\*, *.tmp, SourceGeneration\*, Properties\*, *.csproj, *.user, obj\*, bin\*, *.config, .git\*, .github\*, LICENSE, .editorconfig, .gitignore, .gitattributes, Assets\Effects\Compiler\*, *.mp4, TemplateEngineHost\*
 
-homepage = https://github.com/ZenTheMod/ZensSky
+homepage = https://github.com/ZenTheMod/SkyProjects
