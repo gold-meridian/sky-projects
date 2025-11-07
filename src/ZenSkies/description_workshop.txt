@@ -36,9 +36,9 @@ As well as including simple and easy to use menu configuration straight from the
 [u]This mod is client-sided*. But will sync over data if both the server and client have it enabled.[/u]
 
 This mod provides a number of miscellaneous Mod.Call implementations for simpler compat;
-You can find classes anotated with ModCall [url=https://github.com/search?q=repo%3AZenTheMod%2FZensSky%20ModCall&type=code]​Here[/url].
+You can find classes anotated with ModCall [url=https://github.com/search?q=repo%3AZenTheMod%2FSkyProjects%20ModCall&type=code]​Here[/url].
 
-You can report any issues with the mod [url=https://github.com/ZenTheMod/ZensSky/issues]​Here[/url].
+You can report any issues with the mod [url=https://github.com/ZenTheMod/SkyProjects/issues]​Here[/url].
 
 ✦ Contributing ✦
 
