@@ -5,9 +5,9 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.UI;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.UI;
+namespace ZenSkies.Core.UI;
 
 public class UISlider : UIElement
 {

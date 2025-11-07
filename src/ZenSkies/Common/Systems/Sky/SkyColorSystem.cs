@@ -6,15 +6,15 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Drawing;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Common.Systems.Compat;
-using ZensSky.Common.Systems.Sky.Space;
-using ZensSky.Core;
-using ZensSky.Core.Exceptions;
-using ZensSky.Core.Utils;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.Systems.Compat;
+using ZenSkies.Common.Systems.Sky.Space;
+using ZenSkies.Core;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Core.Utils;
 using hook_ModifySunLightColor = Terraria.ModLoader.SystemLoader.DelegateModifySunLightColor;
 
-namespace ZensSky.Common.Systems.Sky;
+namespace ZenSkies.Common.Systems.Sky;
 
 /// <summary>
 /// Edits and Hooks:

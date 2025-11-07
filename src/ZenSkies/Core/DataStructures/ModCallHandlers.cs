@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.DataStructures;
+namespace ZenSkies.Core.DataStructures;
 
 public sealed class ModCallHandlers : AliasedList<string, MethodInfo>
 {

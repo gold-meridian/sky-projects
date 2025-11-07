@@ -1,4 +1,4 @@
-﻿namespace ZensSky.Common.ModPanels;
+﻿namespace ZenSkies.Common.ModPanels;
 
 public enum BirdState : byte
 {

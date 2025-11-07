@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.UI;
-using ZensSky.Core.UI;
+using ZenSkies.Core.UI;
 
-namespace ZensSky.Common.Systems.Menu.Elements;
+namespace ZenSkies.Common.Systems.Menu.Elements;
 
 public abstract class SliderController : MenuController
 {

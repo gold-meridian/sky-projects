@@ -7,9 +7,9 @@ using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.UI;
+namespace ZenSkies.Core.UI;
 
 public class InputField : UIPanel
 {

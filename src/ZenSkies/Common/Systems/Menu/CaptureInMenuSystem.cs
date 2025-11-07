@@ -4,10 +4,10 @@ using Terraria;
 using Terraria.GameContent.Events;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
-using ZensSky.Core;
-using ZensSky.Core.Exceptions;
+using ZenSkies.Core;
+using ZenSkies.Core.Exceptions;
 
-namespace ZensSky.Common.Systems.Menu;
+namespace ZenSkies.Common.Systems.Menu;
 
 /// <summary>
 /// Edits and Hooks:
@@ -79,7 +79,7 @@ public sealed class CaptureInMenuSystem : ModSystem
             c.MoveAfterLabels();
 
             c.EmitDelegate(() =>
-                ZensSky.Unloading);
+                ZenSkies.Unloading);
 
             c.EmitStloc(menuCaptureFlagIndex);
 

@@ -7,17 +7,17 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Common.DataStructures;
-using ZensSky.Common.Systems.Compat;
-using ZensSky.Core;
-using ZensSky.Core.ModCall;
-using ZensSky.Core.Utils;
-using static ZensSky.Common.Systems.Sky.Space.StarHooks;
-using static ZensSky.Common.Systems.Sky.Space.StarSystem;
-using Star = ZensSky.Common.DataStructures.Star;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Common.Systems.Compat;
+using ZenSkies.Core;
+using ZenSkies.Core.ModCall;
+using ZenSkies.Core.Utils;
+using static ZenSkies.Common.Systems.Sky.Space.StarHooks;
+using static ZenSkies.Common.Systems.Sky.Space.StarSystem;
+using Star = ZenSkies.Common.DataStructures.Star;
 
-namespace ZensSky.Common.Systems.Sky.Space;
+namespace ZenSkies.Common.Systems.Sky.Space;
 
 public static class StarRendering
 {
@@ -150,7 +150,7 @@ public static class StarRendering
     private static void DrawStarsInBackground(On_Main.orig_DrawStarsInBackground orig, Main self, Main.SceneArea sceneArea, bool artificial)
     {
             // TODO: Better method of detecting when a mod uses custom sky to hide the visuals.
-        if (!ZensSky.CanDrawSky ||
+        if (!ZenSkies.CanDrawSky ||
             MacrocosmSystem.IsEnabled && MacrocosmSystem.InAnySubworld ||
             artificial)
         {

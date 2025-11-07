@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ZensSky.Core.ModCall;
+namespace ZenSkies.Core.ModCall;
 
 /// <summary>
 /// Adds the decorated method to <see cref="ModCallSystem.Handlers"/> under its name and <see cref="NameAliases"/> if provided.

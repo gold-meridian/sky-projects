@@ -11,17 +11,17 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
-using ZensSky.Common.Config;
-using ZensSky.Common.DataStructures;
-using ZensSky.Common.Systems.Sky.Space;
-using ZensSky.Core;
-using ZensSky.Core.DataStructures;
-using ZensSky.Core.Particles;
-using ZensSky.Core.Utils;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Common.Systems.Sky.Space;
+using ZenSkies.Core;
+using ZenSkies.Core.DataStructures;
+using ZenSkies.Core.Particles;
+using ZenSkies.Core.Utils;
 using static System.Reflection.BindingFlags;
-using Star = ZensSky.Common.DataStructures.Star;
+using Star = ZenSkies.Common.DataStructures.Star;
 
-namespace ZensSky.Common.ModPanels;
+namespace ZenSkies.Common.ModPanels;
 
 /// <summary>
 /// Edits and Hooks:

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Terraria.ModLoader;
 
-namespace ZensSky.Core.Net;
+namespace ZenSkies.Core.Net;
 
 /// <summary>
 /// Allows for the quick implementation of <see cref="ModPacket"/>s.<br/>

@@ -5,9 +5,9 @@ using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Terraria.Utilities;
-using ZensSky.Core.ModCall;
+using ZenSkies.Core.ModCall;
 
-namespace ZensSky.Common.Systems.Sky.Space;
+namespace ZenSkies.Common.Systems.Sky.Space;
 
 public static class StarHooks
 {

@@ -1,0 +1,54 @@
+﻿<Project Sdk="Tomat.Terraria.ModLoader.Sdk">
+	
+	<PropertyGroup>
+		<!-- Hide this pesky warning -->
+		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+
+		<!-- Enable nullable types -->
+		<Nullable>enable</Nullable>
+		
+		<TargetFramework>net10.0</TargetFramework>
+		<LangVersion>preview</LangVersion>
+
+		<!-- Currently have yet to port over to tml-build's source generation from ZourceGen -->
+		<TmlBuildIncludeSourceGenerators>false</TmlBuildIncludeSourceGenerators>
+
+		<!-- Type conflict with 'IgnoresAccessChecksToAttribute' -->
+		<NoWarn>CS0436</NoWarn>
+	</PropertyGroup>
+
+	<!-- References -->
+	<ItemGroup>
+		<ProjectReference Include="..\daybreak-mod\src\Daybreak\Daybreak.csproj" />
+
+		<AdditionalFiles Include="Assets\**" />
+		<PackageReference Include="ZourceGen" Version="1.1.6" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+	</ItemGroup>
+
+	<!-- Publicizer -->
+	<ItemGroup>
+		<Publicize Include="tModLoader" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
+		
+		<Publicize Include="ReLogic" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
+		
+		<Publicize Include="FNA" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
+
+		<!--Mods with difficult to access types -->
+		<Publicize Include="BetterNightSky" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
+
+		<Publicize Include="CoolerMenu" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
+    		<DoNotPublicize Include="CoolerMenu:System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute" />
+    		<DoNotPublicize Include="System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute" />
+
+		<Publicize Include="FancyLighting" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
+
+		<Publicize Include="RainOverhaul" IncludeVirtualMembers="true" IncludeCompilerGeneratedMembers="false" />
+
+		<Publicize Include="RealisticSky" IncludeVirtualMembers="true" IncludeCompilerGeneratedMembers="false" />
+
+		<Publicize Include="RedSunAndRealisticSky" IncludeVirtualMembers="true" IncludeCompilerGeneratedMembers="false" />
+
+		<Publicize Include="Macrocosm" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
+	</ItemGroup>
+
+</Project>

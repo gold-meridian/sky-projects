@@ -4,9 +4,9 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.UI;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.UI;
+namespace ZenSkies.Core.UI;
 
 public sealed class ColorSquare : UIElement
 {

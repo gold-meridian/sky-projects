@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 using static System.Reflection.BindingFlags;
 
-namespace ZensSky.Core.Config;
+namespace ZenSkies.Core.Config;
 
     // Possibly the dumbest thing ever written.
 [Autoload(Side = ModSide.Client)]

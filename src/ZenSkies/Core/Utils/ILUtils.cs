@@ -1,7 +1,7 @@
 ﻿using MonoMod.Cil;
 using System;
 
-namespace ZensSky.Core.Utils;
+namespace ZenSkies.Core.Utils;
 
 public static partial class Utilities
 {

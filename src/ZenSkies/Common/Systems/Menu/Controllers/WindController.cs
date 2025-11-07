@@ -1,8 +1,8 @@
 ﻿using Terraria;
-using ZensSky.Common.Config;
-using ZensSky.Common.Systems.Menu.Elements;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.Systems.Menu.Elements;
 
-namespace ZensSky.Common.Systems.Menu.Controllers;
+namespace ZenSkies.Common.Systems.Menu.Controllers;
 
 public sealed class WindController : SliderController
 {

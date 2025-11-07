@@ -9,17 +9,17 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Common.Systems.Menu;
-using ZensSky.Common.Systems.Sky;
-using ZensSky.Common.Systems.Sky.SunAndMoon;
-using ZensSky.Core;
-using ZensSky.Core.Exceptions;
-using ZensSky.Core.Utils;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.Systems.Menu;
+using ZenSkies.Common.Systems.Sky;
+using ZenSkies.Common.Systems.Sky.SunAndMoon;
+using ZenSkies.Core;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Core.Utils;
 using static System.Reflection.BindingFlags;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// Edits and Hooks:

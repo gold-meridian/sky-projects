@@ -9,14 +9,14 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Common.Systems.Sky.Space;
-using ZensSky.Core.Exceptions;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.Systems.Sky.Space;
+using ZenSkies.Core.Exceptions;
 using static System.Reflection.BindingFlags;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonRendering;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonRendering;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// Should be noted that this is likely to not work following the next Macrocosm update.<br/><br/>

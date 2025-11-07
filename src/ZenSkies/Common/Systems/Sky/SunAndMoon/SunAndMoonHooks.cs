@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Terraria;
-using ZensSky.Common.DataStructures;
-using ZensSky.Core.ModCall;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Core.ModCall;
 
-namespace ZensSky.Common.Systems.Sky.SunAndMoon;
+namespace ZenSkies.Common.Systems.Sky.SunAndMoon;
 
 public static class SunAndMoonHooks
 {

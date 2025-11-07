@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ZensSky.Core.Config.Elements;
+namespace ZenSkies.Core.Config.Elements;
 
 public sealed class LockedIntSlider : LockedSliderElement<int>
 {

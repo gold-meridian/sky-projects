@@ -6,9 +6,9 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.Utilities;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Common.DataStructures;
+namespace ZenSkies.Common.DataStructures;
 
 public record struct ShootingStar
 {

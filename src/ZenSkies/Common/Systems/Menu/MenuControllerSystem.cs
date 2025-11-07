@@ -14,15 +14,15 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using ZensSky.Common.Config;
-using ZensSky.Common.Systems.Compat;
-using ZensSky.Common.Systems.Menu.Elements;
-using ZensSky.Core;
-using ZensSky.Core.Utils;
-using ZensSky.Core.Exceptions;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.Systems.Compat;
+using ZenSkies.Common.Systems.Menu.Elements;
+using ZenSkies.Core;
+using ZenSkies.Core.Utils;
+using ZenSkies.Core.Exceptions;
 using static System.Reflection.BindingFlags;
 
-namespace ZensSky.Common.Systems.Menu;
+namespace ZenSkies.Common.Systems.Menu;
 
 /// <summary>
 /// TODO: Not use a ModConfig for storing this data.<br/><br/>

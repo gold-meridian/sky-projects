@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json.Converters;
 using System;
 using System.Text.Json.Serialization;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.DataStructures;
+namespace ZenSkies.Core.DataStructures;
 
 [Serializable]
 public class GradientSegment : IComparable<GradientSegment>

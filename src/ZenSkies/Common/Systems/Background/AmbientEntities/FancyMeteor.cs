@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.Skies;
 using Terraria.Utilities;
-using ZensSky.Common.Systems.Sky.Space;
+using ZenSkies.Common.Systems.Sky.Space;
 
-namespace ZensSky.Common.Systems.Background.AmbientEntities;
+namespace ZenSkies.Common.Systems.Background.AmbientEntities;
 
 public sealed class FancyMeteor(Player player, FastRandom random) : AmbientSky.MeteorSkyEntity(player, random)
 {

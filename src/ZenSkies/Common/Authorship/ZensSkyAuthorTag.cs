@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.ModLoader;
-using static ZensSky.GeneratedAssets.Textures.Authorship.Textures;
+using static ZenSkies.GeneratedAssets.Textures.Authorship.Textures;
 
-namespace ZensSky.Common.Authorship;
+namespace ZenSkies.Common.Authorship;
 
 public abstract class ZensSkyAuthorTag : AuthorTag
 {

@@ -4,12 +4,12 @@ using System;
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Common.DataStructures;
-using ZensSky.Common.Systems.Compat;
-using static ZensSky.Common.Systems.Sky.Space.ShootingStarSystem;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Common.Systems.Compat;
+using static ZenSkies.Common.Systems.Sky.Space.ShootingStarSystem;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
 
-namespace ZensSky.Common.Systems.Sky.Space;
+namespace ZenSkies.Common.Systems.Sky.Space;
 
 [Autoload(Side = ModSide.Client)]
 public sealed class ShootingStarRendering : ModSystem
@@ -25,7 +25,7 @@ public sealed class ShootingStarRendering : ModSystem
 
     private static void DrawShootingStarsPostSunAndMoon(SpriteBatch spriteBatch)
     {
-        if (!ZensSky.CanDrawSky || !ShowShootingStars)
+        if (!ZenSkies.CanDrawSky || !ShowShootingStars)
         {
             ShowShootingStars = true;
             return;

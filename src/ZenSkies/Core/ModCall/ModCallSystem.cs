@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Terraria.ModLoader;
-using ZensSky.Core.DataStructures;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.DataStructures;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.ModCall;
+namespace ZenSkies.Core.ModCall;
 
 public sealed class ModCallSystem : ModSystem
 {

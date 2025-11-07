@@ -7,14 +7,16 @@ using System.Reflection;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Core.DataStructures;
+using ZenSkies.Common.Config;
+using ZenSkies.Core.DataStructures;
 using static System.Reflection.BindingFlags;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonRendering;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
-using ZensSky.Core;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonRendering;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
+using ZenSkies.Core;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// Handles Calamity Fables' 16 additional moon styles when the Sun and Moon rework is active.
@@ -23,6 +25,9 @@ namespace ZensSky.Common.Systems.Compat;
 public sealed class CalamityFablesSystem : ModSystem
 {
     #region Private Fields
+
+    private static readonly int[] EdgeCaseMoonStyles =
+        [1, 2, 8, 9, 10, 13, 14];
 
     private const float SingleMoonPhase = .125f;
 
@@ -85,24 +90,13 @@ public sealed class CalamityFablesSystem : ModSystem
 
     #endregion
 
-    public static bool IsEdgeCase()
-    {
-        return (Main.moonType - PriorMoonStyles) switch
-        {
-            1 => true,
-            2 => true,
-            8 => true,
-            9 => true,
-            10 => true,
-            13 => true,
-            14 => true,
-            _ => false
-        };
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsEdgeCase() =>
+        EdgeCaseMoonStyles.Contains(Main.moonType - PriorMoonStyles);
 
     #region Drawing
 
-        // Handle a bunch of edge cases for moons with non standard visuals.
+    // Handle a bunch of edge cases for moons with non standard visuals.
     private static bool MoonsFablesPreDrawExtras(
         SpriteBatch spriteBatch,
         ref Asset<Texture2D> moon,

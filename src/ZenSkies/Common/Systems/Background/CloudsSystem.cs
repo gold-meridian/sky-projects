@@ -5,15 +5,15 @@ using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Core;
-using ZensSky.Core.DataStructures;
-using ZensSky.Core.Exceptions;
-using ZensSky.Core.ModCall;
-using ZensSky.Core.Utils;
-using static ZensSky.Common.Systems.Sky.Lighting.SkyLightSystem;
+using ZenSkies.Common.Config;
+using ZenSkies.Core;
+using ZenSkies.Core.DataStructures;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Core.ModCall;
+using ZenSkies.Core.Utils;
+using static ZenSkies.Common.Systems.Sky.Lighting.SkyLightSystem;
 
-namespace ZensSky.Common.Systems.Background;
+namespace ZenSkies.Common.Systems.Background;
 
 /// <summary>
 /// Edits and Hooks:
@@ -99,7 +99,7 @@ public sealed class CloudsSystem : ModSystem
             c.EmitDelegate((bool canDrawClouds) =>
             {
                 CanDrawClouds =
-                    ZensSky.CanDrawSky &&
+                    ZenSkies.CanDrawSky &&
                     canDrawClouds &&
                     (Main.numClouds > 0 || Main.cloudBGAlpha > 0) &&
                     Main.screenPosition.Y < Main.worldSurface * 16 + 16 &&

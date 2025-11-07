@@ -7,14 +7,14 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
-using ZensSky.Core;
-using ZensSky.Core.Net;
-using ZensSky.Core.ModCall;
-using ZensSky.Core.Utils;
-using static ZensSky.Core.Net.NetMessageHooks;
-using Star = ZensSky.Common.DataStructures.Star;
+using ZenSkies.Core;
+using ZenSkies.Core.Net;
+using ZenSkies.Core.ModCall;
+using ZenSkies.Core.Utils;
+using static ZenSkies.Core.Net.NetMessageHooks;
+using Star = ZenSkies.Common.DataStructures.Star;
 
-namespace ZensSky.Common.Systems.Sky.Space;
+namespace ZenSkies.Common.Systems.Sky.Space;
 
 public sealed class StarSystem : ModSystem, IPacketHandler
 {
@@ -97,7 +97,7 @@ public sealed class StarSystem : ModSystem, IPacketHandler
 
     private void UpdateStars(On_Star.orig_UpdateStars orig)
     {
-        if (!ZensSky.CanDrawSky)
+        if (!ZenSkies.CanDrawSky)
         {
             orig();
             return;

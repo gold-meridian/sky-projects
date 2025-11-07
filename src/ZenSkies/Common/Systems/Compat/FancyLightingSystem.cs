@@ -1,11 +1,11 @@
 ﻿using FancyLighting;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Common.Systems.Sky.Space;
-using ZensSky.Core;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.Systems.Sky.Space;
+using ZenSkies.Core;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// Edits and Hooks:

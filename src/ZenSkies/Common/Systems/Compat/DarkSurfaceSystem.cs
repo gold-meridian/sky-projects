@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using Terraria.ModLoader;
-using ZensSky.Common.Systems.Sky;
-using ZensSky.Core.Utils;
+using ZenSkies.Common.Systems.Sky;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// Allows Dark Surface's effects to apply on the menu.

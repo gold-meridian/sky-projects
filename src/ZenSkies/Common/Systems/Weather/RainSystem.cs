@@ -7,12 +7,12 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Default;
-using ZensSky.Common.Systems.Compat;
-using ZensSky.Core;
-using ZensSky.Core.Utils;
-using ZensSky.Core.Exceptions;
+using ZenSkies.Common.Systems.Compat;
+using ZenSkies.Core;
+using ZenSkies.Core.Utils;
+using ZenSkies.Core.Exceptions;
 
-namespace ZensSky.Common.Systems.Weather;
+namespace ZenSkies.Common.Systems.Weather;
 
 /// <summary>
 /// Edits and Hooks:

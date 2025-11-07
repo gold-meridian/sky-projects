@@ -6,9 +6,9 @@ using Terraria.GameContent;
 using Terraria.GameInput;
 using Terraria.ModLoader.Config.UI;
 using Terraria.ModLoader.UI;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.Config.Elements;
+namespace ZenSkies.Core.Config.Elements;
 
 [HideRangeSlider]
 public abstract class LockedSliderElement<T> : PrimitiveRangeElement<T>, ILockedConfigElement where T : IComparable<T>

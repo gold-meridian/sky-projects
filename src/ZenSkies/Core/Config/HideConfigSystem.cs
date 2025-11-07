@@ -2,7 +2,7 @@
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
-namespace ZensSky.Core.Config;
+namespace ZenSkies.Core.Config;
 
 [Autoload(Side = ModSide.Client)]
 public sealed class HideConfigSystem : ModSystem

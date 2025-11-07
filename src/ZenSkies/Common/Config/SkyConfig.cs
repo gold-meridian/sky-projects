@@ -1,15 +1,15 @@
 ﻿using System.ComponentModel;
 using Terraria.ModLoader.Config;
-using ZensSky.Common.Config.Elements;
-using ZensSky.Common.DataStructures;
-using ZensSky.Common.Systems.Compat;
-using ZensSky.Core.Config.Elements;
-using ZensSky.Core.DataStructures;
+using ZenSkies.Common.Config.Elements;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Common.Systems.Compat;
+using ZenSkies.Core.Config.Elements;
+using ZenSkies.Core.DataStructures;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 #pragma warning disable CA2211 // Non-constant fields should not be visible.
 
-namespace ZensSky.Common.Config;
+namespace ZenSkies.Common.Config;
 
 public sealed class SkyConfig : ModConfig
 {

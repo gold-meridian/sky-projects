@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Utilities;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Common.DataStructures;
+namespace ZenSkies.Common.DataStructures;
 
     // Thanks to jupiter.ryo for early help with this.
 /// <summary>

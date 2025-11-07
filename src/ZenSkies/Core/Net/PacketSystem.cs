@@ -3,9 +3,9 @@ using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.Net;
+namespace ZenSkies.Core.Net;
 
 public sealed class PacketSystem : ModSystem
 {

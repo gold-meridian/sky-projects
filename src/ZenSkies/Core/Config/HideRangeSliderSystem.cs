@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config.UI;
-using ZensSky.Core.Exceptions;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Core.Utils;
 using static System.Reflection.BindingFlags;
 
-namespace ZensSky.Core.Config;
+namespace ZenSkies.Core.Config;
 
 [Autoload(Side = ModSide.Client)]
 public sealed class HideRangeSliderSystem : ModSystem

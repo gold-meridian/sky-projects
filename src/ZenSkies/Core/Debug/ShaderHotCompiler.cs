@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Terraria.ModLoader;
 using static System.IO.WatcherChangeTypes;
 
-namespace ZensSky.Core.Debug;
+namespace ZenSkies.Core.Debug;
 
 #if DEBUG
 

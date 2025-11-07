@@ -7,13 +7,13 @@ using System.Reflection;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-using ZensSky.Core.Exceptions;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Core.Utils;
 using static System.Reflection.BindingFlags;
-using static ZensSky.Common.Systems.Menu.Controllers.ButtonColorController;
-using static ZensSky.Common.Systems.Menu.MenuControllerSystem;
+using static ZenSkies.Common.Systems.Menu.Controllers.ButtonColorController;
+using static ZenSkies.Common.Systems.Menu.MenuControllerSystem;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// Edits and Hooks:

@@ -5,15 +5,15 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using ZensSky.Core.Net;
-using ZensSky.Core.ModCall;
-using static ZensSky.Common.Systems.Sky.Space.StarHooks;
-using static ZensSky.Common.Systems.Sky.Space.StarSystem;
-using static ZensSky.Core.Net.NetMessageHooks;
-using Star = ZensSky.Common.DataStructures.Star;
-using Supernova = ZensSky.Common.DataStructures.Supernova;
+using ZenSkies.Core.Net;
+using ZenSkies.Core.ModCall;
+using static ZenSkies.Common.Systems.Sky.Space.StarHooks;
+using static ZenSkies.Common.Systems.Sky.Space.StarSystem;
+using static ZenSkies.Core.Net.NetMessageHooks;
+using Star = ZenSkies.Common.DataStructures.Star;
+using Supernova = ZenSkies.Common.DataStructures.Supernova;
 
-namespace ZensSky.Common.Systems.Sky.Space;
+namespace ZenSkies.Common.Systems.Sky.Space;
 
 public sealed class SupernovaSystem : ModSystem, IPacketHandler
 {

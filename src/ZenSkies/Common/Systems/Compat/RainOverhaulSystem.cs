@@ -6,10 +6,10 @@ using System.Reflection;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
-using ZensSky.Core;
+using ZenSkies.Core;
 using static System.Reflection.BindingFlags;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// Edits and Hooks:

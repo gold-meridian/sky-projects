@@ -2,14 +2,14 @@
 using System;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Common.DataStructures;
-using ZensSky.Common.Systems.Compat;
-using ZensSky.Core;
-using ZensSky.Core.Particles;
-using ZensSky.Core.Utils;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Common.Systems.Compat;
+using ZenSkies.Core;
+using ZenSkies.Core.Particles;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Common.Systems.Weather;
+namespace ZenSkies.Common.Systems.Weather;
 
 [Autoload(Side = ModSide.Client)]
 public sealed class WindSystem : ModSystem

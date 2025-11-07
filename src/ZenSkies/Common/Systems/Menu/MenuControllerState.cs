@@ -8,11 +8,11 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader.Config;
 using Terraria.UI;
-using ZensSky.Common.Config;
-using ZensSky.Common.Systems.Menu.Elements;
-using ZensSky.Core.UI;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.Systems.Menu.Elements;
+using ZenSkies.Core.UI;
 
-namespace ZensSky.Common.Systems.Menu;
+namespace ZenSkies.Common.Systems.Menu;
 
 public sealed class MenuControllerState : UIState
 {

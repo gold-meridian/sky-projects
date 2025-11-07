@@ -1,6 +1,6 @@
 ﻿using Terraria.UI;
 
-namespace ZensSky.Core.Utils;
+namespace ZenSkies.Core.Utils;
 
     // The C# 14.0 'extension' block seems to still be a little buggy.
 #pragma warning disable CA1822 // Member does not access instance data and can be marked as static.

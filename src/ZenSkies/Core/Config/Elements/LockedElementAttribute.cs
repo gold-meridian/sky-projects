@@ -1,7 +1,7 @@
 ﻿using System;
 using Terraria.ModLoader.Config;
 
-namespace ZensSky.Core.Config.Elements;
+namespace ZenSkies.Core.Config.Elements;
 
 /// <summary>
 /// "Locks" a config from being changed if the type's target member is true (target member MUST be of type <see cref="bool"/>!)<br/>

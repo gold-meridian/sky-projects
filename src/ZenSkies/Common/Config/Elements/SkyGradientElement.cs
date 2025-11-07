@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader.Config.UI;
-using ZensSky.Core.Config.Elements;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Config.Elements;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Common.Config.Elements;
+namespace ZenSkies.Common.Config.Elements;
 
 public class SkyGradientElement : GradientElement
 {

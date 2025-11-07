@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace ZensSky.Core.Utils;
+namespace ZenSkies.Core.Utils;
 
 public static class Easings
 {

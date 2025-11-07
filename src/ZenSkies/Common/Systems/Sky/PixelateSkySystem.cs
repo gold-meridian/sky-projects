@@ -7,12 +7,12 @@ using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Core.Utils;
-using ZensSky.Core.Exceptions;
-using ZensSky.Core;
+using ZenSkies.Common.Config;
+using ZenSkies.Core.Utils;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Core;
 
-namespace ZensSky.Common.Systems.Sky;
+namespace ZenSkies.Common.Systems.Sky;
 
 [Autoload(Side = ModSide.Client)]
 public sealed class PixelateSkySystem : ModSystem
@@ -187,7 +187,7 @@ public sealed class PixelateSkySystem : ModSystem
 
     private static void PrepareTarget()
     {
-        if (!ZensSky.CanDrawSky ||
+        if (!ZenSkies.CanDrawSky ||
             !SkyConfig.Instance.UsePixelatedSky || !SkyEffects.PixelateAndQuantize.IsReady)
             return;
 
@@ -226,7 +226,7 @@ public sealed class PixelateSkySystem : ModSystem
 
     private static void DrawTarget()
     {
-        if (!ZensSky.CanDrawSky ||
+        if (!ZenSkies.CanDrawSky ||
             !SkyConfig.Instance.UsePixelatedSky || 
             SkyTarget is null ||
             !SkyEffects.PixelateAndQuantize.IsReady || 

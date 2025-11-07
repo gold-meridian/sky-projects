@@ -5,9 +5,9 @@ using Terraria;
 using Terraria.ModLoader.Config.UI;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.Config.Elements;
+namespace ZenSkies.Core.Config.Elements;
 
 [UseSplitPanel]
 public abstract class DropDownConfigElement<T> : ConfigElement<T>

@@ -3,7 +3,7 @@ using System;
 using Terraria;
 using Terraria.Utilities;
 
-namespace ZensSky.Core.Utils;
+namespace ZenSkies.Core.Utils;
 
 public static partial class Utilities
 {

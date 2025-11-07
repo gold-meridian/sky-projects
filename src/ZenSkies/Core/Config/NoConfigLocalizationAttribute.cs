@@ -1,7 +1,7 @@
 ﻿using System;
 using static System.AttributeTargets;
 
-namespace ZensSky.Core.Config;
+namespace ZenSkies.Core.Config;
 
 /// <summary>
 /// Makes the the decorated type, and all its members, not be localized.

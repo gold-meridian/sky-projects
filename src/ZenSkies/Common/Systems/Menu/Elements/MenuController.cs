@@ -2,7 +2,7 @@
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace ZensSky.Common.Systems.Menu.Elements;
+namespace ZenSkies.Common.Systems.Menu.Elements;
 
 [Autoload(Side = ModSide.Client)]
 public abstract class MenuController : UIPanel, ILoadable

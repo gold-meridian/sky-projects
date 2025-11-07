@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics.CodeAnalysis;
 using Terraria;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.DataStructures;
+namespace ZenSkies.Core.DataStructures;
 
 #pragma warning disable CS8777
 

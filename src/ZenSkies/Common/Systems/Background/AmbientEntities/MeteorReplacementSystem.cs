@@ -4,9 +4,9 @@ using Terraria;
 using Terraria.GameContent.Skies;
 using Terraria.ModLoader;
 using Terraria.Utilities;
-using ZensSky.Core.Exceptions;
+using ZenSkies.Core.Exceptions;
 
-namespace ZensSky.Common.Systems.Background.AmbientEntities;
+namespace ZenSkies.Common.Systems.Background.AmbientEntities;
 
 /// <summary>
 /// Edits and Hooks:

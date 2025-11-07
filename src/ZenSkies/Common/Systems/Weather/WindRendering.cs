@@ -4,11 +4,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Core;
-using ZensSky.Core.DataStructures;
+using ZenSkies.Common.Config;
+using ZenSkies.Core;
+using ZenSkies.Core.DataStructures;
 
-namespace ZensSky.Common.Systems.Weather;
+namespace ZenSkies.Common.Systems.Weather;
 
 public static class WindRendering
 {
@@ -46,7 +46,7 @@ public static class WindRendering
     {
         orig(self);
 
-        if (!ZensSky.CanDrawSky ||
+        if (!ZenSkies.CanDrawSky ||
             !Main.gameMenu ||
             !SkyConfig.Instance.UseWindParticles ||
             SkyConfig.Instance.WindOpacity <= 0)
@@ -59,7 +59,7 @@ public static class WindRendering
     {
         orig(self);
 
-        if (!ZensSky.CanDrawSky ||
+        if (!ZenSkies.CanDrawSky ||
             Main.gameMenu ||
             !SkyConfig.Instance.UseWindParticles ||
             SkyConfig.Instance.WindOpacity <= 0)

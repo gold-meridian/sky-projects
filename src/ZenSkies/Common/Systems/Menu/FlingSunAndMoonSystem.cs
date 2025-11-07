@@ -4,12 +4,12 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using ZensSky.Common.Systems.Compat;
-using ZensSky.Core.Utils;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
+using ZenSkies.Common.Systems.Compat;
+using ZenSkies.Core.Utils;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
 
-namespace ZensSky.Common.Systems.Menu;
+namespace ZenSkies.Common.Systems.Menu;
 
 /// <summary>
 /// Edits and Hooks:

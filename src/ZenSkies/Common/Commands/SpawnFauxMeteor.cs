@@ -4,7 +4,7 @@ using Terraria.GameContent.Skies;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
-namespace ZensSky.Common.Commands;
+namespace ZenSkies.Common.Commands;
 
 public sealed class SpawnFauxMeteor : ModCommand
 {

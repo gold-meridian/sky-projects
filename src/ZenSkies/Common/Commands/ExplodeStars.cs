@@ -1,7 +1,7 @@
 ﻿using Terraria.ModLoader;
-using ZensSky.Common.Systems.Sky.Space;
+using ZenSkies.Common.Systems.Sky.Space;
 
-namespace ZensSky.Common.Commands;
+namespace ZenSkies.Common.Commands;
 
 public sealed class ExplodeStars : ModCommand
 {

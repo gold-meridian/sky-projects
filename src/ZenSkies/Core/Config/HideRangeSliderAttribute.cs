@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ZensSky.Core.Config;
+namespace ZenSkies.Core.Config;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public sealed class HideRangeSliderAttribute : Attribute;

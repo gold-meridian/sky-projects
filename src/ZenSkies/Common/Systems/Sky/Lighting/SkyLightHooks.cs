@@ -1,6 +1,6 @@
-﻿using static ZensSky.Common.Systems.Sky.Lighting.SkyLight;
+﻿using static ZenSkies.Common.Systems.Sky.Lighting.SkyLight;
 
-namespace ZensSky.Common.Systems.Sky.Lighting;
+namespace ZenSkies.Common.Systems.Sky.Lighting;
 
 public static class SkyLightHooks<T> where T : SkyLight
 {

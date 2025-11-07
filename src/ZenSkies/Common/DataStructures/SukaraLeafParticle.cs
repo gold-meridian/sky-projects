@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
-using ZensSky.Core.Particles;
+using ZenSkies.Core.Particles;
 
-namespace ZensSky.Common.DataStructures;
+namespace ZenSkies.Common.DataStructures;
 
 public record struct SakuraLeafParticle : IParticle
 {

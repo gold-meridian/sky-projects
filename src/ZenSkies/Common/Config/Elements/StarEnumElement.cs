@@ -7,12 +7,12 @@ using Terraria.GameContent;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI.Chat;
-using ZensSky.Common.DataStructures;
-using ZensSky.Common.Systems.Sky.Space;
-using ZensSky.Core.Utils;
-using Star = ZensSky.Common.DataStructures.Star;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Common.Systems.Sky.Space;
+using ZenSkies.Core.Utils;
+using Star = ZenSkies.Common.DataStructures.Star;
 
-namespace ZensSky.Common.Config.Elements;
+namespace ZenSkies.Common.Config.Elements;
 
 public sealed class StarEnumElement : ConfigElement<StarVisual>
 {

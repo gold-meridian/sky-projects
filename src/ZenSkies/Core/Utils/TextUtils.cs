@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.Localization;
 using static ReLogic.Graphics.DynamicSpriteFont;
 
-namespace ZensSky.Core.Utils;
+namespace ZenSkies.Core.Utils;
 
 public static partial class Utilities
 {

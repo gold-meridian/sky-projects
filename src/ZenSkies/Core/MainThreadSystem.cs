@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core;
+namespace ZenSkies.Core;
 
     // Only load on clients as servers should not use the main thread queue. 
 [Autoload(Side = ModSide.Client)]
@@ -65,7 +65,7 @@ public sealed class MainThreadSystem : ModSystem
     {
         if (Main.dedServ)
             action();
-        else if (ZensSky.Unloading)
+        else if (ZenSkies.Unloading)
             Main.QueueMainThreadAction(() => action());
         else
             MainThreadActions.Enqueue(action);

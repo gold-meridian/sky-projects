@@ -2,9 +2,9 @@
 using System;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.UI;
+namespace ZenSkies.Core.UI;
 
 public sealed class ColorPicker : UIElement
 {

@@ -2,7 +2,7 @@
 using System;
 using Terraria;
 
-namespace ZensSky.Common.Authorship;
+namespace ZenSkies.Common.Authorship;
 
 public sealed class ZoeyTag : ZensSkyAuthorTag
 {

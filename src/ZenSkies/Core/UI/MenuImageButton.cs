@@ -6,7 +6,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace ZensSky.Core.UI;
+namespace ZenSkies.Core.UI;
 
 public sealed class MenuImageButton(Asset<Texture2D> texture) : UIImageButton(texture)
 {

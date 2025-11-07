@@ -1,4 +1,4 @@
-﻿namespace ZensSky.Core.Utils;
+﻿namespace ZenSkies.Core.Utils;
 
 public enum InputCancellationType : byte
 {

@@ -5,9 +5,9 @@ using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 using static System.Reflection.BindingFlags;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// Lights and Shadows has many issues relating to how they handle their infamous screen shader;<br/>

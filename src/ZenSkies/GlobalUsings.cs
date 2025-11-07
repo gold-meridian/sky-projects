@@ -3,20 +3,20 @@ global using Color = Microsoft.Xna.Framework.Color;
 global using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
     // Asset Namespaces.
-global using CompatEffects = ZensSky.GeneratedAssets.Effects.Compat;
-global using SkyEffects = ZensSky.GeneratedAssets.Effects.Sky;
-global using UIEffects = ZensSky.GeneratedAssets.Effects.UI;
+global using CompatEffects = ZenSkies.GeneratedAssets.Effects.Compat;
+global using SkyEffects = ZenSkies.GeneratedAssets.Effects.Sky;
+global using UIEffects = ZenSkies.GeneratedAssets.Effects.UI;
 
-global using Models = ZensSky.GeneratedAssets.Models;
+global using Models = ZenSkies.GeneratedAssets.Models;
 
-global using SkyTextures = ZensSky.GeneratedAssets.Textures.Sky.Textures;
-global using FablesTextures = ZensSky.GeneratedAssets.Textures.Sky.FablesMoons.Textures;
-global using StarTextures = ZensSky.GeneratedAssets.Textures.Sky.StarStyles.Textures;
+global using SkyTextures = ZenSkies.GeneratedAssets.Textures.Sky;
+global using FablesTextures = ZenSkies.GeneratedAssets.Textures.Sky.FablesMoons;
+global using StarTextures = ZenSkies.GeneratedAssets.Textures.Sky.StarStyles;
 
-global using UITextures = ZensSky.GeneratedAssets.Textures.UI.Textures;
-global using ButtonTextures = ZensSky.GeneratedAssets.Textures.UI.Buttons.Textures;
-global using PanelStyleTextures = ZensSky.GeneratedAssets.Textures.UI.PanelStyle.Textures;
+global using UITextures = ZenSkies.GeneratedAssets.Textures.UI;
+global using ButtonTextures = ZenSkies.GeneratedAssets.Textures.UI.Buttons;
+global using PanelStyleTextures = ZenSkies.GeneratedAssets.Textures.UI.PanelStyle;
 
-global using MiscTextures = ZensSky.GeneratedAssets.Textures.Textures;
+global using MiscTextures = ZenSkies.GeneratedAssets.Textures;
 
-global using AuthorshipTextures = ZensSky.GeneratedAssets.Textures.Authorship.Textures;
+global using AuthorshipTextures = ZenSkies.GeneratedAssets.Textures.Authorship;

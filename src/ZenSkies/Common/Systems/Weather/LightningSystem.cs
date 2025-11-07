@@ -4,11 +4,11 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Core;
-using ZensSky.Core.Exceptions;
+using ZenSkies.Common.Config;
+using ZenSkies.Core;
+using ZenSkies.Core.Exceptions;
 
-namespace ZensSky.Common.Systems.Weather;
+namespace ZenSkies.Common.Systems.Weather;
 
 /// <summary>
 /// Edits and Hooks:

@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using Terraria.ModLoader;
 
-namespace ZensSky.Core.Exceptions;
+namespace ZenSkies.Core.Exceptions;
 
 public class ILEditException : Exception
 {

@@ -12,14 +12,14 @@ using Terraria.GameContent.Animations;
 using Terraria.GameContent.Skies;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Core;
-using ZensSky.Core.Exceptions;
-using ZensSky.Core.Utils;
+using ZenSkies.Common.Config;
+using ZenSkies.Core;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Core.Utils;
 using static System.Reflection.BindingFlags;
-using static ZensSky.Common.Systems.Sky.Lighting.SkyLightSystem;
+using static ZenSkies.Common.Systems.Sky.Lighting.SkyLightSystem;
 
-namespace ZensSky.Common.Systems.Menu;
+namespace ZenSkies.Common.Systems.Menu;
 
 /// <summary>
 /// Edits and Hooks:
@@ -154,7 +154,7 @@ public sealed class ModMenuSystem : ModSystem
 
     private static void DrawLighting(SpriteBatch spriteBatch, Vector2 logoDrawCenter, Color color, float logoRotation, float logoScale2)
     {
-        if (!ZensSky.CanDrawSky ||
+        if (!ZenSkies.CanDrawSky ||
             MenuLoader.currentMenu.Logo.Value != ModMenu.modLoaderLogo.Value ||
             !UIEffects.LogoNormals.IsReady)
             return;

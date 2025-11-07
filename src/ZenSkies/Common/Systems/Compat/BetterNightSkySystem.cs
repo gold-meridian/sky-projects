@@ -14,15 +14,15 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Config.UI;
-using ZensSky.Common.Config;
-using ZensSky.Core.Exceptions;
+using ZenSkies.Common.Config;
+using ZenSkies.Core.Exceptions;
 using static BetterNightSky.BetterNightSky;
 using static System.Reflection.BindingFlags;
-using static ZensSky.Common.Systems.Sky.Space.StarHooks;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
+using static ZenSkies.Common.Systems.Sky.Space.StarHooks;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
 using BetterNightSystem = BetterNightSky.BetterNightSky.BetterNightSkySystem;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// Edits and Hooks:
@@ -50,7 +50,6 @@ namespace ZensSky.Common.Systems.Compat;
 ///     </item>
 /// </list>
 /// </summary>
-[JITWhenModsEnabled("BetterNightSky")]
 [ExtendsFromMod("BetterNightSky")]
 [Autoload(Side = ModSide.Client)]
 public sealed class BetterNightSkySystem : ModSystem

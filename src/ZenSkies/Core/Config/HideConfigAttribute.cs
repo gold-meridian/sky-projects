@@ -1,7 +1,7 @@
 ﻿using System;
 using Terraria.ModLoader.Config;
 
-namespace ZensSky.Core.Config;
+namespace ZenSkies.Core.Config;
 
 /// <summary>
 /// Hides the decorated <see cref="ModConfig"/> from the config list.

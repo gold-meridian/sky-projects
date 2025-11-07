@@ -5,10 +5,10 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Config.UI;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 using static System.Reflection.BindingFlags;
 
-namespace ZensSky.Core.Config.Elements;
+namespace ZenSkies.Core.Config.Elements;
 
     // TODO: API for other mods to be able to lock our config elements.
 public interface ILockedConfigElement
@@ -60,7 +60,7 @@ public interface ILockedConfigElement
 
         if (!TargetMember.IsStatic)
         {
-            if (ConfigManager.Configs.TryGetValue(ModContent.GetInstance<ZensSky>(), out List<ModConfig>? value))
+            if (ConfigManager.Configs.TryGetValue(ModContent.GetInstance<ZenSkies>(), out List<ModConfig>? value))
                 TargetInstance = value.Find(c => c.Name == type.Name);
             else if (Utilities.TryGetInstance(type, out object? instance))
                 TargetInstance = instance;

@@ -9,7 +9,7 @@ using Terraria.GameContent;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI.Chat;
 
-namespace ZensSky.Core.Utils;
+namespace ZenSkies.Core.Utils;
 
 public static partial class Utilities
 {

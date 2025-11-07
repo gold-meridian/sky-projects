@@ -4,11 +4,11 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.Config.UI;
-using ZensSky.Core.DataStructures;
-using ZensSky.Core.UI;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.DataStructures;
+using ZenSkies.Core.UI;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.Config.Elements;
+namespace ZenSkies.Core.Config.Elements;
 
 public class GradientElement : DropDownConfigElement<Gradient>
 {

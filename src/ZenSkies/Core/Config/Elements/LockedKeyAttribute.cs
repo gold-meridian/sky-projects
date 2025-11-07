@@ -1,6 +1,6 @@
 ﻿using Terraria.ModLoader.Config;
 
-namespace ZensSky.Core.Config.Elements;
+namespace ZenSkies.Core.Config.Elements;
 
 public sealed class LockedKeyAttribute : ConfigKeyAttribute
 {

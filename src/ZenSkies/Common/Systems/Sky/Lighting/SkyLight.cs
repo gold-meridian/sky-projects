@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using ZensSky.Common.DataStructures;
+using ZenSkies.Common.DataStructures;
 
 
-namespace ZensSky.Common.Systems.Sky.Lighting;
+namespace ZenSkies.Common.Systems.Sky.Lighting;
 
 public abstract class SkyLight
 {

@@ -6,9 +6,9 @@ using Terraria.Localization;
 using Terraria.ModLoader.Config.UI;
 using Terraria.ModLoader.UI;
 using Terraria.UI.Chat;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.Config.Elements;
+namespace ZenSkies.Core.Config.Elements;
 
 public sealed class LockedBoolElement : ConfigElement<bool>, ILockedConfigElement
 {

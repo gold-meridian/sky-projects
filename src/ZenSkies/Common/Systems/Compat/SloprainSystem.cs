@@ -6,11 +6,11 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Core.Exceptions;
+using ZenSkies.Core.Exceptions;
 using SloprainSys = Sloprain.Common.Systems.SloprainSystem;
 using static System.Reflection.BindingFlags;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// Allows for manually queuing draw actions into the shader used by Rain++.

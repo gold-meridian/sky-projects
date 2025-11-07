@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Common.DataStructures;
+namespace ZenSkies.Common.DataStructures;
 
 /// <summary>
 /// Structure that contains data pertaining to a <see cref="Star"/>'s supernova.

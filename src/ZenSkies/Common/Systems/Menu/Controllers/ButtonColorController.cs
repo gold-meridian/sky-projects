@@ -5,14 +5,14 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Core.Utils;
-using ZensSky.Core.Exceptions;
-using ZensSky.Common.Systems.Menu.Elements;
-using ZensSky.Core.UI;
-using ZensSky.Core;
+using ZenSkies.Common.Config;
+using ZenSkies.Core.Utils;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Common.Systems.Menu.Elements;
+using ZenSkies.Core.UI;
+using ZenSkies.Core;
 
-namespace ZensSky.Common.Systems.Menu.Controllers;
+namespace ZenSkies.Common.Systems.Menu.Controllers;
 
 /// <summary>
 /// Edits and Hooks:
@@ -238,7 +238,7 @@ public sealed class ButtonColorController : MenuController
         }
         catch (Exception e)
         {
-            throw new ILEditException(ModContent.GetInstance<ZensSky>(), il, e);
+            throw new ILEditException(ModContent.GetInstance<ZenSkies>(), il, e);
         }
     }
 

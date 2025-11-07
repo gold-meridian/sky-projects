@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace ZensSky.Common.DataStructures;
+namespace ZenSkies.Common.DataStructures;
 
 public record struct SkyLightInfo
 {

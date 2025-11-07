@@ -3,14 +3,14 @@ using System;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.Utilities;
-using ZensSky.Common.DataStructures;
-using ZensSky.Core;
-using ZensSky.Core.Exceptions;
-using ZensSky.Core.ModCall;
-using ZensSky.Core.Utils;
-using static ZensSky.Common.Systems.Sky.Space.StarHooks;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Core;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Core.ModCall;
+using ZenSkies.Core.Utils;
+using static ZenSkies.Common.Systems.Sky.Space.StarHooks;
 
-namespace ZensSky.Common.Systems.Sky.Space;
+namespace ZenSkies.Common.Systems.Sky.Space;
 
 /// <summary>
 /// Edits and Hooks:
@@ -131,7 +131,7 @@ public sealed class ShootingStarSystem : ModSystem
 
     private void ModifyFallingStarSpawn(On_Star.orig_StarFall orig, float positionX)
     {
-        if (!ZensSky.CanDrawSky || !ShowShootingStars)
+        if (!ZenSkies.CanDrawSky || !ShowShootingStars)
         {
             orig(positionX);
             return;

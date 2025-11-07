@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Terraria.ModLoader;
-using ZensSky.Common.DataStructures;
-using ZensSky.Core.Utils;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Common.Systems.Sky.Lighting;
+namespace ZenSkies.Common.Systems.Sky.Lighting;
 
 public sealed class SkyLightSystem : ModSystem
 {

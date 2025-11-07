@@ -8,14 +8,14 @@ using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Core;
-using ZensSky.Core.ModCall;
-using ZensSky.Core.Utils;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
+using ZenSkies.Common.Config;
+using ZenSkies.Core;
+using ZenSkies.Core.ModCall;
+using ZenSkies.Core.Utils;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
 
-namespace ZensSky.Common.Systems.Sky.SunAndMoon;
+namespace ZenSkies.Common.Systems.Sky.SunAndMoon;
 
 public static class SunAndMoonRendering
 {
@@ -455,7 +455,7 @@ public static class SunAndMoonRendering
 
     private static void DrawSunAndMoonToSky(On_Main.orig_DrawSunAndMoon orig, Main self, Main.SceneArea sceneArea, Color moonColor, Color sunColor, float tempMushroomInfluence)
     {
-        if (!ZensSky.CanDrawSky)
+        if (!ZenSkies.CanDrawSky)
         {
             orig(self, sceneArea, moonColor, sunColor, tempMushroomInfluence);
             return;

@@ -1,4 +1,4 @@
-﻿namespace ZensSky.Common.DataStructures;
+﻿namespace ZenSkies.Common.DataStructures;
 
 public enum StarVisual : byte
 {

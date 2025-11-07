@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 
-namespace ZensSky.Core.Net;
+namespace ZenSkies.Core.Net;
 
 public static class NetMessageHooks
 {

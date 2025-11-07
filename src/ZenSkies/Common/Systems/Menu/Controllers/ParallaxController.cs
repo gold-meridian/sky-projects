@@ -2,12 +2,12 @@
 using System;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Common.Systems.Menu.Elements;
-using ZensSky.Core;
-using ZensSky.Core.Exceptions;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.Systems.Menu.Elements;
+using ZenSkies.Core;
+using ZenSkies.Core.Exceptions;
 
-namespace ZensSky.Common.Systems.Menu.Controllers;
+namespace ZenSkies.Common.Systems.Menu.Controllers;
 
 /// <summary>
 /// Edits and Hooks:
@@ -57,7 +57,7 @@ public sealed class ParallaxController : SliderController
         }
         catch (Exception e)
         {
-            throw new ILEditException(ModContent.GetInstance<ZensSky>(), il, e);
+            throw new ILEditException(ModContent.GetInstance<ZenSkies>(), il, e);
         }
     }
 

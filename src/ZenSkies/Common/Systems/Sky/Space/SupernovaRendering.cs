@@ -6,15 +6,15 @@ using System;
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Common.DataStructures;
-using ZensSky.Common.Systems.Compat;
-using ZensSky.Core.ModCall;
-using static ZensSky.Common.Systems.Sky.Space.StarHooks;
-using static ZensSky.Common.Systems.Sky.Space.StarSystem;
-using static ZensSky.Common.Systems.Sky.Space.SupernovaSystem;
-using Supernova = ZensSky.Common.DataStructures.Supernova;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Common.Systems.Compat;
+using ZenSkies.Core.ModCall;
+using static ZenSkies.Common.Systems.Sky.Space.StarHooks;
+using static ZenSkies.Common.Systems.Sky.Space.StarSystem;
+using static ZenSkies.Common.Systems.Sky.Space.SupernovaSystem;
+using Supernova = ZenSkies.Common.DataStructures.Supernova;
 
-namespace ZensSky.Common.Systems.Sky.Space;
+namespace ZenSkies.Common.Systems.Sky.Space;
 
 public static class SupernovaRendering
 {

@@ -1,23 +1,21 @@
 ﻿using Daybreak.Common.Features.Authorship;
 using Daybreak.Common.Features.ModPanel;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content.Sources;
 using System;
 using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using ZensSky.Core;
-using ZensSky.Core.ModCall;
-using ZensSky.Core.Net;
-using ZensSky.GeneratedAssets.AssetReaders;
+using ZenSkies.Core;
+using ZenSkies.Core.ModCall;
+using ZenSkies.Core.Net;
 
 #pragma warning disable CS8603 // Possible null reference return.
 
-namespace ZensSky;
+namespace ZenSkies;
 
-public sealed class ZensSky : Mod, IHasCustomAuthorMessage
+public sealed class ZenSkies : Mod, IHasCustomAuthorMessage
 {
     #region Public Properties
 
@@ -93,17 +91,19 @@ public sealed class ZensSky : Mod, IHasCustomAuthorMessage
 
     #endregion
 
-    #region Content
+    /*
+        #region Content
 
-    public override IContentSource CreateDefaultContentSource()
-    {
-        if (!Main.dedServ)
-            AddContent(new OBJModelReader());
+        public override IContentSource CreateDefaultContentSource()
+        {
+            if (!Main.dedServ)
+                AddContent(new OBJModelReader());
 
-        return base.CreateDefaultContentSource();
-    }
+            return base.CreateDefaultContentSource();
+        }
 
-    #endregion
+        #endregion
+    */
 
     #region Authorshp
 

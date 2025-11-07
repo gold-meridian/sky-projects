@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ZensSky.Core.DataStructures;
+namespace ZenSkies.Core.DataStructures;
 
 public class AliasedList<TKey, TElement> 
     : List<(HashSet<TKey> Keys, List<TElement> Items)>

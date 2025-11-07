@@ -2,11 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Core.Utils;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
+using ZenSkies.Common.Config;
+using ZenSkies.Core.Utils;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
 
-namespace ZensSky.Common.Systems.Sky;
+namespace ZenSkies.Common.Systems.Sky;
 
 public static class AtmosphereRendering
 {

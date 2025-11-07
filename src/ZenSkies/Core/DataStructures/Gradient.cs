@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using ZensSky.Core.Config;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.Config;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.DataStructures;
+namespace ZenSkies.Core.DataStructures;
 
 [Serializable]
 [NoConfigLocalization]

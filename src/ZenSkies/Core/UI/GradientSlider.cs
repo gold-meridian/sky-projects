@@ -4,10 +4,10 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Terraria;
 using Terraria.UI;
-using ZensSky.Core.DataStructures;
-using ZensSky.Core.Utils;
+using ZenSkies.Core.DataStructures;
+using ZenSkies.Core.Utils;
 
-namespace ZensSky.Core.UI;
+namespace ZenSkies.Core.UI;
 
 public class GradientSlider : UISlider
 {

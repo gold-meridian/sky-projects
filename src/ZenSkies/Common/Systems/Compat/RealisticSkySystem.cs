@@ -16,17 +16,17 @@ using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Core.Utils;
-using ZensSky.Core.Exceptions;
-using ZensSky.Common.DataStructures;
-using ZensSky.Common.Systems.Sky.Space;
-using ZensSky.Common.Systems.Sky.SunAndMoon;
+using ZenSkies.Common.Config;
+using ZenSkies.Core.Utils;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Common.Systems.Sky.Space;
+using ZenSkies.Common.Systems.Sky.SunAndMoon;
 using static System.Reflection.BindingFlags;
-using static ZensSky.Common.Systems.Sky.Space.StarHooks;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
+using static ZenSkies.Common.Systems.Sky.Space.StarHooks;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// A poor taste fork attempting to implement the below can be found <a href="https://github.com/ZenTheMod/Realistic-Sky">here</a>.<br/><br/>

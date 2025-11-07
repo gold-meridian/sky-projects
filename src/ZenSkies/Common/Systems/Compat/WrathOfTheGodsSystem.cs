@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Reflection;
 using Terraria.ModLoader;
-using ZensSky.Common.DataStructures;
+using ZenSkies.Common.DataStructures;
 using static System.Reflection.BindingFlags;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 /// <summary>
 /// Simply updates the internal sun/moon positions used by NoxusBoss.

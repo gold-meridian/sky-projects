@@ -5,16 +5,16 @@ using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.ModLoader;
-using ZensSky.Common.Config;
-using ZensSky.Common.DataStructures;
-using ZensSky.Common.Systems.Menu;
-using ZensSky.Core;
-using ZensSky.Core.Exceptions;
-using ZensSky.Core.ModCall;
-using ZensSky.Core.Utils;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.DataStructures;
+using ZenSkies.Common.Systems.Menu;
+using ZenSkies.Core;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Core.ModCall;
+using ZenSkies.Core.Utils;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
 
-namespace ZensSky.Common.Systems.Sky.SunAndMoon;
+namespace ZenSkies.Common.Systems.Sky.SunAndMoon;
 
 /// <summary>
 /// Edits and Hooks:

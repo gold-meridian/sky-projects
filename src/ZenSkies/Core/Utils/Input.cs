@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.GameInput;
-using static ZensSky.Core.Utils.InputCancellationType;
+using static ZenSkies.Core.Utils.InputCancellationType;
 
-namespace ZensSky.Core.Utils;
+namespace ZenSkies.Core.Utils;
 
     // The C# 14.0 'extension' block seems to still be a little buggy.
 #pragma warning disable CA1822 // Member does not access instance data and can be marked as static.

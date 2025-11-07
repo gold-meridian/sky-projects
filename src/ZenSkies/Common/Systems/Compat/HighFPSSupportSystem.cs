@@ -3,7 +3,7 @@ using System.Reflection;
 using Terraria.ModLoader;
 using static System.Reflection.BindingFlags;
 
-namespace ZensSky.Common.Systems.Compat;
+namespace ZenSkies.Common.Systems.Compat;
 
 [ExtendsFromMod("HighFPSSupport")]
 [Autoload(Side = ModSide.Client)]

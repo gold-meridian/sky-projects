@@ -3,10 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
 using Terraria;
-using ZensSky.Common.Config;
-using ZensSky.Core.Particles;
+using ZenSkies.Common.Config;
+using ZenSkies.Core.Particles;
 
-namespace ZensSky.Common.DataStructures;
+namespace ZenSkies.Common.DataStructures;
 
 public record struct WindParticle : IParticle
 {

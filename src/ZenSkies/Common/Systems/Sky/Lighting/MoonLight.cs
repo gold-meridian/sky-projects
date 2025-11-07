@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using ZensSky.Common.Config;
-using ZensSky.Common.Systems.Compat;
-using static ZensSky.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
+using ZenSkies.Common.Config;
+using ZenSkies.Common.Systems.Compat;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
 
-namespace ZensSky.Common.Systems.Sky.Lighting;
+namespace ZenSkies.Common.Systems.Sky.Lighting;
 
 public sealed class MoonLight : SkyLight
 {
