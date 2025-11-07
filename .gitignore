@@ -1,0 +1,12 @@
+.vs/
+.vscode/
+.idea/
+
+bin/
+obj/
+
+*.user
+
+*.sln
+
+TemplateEngineHost/

@@ -1,0 +1,38 @@
+﻿using Terraria;
+using ZensSky.Common.Config;
+using ZensSky.Common.Systems.Menu.Elements;
+
+namespace ZensSky.Common.Systems.Menu.Controllers;
+
+public sealed class RainController : SliderController
+{
+    #region Properties
+
+    public override float MaxRange => 1f;
+    public override float MinRange => 0f;
+
+    public override Color InnerColor => Color.Blue;
+
+    public override ref float Modifying => ref MenuConfig.Instance.Rain;
+
+    public override int Index => 4;
+
+    public override string Name => "Mods.ZensSky.MenuController.Rain";
+
+    #endregion
+
+    #region Updating
+
+    public override void Refresh() 
+    {
+        Main.maxRaining = MenuConfig.Instance.Rain;
+
+        Main.cloudAlpha = MenuConfig.Instance.Rain;
+
+        Main.raining = Main.IsItRaining;
+
+        Main.ChangeRain();
+    }
+
+    #endregion
+}

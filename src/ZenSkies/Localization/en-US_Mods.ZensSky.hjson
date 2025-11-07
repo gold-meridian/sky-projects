@@ -1,0 +1,52 @@
+Configs: {
+	Locked: - Locked
+
+	StarVisual: {
+		Vanilla: {
+			Label: Vanilla
+			Tooltip: ""
+		}
+
+		Diamond: {
+			Label: Diamond
+			Tooltip: ""
+		}
+
+		FourPointed: {
+			Label: Four Pointed
+			Tooltip: ""
+		}
+
+		OuterWilds: {
+			Label: Circle
+			Tooltip: ""
+		}
+
+		Random: {
+			Label: Random
+			Tooltip: ""
+		}
+
+		Tooltip: ""
+	}
+
+	GradientSliderHover:
+		'''
+		Hold <left> on points to move them.
+		Press <left> on gaps to add points.
+		Press <right> on points to remove them.
+		'''
+}
+
+MenuController: {
+	Header: Menu Config
+	ResetTooltip: Reset Configuration
+	Time: Time Multiplier
+	Rain: Rain Intensity
+	Wind: Wind Direction
+	Parallax: Parallax Direction
+	CloudDensity: Cloud Density
+	ButtonColor: Menu Button Colors
+	ColorDisplayHover: Button Color (<right> to reset.)
+	HoverColorDisplayHover: Button Hover Color (<right> to reset.)
+}

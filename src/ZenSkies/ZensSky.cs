@@ -1,0 +1,138 @@
+﻿using Daybreak.Common.Features.Authorship;
+using Daybreak.Common.Features.ModPanel;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content.Sources;
+using System;
+using System.IO;
+using System.Linq;
+using Terraria;
+using Terraria.Localization;
+using Terraria.ModLoader;
+using ZensSky.Core;
+using ZensSky.Core.ModCall;
+using ZensSky.Core.Net;
+using ZensSky.GeneratedAssets.AssetReaders;
+
+#pragma warning disable CS8603 // Possible null reference return.
+
+namespace ZensSky;
+
+public sealed class ZensSky : Mod, IHasCustomAuthorMessage
+{
+    #region Public Properties
+
+    public static bool CanDrawSky { get; private set; }
+
+    public static bool Unloading { get; private set; }
+
+    #endregion
+
+    #region Loading
+
+    public override void Load()
+    {
+        if (Main.dedServ)
+            return;
+
+        MainThreadSystem.Enqueue(() =>
+        {
+                // Set the default render target usage to preserve to prevent issues when swaping targets.
+            Main.graphics.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
+            Main.graphics.ApplyChanges();
+        });
+    }
+
+    /*
+        private static IOrderedLoadable?[]? Cache;
+
+        public override void Load()
+        {
+            Type[] loadable = [.. AssemblyManager.GetLoadableTypes(Code)
+                .Where(t => !t.IsAbstract && !t.ContainsGenericParameters && t.GetInterfaces().Contains(typeof(IOrderedLoadable)))];
+
+            if (loadable.Length <= 0)
+                return;
+
+            Cache = new IOrderedLoadable[loadable.Length];
+
+            for (int i = 0; i < loadable.Length; i++)
+            {
+                object? instance = Activator.CreateInstance(loadable[i]);
+
+                if (!AutoloadAttribute.GetValue(loadable[i]).NeedsAutoloading)
+                    continue;
+
+                Cache[i] = instance as IOrderedLoadable;
+            }
+
+            Array.Sort(Cache, (n, t) => n?.Index.CompareTo(t?.Index) ?? 0);
+
+            Array.ForEach(Cache, l => l?.Load());
+        }
+
+        public override void Unload()
+        {
+            if (Cache is null)
+                return;
+
+            for (int i = Cache.Length - 1; i >= 0; i--)
+                Cache[i]?.Unload();
+        }
+    */
+
+    public override void Close()
+    {
+        Unloading = true;
+        MainThreadSystem.ClearQueue();
+
+        base.Close();
+    }
+
+    public override void PostSetupContent() => 
+        CanDrawSky = true;
+
+    #endregion
+
+    #region Content
+
+    public override IContentSource CreateDefaultContentSource()
+    {
+        if (!Main.dedServ)
+            AddContent(new OBJModelReader());
+
+        return base.CreateDefaultContentSource();
+    }
+
+    #endregion
+
+    #region Authorshp
+
+    private const string AuthorshipHeaderKey = "Mods.ZensSky.AuthorTags.Header";
+
+    string IHasCustomAuthorMessage.GetAuthorText() =>
+        AuthorText.GetAuthorTooltip(this, Language.GetTextValue(AuthorshipHeaderKey));
+
+    #endregion
+
+    #region Packets
+
+    public override void HandlePacket(BinaryReader reader, int whoAmI) =>
+        PacketSystem.Handle(this, reader, whoAmI);
+
+    #endregion
+
+    #region ModCall
+
+    public override object Call(params object[] args)
+    {
+        if (args.Length <= 0)
+            throw new ArgumentException("Zero arguments provided!");
+
+        if (args[0] is not string name)
+            throw new ArgumentException("First argument was not of type string!");
+
+        return ModCallSystem.HandleCall(name, [.. args.Skip(1)]);
+    }
+
+    #endregion
+}
