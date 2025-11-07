@@ -7,6 +7,6 @@ obj/
 
 *.user
 
-*.sln
+**/*.sln
 
 TemplateEngineHost/
