@@ -414,8 +414,11 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
         
         DrawAsPanel(spriteBatch, snapshot, device, leasedTarget.Target, source, element, Color.Transparent);
 
+            // Return it to the pool.
+        leasedTarget.Dispose();
+
             // Return to the base spriteBatch params* (I don't trust the game to use the correct BlendState.)
-        spriteBatch.Begin(snapshot with { BlendState = BlendState.NonPremultiplied });
+        spriteBatch.Begin(snapshot with { BlendState = BlendState.AlphaBlend });
 
             // Additional border that stands out more.
         Color borderColor =

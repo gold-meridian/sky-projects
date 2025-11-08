@@ -183,6 +183,8 @@ public sealed class CalamityFablesSystem : ModSystem
 
         Vector2 size = new Vector2(MoonSize * scale * ShatterScale) / ShatterTargetSize;
         spriteBatch.Draw(leasedTarget.Target, position, null, Color.White, rotation, targetSize * .5f, size, SpriteEffects.None, 0f);
+
+        leasedTarget.Dispose();
     }
 
     private static Matrix CalculateShatterMatrix() => 
