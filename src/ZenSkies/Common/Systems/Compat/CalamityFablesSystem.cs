@@ -4,17 +4,15 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Reflection;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 using ZenSkies.Common.Config;
-using ZenSkies.Core.DataStructures;
 using static System.Reflection.BindingFlags;
 using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonRendering;
 using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
-using ZenSkies.Core;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace ZenSkies.Common.Systems.Compat;
 
@@ -41,8 +39,6 @@ public sealed class CalamityFablesSystem : ModSystem
     private static readonly Vector4 AtmosphereShadowColor = new(.1f, .02f, .06f, 1f);
 
     private static readonly Vector2 ShatterTargetSize = new(200);
-
-    private static RenderTarget2D? ShatterTarget;
 
     #endregion
 
@@ -84,9 +80,6 @@ public sealed class CalamityFablesSystem : ModSystem
 
         PreDrawMoonExtras += MoonsFablesPreDrawExtras;
     }
-
-    public override void Unload() =>
-        MainThreadSystem.Enqueue(() => ShatterTarget?.Dispose());
 
     #endregion
 
@@ -145,10 +138,13 @@ public sealed class CalamityFablesSystem : ModSystem
 
         spriteBatch.End(out var snapshot);
 
-        using (new RenderTargetSwap(ref ShatterTarget, (int)ShatterTargetSize.X, (int)ShatterTargetSize.Y, preferredDepthFormat: DepthFormat.Depth16))
-        {
-            device.Clear(Color.Transparent);
+        Vector2 targetSize = ShatterTargetSize;
 
+            // Lease a target from the pool.
+        RenderTargetLease leasedTarget = RenderTargetPool.Shared.Rent(device, (int)targetSize.X, (int)targetSize.Y, RenderTargetDescriptor.Default with { Depth = DepthFormat.Depth16 });
+
+        using (new RenderTargetScope(device, leasedTarget.Target, true, true, Color.Transparent))
+        {
                 // The texture of the broken chunks.
             device.Textures[0] = moon;
 
@@ -186,7 +182,7 @@ public sealed class CalamityFablesSystem : ModSystem
         spriteBatch.Begin(in snapshot);
 
         Vector2 size = new Vector2(MoonSize * scale * ShatterScale) / ShatterTargetSize;
-        spriteBatch.Draw(ShatterTarget, position, null, Color.White, rotation, ShatterTarget.Size() * .5f, size, SpriteEffects.None, 0f);
+        spriteBatch.Draw(leasedTarget.Target, position, null, Color.White, rotation, targetSize * .5f, size, SpriteEffects.None, 0f);
     }
 
     private static Matrix CalculateShatterMatrix() => 

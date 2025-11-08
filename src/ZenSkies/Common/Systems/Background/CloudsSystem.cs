@@ -259,10 +259,10 @@ public sealed class CloudsSystem : ModSystem
         int width = (int)(viewport.Width * LightTargetScale);
         int height = (int)(viewport.Height * LightTargetScale);
 
-        using (new RenderTargetSwap(ref LightTarget, width, height))
-        {
-            device.Clear(Color.Transparent);
+        Utilities.ReintializeTarget(ref LightTarget, device, width, height);
 
+        using (new RenderTargetScope(device, LightTarget, true, true, Color.Transparent))
+        {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 
             DrawGodrays(spriteBatch);

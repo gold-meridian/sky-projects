@@ -14,8 +14,6 @@ using Terraria.UI;
 using ZenSkies.Common.Config;
 using ZenSkies.Common.DataStructures;
 using ZenSkies.Common.Systems.Sky.Space;
-using ZenSkies.Core;
-using ZenSkies.Core.DataStructures;
 using ZenSkies.Core.Particles;
 using ZenSkies.Core.Utils;
 using static System.Reflection.BindingFlags;
@@ -38,8 +36,6 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
 
     private delegate void orig_OnInitialize(UIMods self);
     private static Hook? PatchOnInitialize;
-
-    private static RenderTarget2D? PanelTarget;
 
     private static readonly Color PanelOutlineColor = new(76, 76, 76, 76);
     private static readonly Color PanelHoverOutlineColor = new(100, 80, 90, 0);
@@ -133,13 +129,8 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
                 ReorderUIModList);
     }
 
-    public override void Unload()
-    {
-        MainThreadSystem.Enqueue(() =>
-            PanelTarget?.Dispose());
-
+    public override void Unload() =>
         PatchOnInitialize?.Dispose();
-    }
 
     private void ReorderUIModList(orig_OnInitialize orig, UIMods self)
     {
@@ -405,32 +396,26 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
 
         spriteBatch.End(out var snapshot);
 
-            // Panel background (sky, branch.)
-        using (new RenderTargetSwap(ref PanelTarget, (int)size.X, (int)size.Y))
-        {
-            device.Clear(Color.Transparent);
+            // Lease a target from the pool.
+        RenderTargetLease leasedTarget = RenderTargetPool.Shared.Rent(device, (int)size.X, (int)size.Y, RenderTargetDescriptor.Default);
 
+            // BG.
+        using (new RenderTargetScope(device, leasedTarget.Target, true, true, Color.Transparent))
             DrawPanelBackground(spriteBatch, size);
-        }
 
-        DrawAsPanel(spriteBatch, snapshot, device, PanelTarget, source, element);
+        DrawAsPanel(spriteBatch, snapshot, device, leasedTarget.Target, source, element);
 
             // That fucking bird that I hate.
         DrawBird(spriteBatch, snapshot, device, element);
 
-            // Panel foreground (particles, glow.)
-        using (new RenderTargetSwap(ref PanelTarget, (int)size.X, (int)size.Y))
-        {
-            device.Clear(Color.Transparent);
-
+            // FG.
+        using (new RenderTargetScope(device, leasedTarget.Target, true, true, Color.Transparent))
             DrawPanelForeground(spriteBatch, device, size);
-        }
+        
+        DrawAsPanel(spriteBatch, snapshot, device, leasedTarget.Target, source, element, Color.Transparent);
 
-            // Use transparent as the panel color to only mask PanelTarget.
-        DrawAsPanel(spriteBatch, snapshot, device, PanelTarget, source, element, Color.Transparent);
-
-            // Return to the base spriteBatch context.
-        spriteBatch.Begin(in snapshot);
+            // Return to the base spriteBatch params* (I don't trust the game to use the correct BlendState.)
+        spriteBatch.Begin(snapshot with { BlendState = BlendState.NonPremultiplied });
 
             // Additional border that stands out more.
         Color borderColor =
@@ -450,6 +435,8 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
             innerDimensions.Width - 10 - element._modIconAdjust, 4);
 
         spriteBatch.Draw(PanelStyleTextures.Divider, dividerSize, Color.White);
+
+        spriteBatch.Restart(in snapshot);
 
         return false;
     }

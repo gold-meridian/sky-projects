@@ -6,18 +6,11 @@ using Terraria;
 using Terraria.ModLoader;
 using ZenSkies.Common.Config;
 using ZenSkies.Core;
-using ZenSkies.Core.DataStructures;
 
 namespace ZenSkies.Common.Systems.Weather;
 
 public static class WindRendering
 {
-    #region Private Fields
-
-    private static RenderTarget2D? WindTarget;
-
-    #endregion
-
     #region Loading
 
     [OnLoad(Side = ModSide.Client)]
@@ -101,12 +94,10 @@ public static class WindRendering
 
         spriteBatch.End(out var snapshot);
 
-        using (new RenderTargetSwap(ref WindTarget, viewport.Width, viewport.Height))
-        {
-            device.Clear(Color.Transparent);
+        RenderTargetLease leasedTarget = RenderTargetPool.Shared.Rent(device, viewport.Width, viewport.Height, RenderTargetDescriptor.Default);
 
+        using (new RenderTargetScope(device, leasedTarget.Target, true, true, Color.Transparent))
             DrawWinds(spriteBatch, device, snapshot);
-        }
 
         spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Matrix.Identity);
 
@@ -121,7 +112,7 @@ public static class WindRendering
 
         SkyEffects.PixelateAndQuantize.Apply(pass);
 
-        spriteBatch.Draw(WindTarget, viewport.Bounds, Color.White);
+        spriteBatch.Draw(leasedTarget.Target, viewport.Bounds, Color.White);
 
         spriteBatch.Restart(in snapshot);
     }
