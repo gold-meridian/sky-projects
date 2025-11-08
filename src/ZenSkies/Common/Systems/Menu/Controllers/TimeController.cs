@@ -34,16 +34,16 @@ public sealed class TimeController : SliderController
 
     public override int Index => 6;
 
-    public override string Name => "Mods.ZensSky.MenuController.Time";
+    public override string Name => "Time";
 
     #endregion
 
     #region Loading
 
-    public override void OnLoad() => 
+    public override void Load() => 
         MainThreadSystem.Enqueue(() => IL_Main.UpdateMenu += ModifyMenuTime);
 
-    public override void OnUnload() => 
+    public override void Unload() => 
         MainThreadSystem.Enqueue(() => IL_Main.UpdateMenu -= ModifyMenuTime);
 
     private void ModifyMenuTime(ILContext il)

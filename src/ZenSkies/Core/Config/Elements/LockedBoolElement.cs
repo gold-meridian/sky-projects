@@ -67,7 +67,7 @@ public sealed class LockedBoolElement : ConfigElement<bool>, ILockedConfigElemen
         string text = Value ? Lang.menu[126].Value : Lang.menu[124].Value; // On / Off
 
         if (IsLocked)
-            text += " " + Language.GetTextValue("Mods.ZensSky.Configs.Locked");
+            text += " " + Language.GetTextValue("Mods.ZensSkies.Configs.Locked");
 
         DynamicSpriteFont font = FontAssets.ItemStack.Value;
 

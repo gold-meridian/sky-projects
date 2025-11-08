@@ -17,7 +17,7 @@ public sealed class CloudDensityController : SliderController
 
     public override int Index => 1;
 
-    public override string Name => "Mods.ZensSky.MenuController.CloudDensity";
+    public override string Name => "CloudDensity";
 
     #endregion
 

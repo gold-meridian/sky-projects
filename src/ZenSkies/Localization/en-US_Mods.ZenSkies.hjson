@@ -37,16 +37,3 @@ Configs: {
 		Press <right> on points to remove them.
 		'''
 }
-
-MenuController: {
-	Header: Menu Config
-	ResetTooltip: Reset Configuration
-	Time: Time Multiplier
-	Rain: Rain Intensity
-	Wind: Wind Direction
-	Parallax: Parallax Direction
-	CloudDensity: Cloud Density
-	ButtonColor: Menu Button Colors
-	ColorDisplayHover: Button Color (<right> to reset.)
-	HoverColorDisplayHover: Button Hover Color (<right> to reset.)
-}

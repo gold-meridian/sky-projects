@@ -4,13 +4,16 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using ZenSkies.Common.Config;
-using ZenSkies.Core.Utils;
-using ZenSkies.Core.Exceptions;
 using ZenSkies.Common.Systems.Menu.Elements;
-using ZenSkies.Core.UI;
 using ZenSkies.Core;
+using ZenSkies.Core.Exceptions;
+using ZenSkies.Core.UI;
+using ZenSkies.Core.Utils;
+
+#nullable disable
 
 namespace ZenSkies.Common.Systems.Menu.Controllers;
 
@@ -29,16 +32,16 @@ public sealed class ButtonColorController : MenuController
 
     private const float DefaultHeight = 75f;
 
-    private readonly ColorPicker Picker;
+    private ColorPicker Picker;
 
-    private readonly HoverImageButton ColorDisplay;
-    private readonly HoverImageButton HoverColorDisplay;
+    private HoverImageButton ColorDisplay;
+    private HoverImageButton HoverColorDisplay;
 
     private static bool SettingHover;
 
-    private const string ColorDisplayHoverKey = "Mods.ZensSky.MenuController.ColorDisplayHover";
-    private const string HoverColorDisplayHoverKey = "Mods.ZensSky.MenuController.HoverColorDisplayHover";
-    
+    private const string ColorDisplayHoverKey = "ColorDisplayHover";
+    private const string HoverColorDisplayHoverKey = "HoverColorDisplayHover";
+
     private static readonly Color Outline = new(215, 215, 215);
 
     #endregion
@@ -51,6 +54,12 @@ public sealed class ButtonColorController : MenuController
     #endregion
 
     #region Private Properties
+
+    private LocalizedText ColorDisplayHover =>
+        this.GetLocalization(ColorDisplayHoverKey);
+
+    private LocalizedText HoverColorDisplayHover =>
+        this.GetLocalization(HoverColorDisplayHoverKey);
 
     private static ref Color Modifying =>
         ref SettingHover ? ref MenuConfig.Instance.MenuButtonHoverColor : ref MenuConfig.Instance.MenuButtonColor;
@@ -96,17 +105,20 @@ public sealed class ButtonColorController : MenuController
 
     public override int Index => 7;
 
-    public override string Name => "Mods.ZensSky.MenuController.ButtonColor";
+    public override string Name => "ButtonColor";
 
     public static Color ButtonColor { get; set; }
+
     public static Color ButtonHoverColor { get; set; }
 
     #endregion
 
-    #region Constructor
+    #region Initalization
 
-    public ButtonColorController() : base()
+    public override void OnInitialize()
     {
+        base.OnInitialize();
+
         Height.Set(DefaultHeight, 0f);
 
         Picker = new();
@@ -132,10 +144,16 @@ public sealed class ButtonColorController : MenuController
 
     #region Loading
 
-    public override void OnLoad() => 
-        MainThreadSystem.Enqueue(() => IL_Main.DrawMenu += ModifyColors);
+    public override void Load()
+    {
+        MainThreadSystem.Enqueue(() =>
+            IL_Main.DrawMenu += ModifyColors);
 
-    public override void OnUnload() => 
+        _ = ColorDisplayHover;
+        _ = HoverColorDisplayHover;
+    }
+
+    public override void Unload() => 
         MainThreadSystem.Enqueue(() => IL_Main.DrawMenu -= ModifyColors);
 
     private void ModifyColors(ILContext il)
@@ -323,7 +341,7 @@ public sealed class ButtonColorController : MenuController
 
     #region Private Methods
 
-    private HoverImageButton CreateColorDisplay(bool isHover)
+    private HoverImageButton CreateColorDisplay(bool isHoverDisplay)
     {
         HoverImageButton display = new(ButtonTextures.ColorInner, Color.White, ButtonTextures.ColorOuter);
 
@@ -332,14 +350,15 @@ public sealed class ButtonColorController : MenuController
 
         display.Top.Set(20f, 0f);
 
-        display.Left.Set(-14f, isHover ? .666f : .333f);
+        display.Left.Set(-14f, isHoverDisplay ? .666f : .333f);
 
-        display.OnLeftMouseDown += (evt, listeningElement) => ShowColor(isHover);
+        display.OnLeftMouseDown += (evt, listeningElement) => ShowColor(isHoverDisplay);
 
         display.OnRightMouseDown +=
-            (evt, listeningElement) => ResetColor(isHover);
+            (evt, listeningElement) => ResetColor(isHoverDisplay);
 
-        display.HoverText = Utilities.GetTextValueWithGlyphs(isHover ? HoverColorDisplayHoverKey : ColorDisplayHoverKey);
+        LocalizedText hover = isHoverDisplay ? HoverColorDisplayHover : ColorDisplayHover;
+        display.HoverText = Utilities.GetTextValueWithGlyphs(hover.Key);
 
         return display;
     }

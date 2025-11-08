@@ -6,7 +6,7 @@ using static ZenSkies.GeneratedAssets.Textures.Authorship.Textures;
 
 namespace ZenSkies.Common.Authorship;
 
-public abstract class ZensSkyAuthorTag : AuthorTag
+public abstract class ZenSkiesAuthorTag : AuthorTag
 {
     #region Private Fields
 

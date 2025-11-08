@@ -112,6 +112,8 @@ public sealed class MenuControllerSystem : ModSystem
                 RefreshOnSave);
 
         MenuController?.Activate();
+
+        Controllers.AddRange(Mod.GetContent<MenuController>());
     }
 
     public override void Unload()

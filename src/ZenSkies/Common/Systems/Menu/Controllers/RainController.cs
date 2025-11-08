@@ -17,7 +17,7 @@ public sealed class RainController : SliderController
 
     public override int Index => 4;
 
-    public override string Name => "Mods.ZensSky.MenuController.Rain";
+    public override string Name => "Rain";
 
     #endregion
 

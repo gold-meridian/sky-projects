@@ -46,22 +46,22 @@ This mod features cross compatibility with a large amount of popular mods that m
 - 'Red Sun and Realistic Sky' by Waffles22
 - 'Wrath of the Gods' by Lucille Karma\*[^WrathOfTheGods]
 
-If any issues arise with any mods, including the above; please bring up an issue [here](https://github.com/ZenTheMod/ZensSky/issues).
+If any issues arise with any mods, including the above; please bring up an issue [here](https://github.com/ZenTheMod/SkyProjects/issues).
 
 ### Adding Compat
 This mod allows for other mod creators to easily include their own compat with 'Mod Calls.'
 
 Example:
 ```cs
-if (!ModLoader.TryGetMod("ZensSky", out Mod zensSky))
+if (!ModLoader.TryGetMod("ZenSkies", out Mod zenSkies))
     return;
 
-zensSky.Call({MethodAlias}, {Arguments});
+zenSkies.Call({MethodAlias}, {Arguments});
  ```
 
 Where {MethodAlias} would be the name of the method you wish to call, and {Arguments} would be the full arguments of that method.\
-A full list of the available methods and their aliases can be found [here](https://github.com/search?q=repo%3AZenTheMod%2FZensSky%20ModCall&type=code), or by searching this repository for the `[ModCall]` attribute.\
-If you feel any feature lacks certain cross compatibility that you'd like, please bring up an issue [here](https://github.com/ZenTheMod/ZensSky/issues).
+A full list of the available methods and their aliases can be found [here](https://github.com/search?q=repo%3AZenTheMod%2FSkyProjects%20ModCall&type=code), or by searching this repository for the `[ModCall]` attribute.\
+If you feel any feature lacks certain cross compatibility that you'd like, please bring up an issue.
 
 ## Credits
 ### Developer(s)

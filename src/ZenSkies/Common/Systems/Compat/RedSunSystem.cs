@@ -1,5 +1,4 @@
-﻿using Daybreak.Common.Rendering;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using RedSunAndRealisticSky;

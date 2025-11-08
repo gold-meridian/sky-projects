@@ -30,16 +30,17 @@ public sealed class ParallaxController : SliderController
     public override ref float Modifying => ref MenuConfig.Instance.Parallax;
 
     public override int Index => 2;
-    public override string Name => "Mods.ZensSky.MenuController.Parallax";
+
+    public override string Name => "Parallax";
 
     #endregion
 
     #region Loading
 
-    public override void OnLoad() => 
+    public override void Load() => 
         MainThreadSystem.Enqueue(() => IL_Main.DrawMenu += ChangeParallaxDirection);
 
-    public override void OnUnload() => 
+    public override void Unload() => 
         MainThreadSystem.Enqueue(() => IL_Main.DrawMenu -= ChangeParallaxDirection);
 
     private void ChangeParallaxDirection(ILContext il)

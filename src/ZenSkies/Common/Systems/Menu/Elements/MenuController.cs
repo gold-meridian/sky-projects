@@ -2,52 +2,65 @@
 using Terraria.Localization;
 using Terraria.ModLoader;
 
+#nullable disable
+
 namespace ZenSkies.Common.Systems.Menu.Elements;
 
 [Autoload(Side = ModSide.Client)]
-public abstract class MenuController : UIPanel, ILoadable
+public abstract class MenuController : UIPanel, ILocalizedModType, ILoadable
 {
     #region Public Fields
 
-    public UIText? UIName;
+    public UIText UIName;
 
     #endregion
 
     #region Public Properties
 
+    public string LocalizationCategory => "MenuController";
+
+    public Mod Mod { get; private set; }
+
+    public string FullName =>
+        (Mod?.Name ?? "Terraria") + "/" + Name;
+
     public abstract int Index { get; }
 
-    public abstract string Name { get; }
+    public virtual string Name =>
+        GetType().Name;
+
+    public LocalizedText DisplayName =>
+        this.GetLocalization("DisplayName");
 
     #endregion
 
     #region Loading
 
-    public virtual void OnLoad() { }
-
-    public virtual void OnUnload() { }
-
     void ILoadable.Load(Mod mod) 
-    { 
-        MenuControllerSystem.Controllers.Add(this); 
-        OnLoad();
+    {
+        Mod = mod;
+
+        _ = DisplayName;
+
+        Load();
         Refresh();
     }
 
-    void ILoadable.Unload() =>
-        OnUnload();
+    public virtual void Load() { }
+
+    public virtual void Unload() { }
 
     public virtual void Refresh() { }
 
     #endregion
 
-    #region Public Constructors
+    #region Initialization
 
-    public MenuController()
+    public override void OnInitialize()
     {
-        UIName = new(Language.GetText(Name))
+        UIName = new(DisplayName)
         {
-            HAlign = 0.5f
+            HAlign = .5f
         };
 
         Append(UIName);
@@ -61,6 +74,7 @@ public abstract class MenuController : UIPanel, ILoadable
     {
         if (obj is MenuController element)
             return element.Index > Index ? -1: 1;
+
         return 0;
     }
 

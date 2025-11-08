@@ -17,7 +17,7 @@ public sealed class WindController : SliderController
 
     public override int Index => 3;
 
-    public override string Name => "Mods.ZensSky.MenuController.Wind";
+    public override string Name => "Wind";
 
     #endregion
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
@@ -20,10 +19,10 @@ public sealed class MenuControllerState : UIState
 
     private const float VerticalGap = 5f;
 
-    private const string Header = "Mods.ZensSky.MenuController.Header";
+    private const string Header = "Mods.ZenSkies.MenuController.Header";
     private const float HeaderHeight = 30f;
 
-    private const string ResetTooltip = "Mods.ZensSky.MenuController.ResetTooltip";
+    private const string ResetTooltip = "Mods.ZenSkies.MenuController.ResetTooltip";
 
     #endregion
 
@@ -106,15 +105,10 @@ public sealed class MenuControllerState : UIState
         Controllers.SetScrollbar(uIScrollbar);
 
         List<MenuController> controllers = MenuControllerSystem.Controllers;
+
         for (int i = 0; i < controllers.Count; i++)
         {
-                // Recreate the instance for easier debugging.
-            object? instance = Activator.CreateInstance(controllers[i].GetType());
-
-            if (instance is null)
-                continue;
-
-            controllers[i] = (MenuController)instance;
+            controllers[i].Initialize();
 
             controllers[i].Width.Set(0f, 1f);
 

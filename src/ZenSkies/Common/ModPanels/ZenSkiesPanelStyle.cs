@@ -32,7 +32,7 @@ namespace ZenSkies.Common.ModPanels;
 ///     </item>
 /// </list>
 /// </summary>
-public sealed class ZensSkyPanelStyle : ModPanelStyleExt
+public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
 {
     #region Private Fields
 

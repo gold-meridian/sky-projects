@@ -12,7 +12,6 @@ using Terraria.GameContent.Animations;
 using Terraria.GameContent.Skies;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
-using ZenSkies.Common.Config;
 using ZenSkies.Core;
 using ZenSkies.Core.Exceptions;
 using ZenSkies.Core.Utils;
