@@ -7,6 +7,8 @@ obj/
 
 *.user
 
-**/*.sln
+*.sln
+
+*.tml-build/
 
 TemplateEngineHost/
