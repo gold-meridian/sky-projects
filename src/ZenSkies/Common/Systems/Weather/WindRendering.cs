@@ -111,6 +111,8 @@ public static class WindRendering
         spriteBatch.Draw(leasedTarget.Target, viewport.Bounds, Color.White);
 
         spriteBatch.Restart(in snapshot);
+
+        leasedTarget.Dispose();
     }
 
     private static void DrawWinds(SpriteBatch spriteBatch, GraphicsDevice device, SpriteBatchSnapshot snapshot)

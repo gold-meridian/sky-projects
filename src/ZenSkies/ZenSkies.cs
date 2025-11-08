@@ -107,7 +107,7 @@ public sealed class ZenSkies : Mod, IHasCustomAuthorMessage
 
     #region Authorshp
 
-    private const string AuthorshipHeaderKey = "Mods.ZensSkies.AuthorTags.Header";
+    private const string AuthorshipHeaderKey = "Mods.ZenSkies.AuthorTags.Header";
 
     string IHasCustomAuthorMessage.GetAuthorText() =>
         AuthorText.GetAuthorTooltip(this, Language.GetTextValue(AuthorshipHeaderKey));
