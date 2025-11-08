@@ -9,14 +9,14 @@ global using UIEffects = ZenSkies.GeneratedAssets.Effects.UI;
 
 global using Models = ZenSkies.GeneratedAssets.Models;
 
-global using SkyTextures = ZenSkies.GeneratedAssets.Textures.Sky;
-global using FablesTextures = ZenSkies.GeneratedAssets.Textures.Sky.FablesMoons;
-global using StarTextures = ZenSkies.GeneratedAssets.Textures.Sky.StarStyles;
+global using SkyTextures = ZenSkies.GeneratedAssets.Textures.Sky.Textures;
+global using FablesTextures = ZenSkies.GeneratedAssets.Textures.Sky.FablesMoons.Textures;
+global using StarTextures = ZenSkies.GeneratedAssets.Textures.Sky.StarStyles.Textures;
 
-global using UITextures = ZenSkies.GeneratedAssets.Textures.UI;
-global using ButtonTextures = ZenSkies.GeneratedAssets.Textures.UI.Buttons;
-global using PanelStyleTextures = ZenSkies.GeneratedAssets.Textures.UI.PanelStyle;
+global using UITextures = ZenSkies.GeneratedAssets.Textures.UI.Textures;
+global using ButtonTextures = ZenSkies.GeneratedAssets.Textures.UI.Buttons.Textures;
+global using PanelStyleTextures = ZenSkies.GeneratedAssets.Textures.UI.PanelStyle.Textures;
 
-global using MiscTextures = ZenSkies.GeneratedAssets.Textures;
+global using MiscTextures = ZenSkies.GeneratedAssets.Textures.Textures;
 
-global using AuthorshipTextures = ZenSkies.GeneratedAssets.Textures.Authorship;
+global using AuthorshipTextures = ZenSkies.GeneratedAssets.Textures.Authorship.Textures;

@@ -1,6 +1,7 @@
 ﻿using Daybreak.Common.Features.Authorship;
 using Daybreak.Common.Features.ModPanel;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content.Sources;
 using System;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ using Terraria.ModLoader;
 using ZenSkies.Core;
 using ZenSkies.Core.ModCall;
 using ZenSkies.Core.Net;
+using ZenSkies.GeneratedAssets.AssetReaders;
 
 #pragma warning disable CS8603 // Possible null reference return.
 
@@ -91,23 +93,21 @@ public sealed class ZenSkies : Mod, IHasCustomAuthorMessage
 
     #endregion
 
-    /*
-        #region Content
+    #region Content
 
-        public override IContentSource CreateDefaultContentSource()
-        {
-            if (!Main.dedServ)
-                AddContent(new OBJModelReader());
+    public override IContentSource CreateDefaultContentSource()
+    {
+        if (!Main.dedServ)
+            AddContent(new OBJModelReader());
 
-            return base.CreateDefaultContentSource();
-        }
+        return base.CreateDefaultContentSource();
+    }
 
-        #endregion
-    */
+    #endregion
 
     #region Authorshp
 
-    private const string AuthorshipHeaderKey = "Mods.ZensSky.AuthorTags.Header";
+    private const string AuthorshipHeaderKey = "Mods.ZensSkies.AuthorTags.Header";
 
     string IHasCustomAuthorMessage.GetAuthorText() =>
         AuthorText.GetAuthorTooltip(this, Language.GetTextValue(AuthorshipHeaderKey));
