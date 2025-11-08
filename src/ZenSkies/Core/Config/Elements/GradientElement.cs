@@ -14,7 +14,7 @@ public class GradientElement : DropDownConfigElement<Gradient>
 {
     #region Private Fields
 
-    private const string SliderHoverKey = "Mods.ZensSkies.Configs.GradientSliderHover";
+    private const string SliderHoverKey = "Mods.ZenSkies.Configs.GradientSliderHover";
 
     #endregion
 
