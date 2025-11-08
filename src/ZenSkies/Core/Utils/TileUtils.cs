@@ -4,9 +4,6 @@ using Terraria.ID;
 
 namespace ZenSkies.Core.Utils;
 
-    // The C# 14.0 'extension' block seems to still be a little buggy.
-#pragma warning disable CA1822 // Member does not access instance data and can be marked as static.
-
 public static partial class Utilities
 {
     public static bool ShowInvisibleTiles =>
