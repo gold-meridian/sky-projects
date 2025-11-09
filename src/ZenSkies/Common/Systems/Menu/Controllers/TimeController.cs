@@ -82,8 +82,9 @@ public sealed class TimeController : SliderController
                     Main.dayTime ? Main.nightLength / Main.dayLength :
                     Main.dayLength / Main.nightLength;
 
-                if (Main.dayTime)
-                    Main.moonPhase = (Main.moonPhase - 1) % 8;
+                Main.moonPhase--;
+                if (Main.moonPhase < 0)
+                    Main.moonPhase = 7;
 
                 Main.time = (Main.dayTime ? Main.nightLength : Main.dayLength) + (Main.time * timeRatio);
                 Main.dayTime = !Main.dayTime;
