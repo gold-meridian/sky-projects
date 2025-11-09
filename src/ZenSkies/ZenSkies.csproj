@@ -22,7 +22,7 @@
 		<ProjectReference Include="..\daybreak-mod\src\Daybreak\Daybreak.csproj" />
 
 		<AdditionalFiles Include="Assets\**" />
-		<PackageReference Include="ZourceGen" Version="1.1.7" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+		<PackageReference Include="ZourceGen" Version="1.1.8" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
 	</ItemGroup>
 
 	<!-- Publicizer -->
