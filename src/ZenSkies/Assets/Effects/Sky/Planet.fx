@@ -32,7 +32,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     if (dist > radius)
     {
         float3 sp = sphere(uv, dist, 1);
-        float shad = shadow(sp, shadowRotation, 4);
+        float shad = shadow(sp, shadowRotation);
 		
         float4 color = atmo(dist, shad, radius, atmosphereColor == 0 ? tex2D(lightTexture, .5) : atmosphereColor, atmosphereShadowColor, 0);
         

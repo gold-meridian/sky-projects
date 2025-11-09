@@ -56,11 +56,11 @@ float3 sphere(float2 uv, float dist, float radius)
     return sphererot;
 }
 
-float shadow(float3 sp, float shadowRotation, float expo = 12)
+float shadow(float3 sp, float shadowRotation)
 {
-    float shad = 1 - pow(1 - saturate(dot(sp, mul(float3(0, 1, 0), rotateZ(TAU - PIOVER2 + shadowRotation)))), expo);
+    float shad = dot(sp, mul(float3(0, 1, 0), rotateZ(TAU - PIOVER2 + shadowRotation)));
     
-    return shad;
+    return outCubic(saturate(map(shad, -.05, .34, 0, 1)));
 }
 
 float4 atmo(float dist, float shad, float radius, float4 atmosphereColor, float4 atmosphereShadowColor, float range = 0)

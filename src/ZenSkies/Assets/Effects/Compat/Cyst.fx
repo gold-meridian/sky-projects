@@ -53,7 +53,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     	
         float3 sp = metaspheres(uv1, uv2, dist, dist1, dist2);
     	
-        float shad = shadow(sp, shadowRotation, 4);
+        float shad = shadow(sp, shadowRotation);
 		
         float4 color = atmo(1 / dist, shad, .9, atmosphereColor == 0 ? tex2D(tex, .5) : atmosphereColor, atmosphereShadowColor);
 		
