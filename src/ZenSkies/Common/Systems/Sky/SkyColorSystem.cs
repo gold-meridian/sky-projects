@@ -238,6 +238,7 @@ public sealed class SkyColorSystem : ModSystem
         if (!SkyConfig.Instance.PitchBlackBackground || DarkSurfaceSystem.IsEnabled)
             return;
 
+            // TODO: Use a different value to interpolate based on that doesnt pertain to star opacity.
         float interpolator = Easings.InCubic(StarSystem.StarAlpha);
 
         backgroundColor = Color.Lerp(Main.ColorOfTheSkies, Color.Black, interpolator);

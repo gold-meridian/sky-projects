@@ -29,6 +29,7 @@ public sealed class StarSystem : ModSystem, IPacketHandler
     private const float MainMenuDayRateDivisor = 10000f;
     private const float GameDayRateDivisor = 70000f;
     private const float GraveyardAlphaMultiplier = 1.4f;
+    private const float AtmosphereMultiplier = .43f;
 
     private const int DefaultStarGenerationSeed = 100;
 
@@ -81,7 +82,7 @@ public sealed class StarSystem : ModSystem, IPacketHandler
             if (Main.GraveyardVisualIntensity > 0f)
                 alpha *= 1f - Main.GraveyardVisualIntensity * GraveyardAlphaMultiplier;
 
-            float atmosphericBoost = Easings.InCubic(1f - Main.atmo);
+            float atmosphericBoost = Easings.InCubic(1f - Main.atmo) * AtmosphereMultiplier;
 
             alpha = Utilities.Saturate(Easings.InCubic(alpha + atmosphericBoost));
 
