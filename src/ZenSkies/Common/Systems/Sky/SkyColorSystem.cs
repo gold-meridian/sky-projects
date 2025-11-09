@@ -235,7 +235,9 @@ public sealed class SkyColorSystem : ModSystem
 
     public override void ModifySunLightColor(ref Color tileColor, ref Color backgroundColor)
     {
-        if (!SkyConfig.Instance.PitchBlackBackground || DarkSurfaceSystem.IsEnabled)
+        if (!ZenSkies.CanDrawSky ||
+            !SkyConfig.Instance.PitchBlackBackground ||
+            DarkSurfaceSystem.IsEnabled)
             return;
 
             // TODO: Use a different value to interpolate based on that doesnt pertain to star opacity.

@@ -21,7 +21,11 @@ public sealed class ZenSkies : Mod, IHasCustomAuthorMessage
 {
     #region Public Properties
 
-    public static bool CanDrawSky { get; private set; }
+    public static bool CanDrawSky
+    {
+        get => field && !ModLoader.isLoading;
+        private set;
+    }
 
     public static bool Unloading { get; private set; }
 
@@ -42,53 +46,17 @@ public sealed class ZenSkies : Mod, IHasCustomAuthorMessage
         });
     }
 
-    /*
-        private static IOrderedLoadable?[]? Cache;
-
-        public override void Load()
-        {
-            Type[] loadable = [.. AssemblyManager.GetLoadableTypes(Code)
-                .Where(t => !t.IsAbstract && !t.ContainsGenericParameters && t.GetInterfaces().Contains(typeof(IOrderedLoadable)))];
-
-            if (loadable.Length <= 0)
-                return;
-
-            Cache = new IOrderedLoadable[loadable.Length];
-
-            for (int i = 0; i < loadable.Length; i++)
-            {
-                object? instance = Activator.CreateInstance(loadable[i]);
-
-                if (!AutoloadAttribute.GetValue(loadable[i]).NeedsAutoloading)
-                    continue;
-
-                Cache[i] = instance as IOrderedLoadable;
-            }
-
-            Array.Sort(Cache, (n, t) => n?.Index.CompareTo(t?.Index) ?? 0);
-
-            Array.ForEach(Cache, l => l?.Load());
-        }
-
-        public override void Unload()
-        {
-            if (Cache is null)
-                return;
-
-            for (int i = Cache.Length - 1; i >= 0; i--)
-                Cache[i]?.Unload();
-        }
-    */
-
     public override void Close()
     {
+            // Technically redundant.
+        CanDrawSky = false;
         Unloading = true;
         MainThreadSystem.ClearQueue();
 
         base.Close();
     }
 
-    public override void PostSetupContent() => 
+    public override void PostSetupContent() =>
         CanDrawSky = true;
 
     #endregion
