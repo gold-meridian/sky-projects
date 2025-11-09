@@ -1,81 +1,35 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using ZenSkies.Core.Net;
 using ZenSkies.Core.ModCall;
-using static ZenSkies.Common.Systems.Sky.Space.StarHooks;
+using ZenSkies.Core.Net;
 using static ZenSkies.Common.Systems.Sky.Space.StarSystem;
 using static ZenSkies.Core.Net.NetMessageHooks;
-using Star = ZenSkies.Common.DataStructures.Star;
-using Supernova = ZenSkies.Common.DataStructures.Supernova;
 
 namespace ZenSkies.Common.Systems.Sky.Space;
 
 public sealed class SupernovaSystem : ModSystem, IPacketHandler
 {
-    #region Private Fields
-
-    private const string ActiveSupernovaeCountKey = "ActiveCount";
-
-    #endregion
-
-    #region Public Fields
-
-    public const int SupernovaeCount = StarCount;
-
-    public static readonly Supernova[] Supernovae = new Supernova[StarCount];
-
-    #endregion
-
     #region Loading
 
-    public override void Load()
-    {
-        Array.Clear(Supernovae);
-
-        UpdateStars += Update;
-
+    public override void Load() =>
         OnSyncWorldData += WorldDataSupernovae;
-    }
 
     #endregion
 
     #region Spawning
 
-    [ModCall("TriggerSupernova", "ExplodeStar", "SpawnSupernova")]
-    public static void CreateSupernova(int index = -1, Color? supernovaColor = null, float nebulaHue = -1f, bool shouldSync = true)
+    [ModCall("TriggerRandomSupernova", "ExplodeRandomStar", "SpawnRandomSupernova")]
+    public static void CreateRandomSupernovae(bool shouldSync = true)
     {
-        if (index < 0 ||
-            index >= SupernovaeCount)
-            index = Main.rand.Next(SupernovaeCount);
-
-        if (Supernovae[index].IsActive)
-            return;
-
-        unsafe
-        {
-            fixed (Star* star = &Stars[index])
-                Supernovae[index] = new(star, supernovaColor, nebulaHue);
-        }
+        AddStarModifier(s => new Supernova(s));
 
         if (shouldSync &&
             Main.netMode != NetmodeID.SinglePlayer)
             PacketSystem.Send<SupernovaSystem>(ignoreClient: Main.myPlayer);
-    }
-
-    #endregion
-
-    #region Updating
-
-    public static void Update()
-    {
-        for (int i = 0; i < Supernovae.Length; i++)
-            if (Supernovae[i].IsActive)
-                Supernovae[i].Update();
     }
 
     #endregion
@@ -95,44 +49,37 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
 
     public override void SaveWorldData(TagCompound tag)
     {
-        int count = Supernovae.Count(s => s.IsActive);
-        tag[ActiveSupernovaeCountKey] = count;
+        int count = StarModifiersCount<Supernova>();
+
+        tag["ActiveCount"] = count;
 
         int index = 0;
 
-        ReadOnlySpan<Supernova> supernovaeSpan = Supernovae;
-
-        for (int i = 0; i < supernovaeSpan.Length; i++)
+        ForActiveStarModifiers((int i, Supernova s) =>
         {
-            Supernova supernova = supernovaeSpan[i];
+            tag["Supernovae" + index] = i;
 
-            if (!supernova.IsActive)
-                continue;
+            tag[nameof(Supernova.SupernovaColor) + index] = s.SupernovaColor.PackedValue;
 
-            tag[nameof(Supernovae) + index] = i;
+            tag[nameof(Supernova.NebulaHue) + index] = s.NebulaHue;
 
-                // Store color as its packed value to save space.
-            tag[nameof(Supernova.SupernovaColor) + index] = supernova.SupernovaColor.PackedValue;
-
-            tag[nameof(Supernova.NebulaHue) + index] = supernova.NebulaHue;
-
-            tag[nameof(Supernova.Contract) + index] = supernova.Contract;
-            tag[nameof(Supernova.Expand) + index] = supernova.Expand;
-            tag[nameof(Supernova.Decay) + index] = supernova.Decay;
+            tag[nameof(Supernova.Contract) + index] = s.Contract;
+            tag[nameof(Supernova.Expand) + index] = s.Expand;
+            tag[nameof(Supernova.Decay) + index] = s.Decay;
 
             index++;
-        }
+        });
     }
 
     public override void LoadWorldData(TagCompound tag)
     {
         try
         {
-            int count = tag.Get<int>(ActiveSupernovaeCountKey);
+            int count = tag.Get<int>("ActiveCount");
 
             for (int i = 0; i < count; i++)
             {
-                int index = tag.Get<int>(nameof(Supernovae) + i);
+                int index = tag.Get<int>("Supernovae" + i);
 
                     // Load the color from the packed value.
                 Color supernovaColor = new(tag.Get<uint>(nameof(Supernova.SupernovaColor) + i));
@@ -140,15 +87,17 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
                 float nebulaHue = tag.Get<float>(nameof(Supernova.NebulaHue) + i);
 
                     // Create a new active supernova.
-                CreateSupernova(index, supernovaColor, nebulaHue);
+                Supernova s = new(Stars[index], supernovaColor, nebulaHue);
 
                 float contract = tag.Get<float>(nameof(Supernova.Contract) + i);
                 float expand = tag.Get<float>(nameof(Supernova.Expand) + i);
                 float decay = tag.Get<float>(nameof(Supernova.Decay) + i);
 
-                Supernovae[index].Contract = contract;
-                Supernovae[index].Expand = expand;
-                Supernovae[index].Decay = decay;
+                s.Contract = contract;
+                s.Expand = expand;
+                s.Decay = decay;
+
+                AddStarModifier(su => s, index);
             }
         }
         catch (Exception ex)
@@ -169,29 +118,22 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
         if (!Mod.IsNetSynced)
             return;
 
-        int count = Supernovae.Count(s => s.IsActive);
+        int count = StarModifiersCount<Supernova>();
+
         writer.Write7BitEncodedInt(count);
 
-        ReadOnlySpan<Supernova> supernovaeSpan = Supernovae;
-
-        for (int i = 0; i < supernovaeSpan.Length; i++)
+        ForActiveStarModifiers((int i, Supernova s) =>
         {
-            Supernova supernova = supernovaeSpan[i];
-
-            if (!supernova.IsActive)
-                continue;
-
             writer.Write7BitEncodedInt(i);
 
-                // Store color as its packed value to save space.
-            writer.Write(supernova.SupernovaColor.PackedValue);
+            writer.Write(s.SupernovaColor.PackedValue);
 
-            writer.Write(supernova.NebulaHue);
+            writer.Write(s.NebulaHue);
 
-            writer.Write(supernova.Contract);
-            writer.Write(supernova.Expand);
-            writer.Write(supernova.Decay);
-        }
+            writer.Write(s.Contract);
+            writer.Write(s.Expand);
+            writer.Write(s.Decay);
+        });
     }
 
     void IPacketHandler.Receive(BinaryReader reader)
@@ -213,15 +155,17 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
                 float nebulaHue = reader.ReadSingle();
 
                     // Create a new active supernova.
-                CreateSupernova(index, supernovaColor, nebulaHue);
+                Supernova s = new(Stars[index], supernovaColor, nebulaHue);
 
                 float contract = reader.ReadSingle();
                 float expand = reader.ReadSingle();
                 float decay = reader.ReadSingle();
 
-                Supernovae[index].Contract = contract;
-                Supernovae[index].Expand = expand;
-                Supernovae[index].Decay = decay;
+                s.Contract = contract;
+                s.Expand = expand;
+                s.Decay = decay;
+
+                AddStarModifier(su => s, index);
             }
         }
         catch (Exception ex)
@@ -240,7 +184,7 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
     [ModCall("ResetSupernova", "ResetSupernovas",
         "ClearSupernova", "ClearSupernovas", "ClearSupernovae")]
     public static void ResetSupernovae() =>
-        Array.Clear(Supernovae);
+        DisableStarModifiers<Supernova>();
 
     #endregion
 }

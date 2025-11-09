@@ -1,16 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 using ZenSkies.Core;
-using ZenSkies.Core.Net;
 using ZenSkies.Core.ModCall;
+using ZenSkies.Core.Net;
 using ZenSkies.Core.Utils;
+using static ZenSkies.Common.Systems.Sky.Space.StarHooks;
 using static ZenSkies.Core.Net.NetMessageHooks;
 using Star = ZenSkies.Common.DataStructures.Star;
 
@@ -40,6 +41,8 @@ public sealed class StarSystem : ModSystem, IPacketHandler
     public const int StarCount = 1200;
     public static readonly Star[] Stars = new Star[StarCount];
 
+    public static readonly IStarModifier[] StarModifiers = new IStarModifier[StarCount];
+
     #endregion
 
     #region Public Properties
@@ -54,18 +57,42 @@ public sealed class StarSystem : ModSystem, IPacketHandler
     public static float StarAlpha
     {
         [ModCall(nameof(StarAlpha), $"Get{nameof(StarAlpha)}")]
-        get; 
-        private set; 
+        get
+        {
+            float alpha;
+
+            if (Main.dayTime)
+            {
+                if (Main.time < DawnTime)
+                    alpha = (float)(1f - Main.time / DawnTime);
+                else if (Main.time > DuskStartTime)
+                    alpha = (float)((Main.time - DuskStartTime) / (DayLength - DuskStartTime));
+                else
+                    alpha = 0f;
+            }
+            else
+                alpha = 1f;
+
+            if (Main.gameMenu)
+                Main.shimmerAlpha = 0f;
+
+            alpha += Main.shimmerAlpha;
+
+            if (Main.GraveyardVisualIntensity > 0f)
+                alpha *= 1f - Main.GraveyardVisualIntensity * GraveyardAlphaMultiplier;
+
+            float atmosphericBoost = Easings.InCubic(1f - Main.atmo);
+
+            alpha = Utilities.Saturate(Easings.InCubic(alpha + atmosphericBoost));
+
+            InvokeModifyStarAlpha(ref alpha);
+
+            return alpha;
+        }
     }
 
-    public static float StarAlphaOverride
-    {
-        get;
-        [ModCall($"Set{nameof(StarAlpha)}")]
-        set;
-    } = -1;
-
-    public static SupernovaSystem Instance => ModContent.GetInstance<SupernovaSystem>();
+    public static SupernovaSystem Instance =>
+        ModContent.GetInstance<SupernovaSystem>();
 
     public static IPacketHandler Packet => Instance;
 
@@ -109,7 +136,11 @@ public sealed class StarSystem : ModSystem, IPacketHandler
 
         StarRotation %= MathHelper.TwoPi;
 
-        StarHooks.InvokeUpdateStars();
+        for (int i = 0; i < StarModifiers.Length; i++)
+            if (StarModifiers[i]?.IsActive ?? false)
+                StarModifiers[i].Update(ref Stars[i]);
+
+        InvokeUpdateStars();
     }
 
     #endregion
@@ -236,6 +267,8 @@ public sealed class StarSystem : ModSystem, IPacketHandler
     [ModCall("RegenStars", "RegenerateStars")]
     public static void GenerateStars(int seed = DefaultStarGenerationSeed)
     {
+        Array.Clear(StarModifiers);
+
         if (Main.dedServ)
         {
             Array.Clear(Stars);
@@ -249,49 +282,42 @@ public sealed class StarSystem : ModSystem, IPacketHandler
         for (int i = 0; i < StarCount; i++)
             Stars[i] = new(rand, CircularRadius);
 
-        StarHooks.InvokeGenerateStars(rand, seed);
+        InvokeGenerateStars(rand, seed);
     }
 
-    public static void UpdateStarAlpha()
+    public static void AddStarModifier<T>(Func<Star, T> modifier, int index = -1) where T : class, IStarModifier
     {
-        StarAlpha = StarAlphaOverride == -1 ?
-            CalculateStarAlpha() : StarAlphaOverride;
+        if (index == -1)
+            index = Main.rand.Next(StarCount);
 
-        StarAlphaOverride = -1;
+        if (StarModifiers[index]?.IsActive ?? false)
+            return;
+
+        StarModifiers[index] = modifier(Stars[index]);
     }
 
-    #endregion
-
-    #region Private Methods
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private static float CalculateStarAlpha()
+    public static void DrawStarModifiers<T>(SpriteBatch spriteBatch, GraphicsDevice device, float alpha, float rotation) where T : class, IStarModifier
     {
-        float alpha;
+        for (int i = 0; i < StarModifiers.Length; i++)
+            if ((StarModifiers[i]?.IsActive ?? false) && StarModifiers[i] is T m)
+                m.Draw(spriteBatch, device, ref Stars[i], alpha, rotation);
+    }
 
-        if (Main.dayTime)
-        {
-            if (Main.time < DawnTime)
-                alpha = (float)(1f - Main.time / DawnTime);
-            else if (Main.time > DuskStartTime)
-                alpha = (float)((Main.time - DuskStartTime) / (DayLength - DuskStartTime));
-            else
-                alpha = 0f;
-        }
-        else
-            alpha = 1f;
+    public static void ForActiveStarModifiers<T>(Action<int, T> action) where T : class, IStarModifier
+    {
+        for (int i = 0; i < StarModifiers.Length; i++)
+            if ((StarModifiers[i]?.IsActive ?? false) && StarModifiers[i] is T m)
+                action(i, m);
+    }
 
-        if (Main.gameMenu)
-            Main.shimmerAlpha = 0f;
+    public static int StarModifiersCount<T>() where T : class, IStarModifier =>
+        StarModifiers.Count(m => (m?.IsActive ?? false) && m is T);
 
-        alpha += Main.shimmerAlpha;
-
-        if (Main.GraveyardVisualIntensity > 0f)
-            alpha *= 1f - Main.GraveyardVisualIntensity * GraveyardAlphaMultiplier;
-
-        float atmosphericBoost = Easings.InCubic(1f - Main.atmo);
-
-        return Utilities.Saturate(Easings.InCubic(alpha + atmosphericBoost));
+    public static void DisableStarModifiers<T>() where T : class, IStarModifier
+    {
+        for (int i = 0; i < StarModifiers.Length; i++)
+            if ((StarModifiers[i]?.IsActive ?? false) && StarModifiers[i] is T)
+                StarModifiers[i].IsActive = false;
     }
 
     #endregion

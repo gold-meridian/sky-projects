@@ -2,17 +2,12 @@
 using Daybreak.Common.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
-using ZenSkies.Common.DataStructures;
 using ZenSkies.Common.Systems.Compat;
 using ZenSkies.Core.ModCall;
 using static ZenSkies.Common.Systems.Sky.Space.StarHooks;
 using static ZenSkies.Common.Systems.Sky.Space.StarSystem;
-using static ZenSkies.Common.Systems.Sky.Space.SupernovaSystem;
-using Supernova = ZenSkies.Common.DataStructures.Supernova;
 
 namespace ZenSkies.Common.Systems.Sky.Space;
 
@@ -38,13 +33,10 @@ public static class SupernovaRendering
 
         float rotation = -StarRotation;
 
-        ReadOnlySpan<Supernova> activeSupernovae = [.. Supernovae.Where(s => s.IsActive && s.State == SupernovaState.Expanding)];
-
         if (RealisticSkySystem.IsEnabled)
             RealisticSkySystem.SetAtmosphereParams(SkyEffects.Supernova.Value);
 
-        for (int i = 0; i < activeSupernovae.Length; i++)
-            activeSupernovae[i].Draw(spriteBatch, device, alpha, rotation);
+        DrawStarModifiers<Supernova>(spriteBatch, device, alpha, rotation);
     }
 
     private static void SupernovaePostDraw(SpriteBatch spriteBatch, in SpriteBatchSnapshot snapshot, float alpha, Matrix transform)

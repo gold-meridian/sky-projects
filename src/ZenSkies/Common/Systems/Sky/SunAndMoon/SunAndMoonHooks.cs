@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Daybreak.Common.Rendering;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
 using System.Linq;
@@ -146,14 +147,14 @@ public static class SunAndMoonHooks
     #endregion
 
     /// <returns><see cref="true"/> if the normal sun and moon drawing should be used.</returns>
-    public delegate bool hook_PreDrawSunAndMoon(SpriteBatch spriteBatch);
+    public delegate bool hook_PreDrawSunAndMoon(SpriteBatch spriteBatch, in SpriteBatchSnapshot snapshot);
 
     /// <inheritdoc cref="hook_PreDrawSunAndMoon"/>
     [method: ModCall] // add_PreDrawSunAndMoon, remove_PreDrawSunAndMoon.
     public static event hook_PreDrawSunAndMoon? PreDrawSunAndMoon;
 
     /// <returns><see cref="true"/> if the normal sun and moon drawing should be used.</returns>
-    public delegate void hook_PostDrawSunAndMoon(SpriteBatch spriteBatch);
+    public delegate void hook_PostDrawSunAndMoon(SpriteBatch spriteBatch, in SpriteBatchSnapshot snapshot);
 
     /// <inheritdoc cref="hook_PostDrawSunAndMoon"/>
     [method: ModCall] // add_PostDrawSunAndMoon, remove_PostDrawSunAndMoon.
@@ -343,7 +344,7 @@ public static class SunAndMoonHooks
 
     [ModCall("PreDrawSunAndMoon")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool InvokePreDrawSunAndMoon(SpriteBatch spriteBatch)
+    public static bool InvokePreDrawSunAndMoon(SpriteBatch spriteBatch, in SpriteBatchSnapshot snapshot)
     {
         bool ret = true;
 
@@ -352,15 +353,15 @@ public static class SunAndMoonHooks
 
         foreach (hook_PreDrawSunAndMoon handler in
             PreDrawSunAndMoon.GetInvocationList().Select(h => (hook_PreDrawSunAndMoon)h))
-            ret &= handler(spriteBatch);
+            ret &= handler(spriteBatch, in snapshot);
 
         return ret;
     }
 
     [ModCall("PostDrawSunAndMoon")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void InvokePostDrawSunAndMoon(SpriteBatch spriteBatch) =>
-        PostDrawSunAndMoon?.Invoke(spriteBatch);
+    public static void InvokePostDrawSunAndMoon(SpriteBatch spriteBatch, in SpriteBatchSnapshot snapshot) =>
+        PostDrawSunAndMoon?.Invoke(spriteBatch, in snapshot);
 
     public static void InvokeOnUpdateSunAndMoonInfo(SunAndMoonInfo info) =>
         OnUpdateSunAndMoonInfo?.Invoke(info);

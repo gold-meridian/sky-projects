@@ -21,25 +21,6 @@ namespace ZenSkies.Common.Systems.Sky.Space;
 
 public static class StarRendering
 {
-    #region Private Fields
-
-    private static readonly Vector4 ExplosionStart = new(1.5f, 2.5f, 4f, 1f);
-    private static readonly Vector4 ExplosionEnd = new(1.4f, .25f, 2.2f, .7f);
-    private static readonly Vector4 RingStart = new(3.5f, 2.9f, 1f, 1f);
-    private static readonly Vector4 RingEnd = new(4.5f, 1.8f, .5f, .5f);
-
-    private static readonly Vector4 Background = new(0, 0, 0, 0);
-
-    private const float QuickTimeMultiplier = 20f;
-    private const float ExpandTimeMultiplier = 13.3f;
-    private const float RingTimeMultiplier = 6.6f;
-
-    private const float MinimumSupernovaAlpha = 0.6f;
-
-    private const float SupernovaScale = 0.27f;
-
-    #endregion
-
     #region Loading
 
     [OnLoad(Side = ModSide.Client)]
@@ -149,9 +130,7 @@ public static class StarRendering
 
     private static void DrawStarsInBackground(On_Main.orig_DrawStarsInBackground orig, Main self, Main.SceneArea sceneArea, bool artificial)
     {
-            // TODO: Better method of detecting when a mod uses custom sky to hide the visuals.
         if (!ZenSkies.CanDrawSky ||
-            MacrocosmSystem.IsEnabled && MacrocosmSystem.InAnySubworld ||
             artificial)
         {
             orig(self, sceneArea, artificial);
@@ -169,10 +148,9 @@ public static class StarRendering
 
     #region Public Methods
 
+    [ModCall("DrawSkyStars")]
     public static void DrawStarsToSky(SpriteBatch spriteBatch, float alpha)
     {
-        UpdateStarAlpha();
-
         SpriteBatchSnapshot snapshot = new(spriteBatch);
 
         Matrix transform = RotationMatrix() * snapshot.TransformMatrix;

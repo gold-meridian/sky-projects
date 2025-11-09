@@ -31,6 +31,11 @@ public static class StarHooks
     [method: ModCall] // add_PostDrawStars, remove_PostDrawStars.
     public static event hook_PostDrawStars? PostDrawStars;
 
+    public delegate void hook_ModifyStarAlpha(ref float alpha);
+
+    [method: ModCall] // add_ModifyStarAlpha, remove_ModifyStarAlpha.
+    public static event hook_ModifyStarAlpha? ModifyStarAlpha;
+
     #endregion
 
     #region Public Methods
@@ -51,6 +56,10 @@ public static class StarHooks
     [ModCall]
     public static void AddPostDrawStars(hook_PostDrawStars postDraw) =>
         PostDrawStars += postDraw;
+
+    [ModCall]
+    public static void AddModifyStarAlpha(hook_ModifyStarAlpha postDraw) =>
+        ModifyStarAlpha += postDraw;
 
     [ModCall("UpdateStars")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -83,6 +92,11 @@ public static class StarHooks
     public static void InvokePostDrawStars(SpriteBatch spriteBatch, in SpriteBatchSnapshot snapshot, float alpha, Matrix transform) =>
         PostDrawStars?.Invoke(spriteBatch, in snapshot, alpha, transform);
 
+    [ModCall("ModifyStarAlpha")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void InvokeModifyStarAlpha(ref float alpha) =>
+        ModifyStarAlpha?.Invoke(ref alpha);
+
     public static void Clear()
     {
         UpdateStars = null;
@@ -91,6 +105,8 @@ public static class StarHooks
 
         PreDrawStars = null;
         PostDrawStars = null;
+
+        ModifyStarAlpha = null;
     }
 
     #endregion

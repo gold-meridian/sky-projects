@@ -42,6 +42,8 @@ public abstract class MenuController : UIPanel, ILocalizedModType, ILoadable
 
         _ = DisplayName;
 
+        MenuControllerSystem.Controllers.Add(this);
+
         Load();
         Refresh();
     }

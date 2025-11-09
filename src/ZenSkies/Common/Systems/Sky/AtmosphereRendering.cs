@@ -1,4 +1,5 @@
 ﻿using Daybreak.Common.Features.Hooks;
+using Daybreak.Common.Rendering;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
@@ -20,13 +21,17 @@ public static class AtmosphereRendering
 
     #region Drawing
 
-    private static void AtmospherePostDraw(SpriteBatch spriteBatch)
+    private static void AtmospherePostDraw(SpriteBatch spriteBatch, in SpriteBatchSnapshot snapshot)
     {
         Texture2D gradient = SkyTextures.SkyGradient;
 
         Color color = GetColor();
 
+        spriteBatch.Begin(in snapshot);
+
         spriteBatch.Draw(gradient, Utilities.ScreenDimensions, color);
+
+        spriteBatch.End();
     }
 
     #endregion

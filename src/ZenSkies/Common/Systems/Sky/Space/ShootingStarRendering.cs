@@ -23,7 +23,7 @@ public sealed class ShootingStarRendering : ModSystem
 
     #region Drawing
 
-    private static void DrawShootingStarsPostSunAndMoon(SpriteBatch spriteBatch)
+    private static void DrawShootingStarsPostSunAndMoon(SpriteBatch spriteBatch, in SpriteBatchSnapshot snapshot)
     {
         if (!ZenSkies.CanDrawSky || !ShowShootingStars)
         {
@@ -34,7 +34,6 @@ public sealed class ShootingStarRendering : ModSystem
 
         float alpha = StarSystem.StarAlpha;
 
-        spriteBatch.End(out var snapshot);
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap, snapshot.DepthStencilState, snapshot.RasterizerState, RealisticSkySystem.ApplyStarShader(), snapshot.TransformMatrix);
 
         ReadOnlySpan<ShootingStar> activeShootingStars = [.. ShootingStars.Where(s => s.IsActive)];
@@ -42,7 +41,7 @@ public sealed class ShootingStarRendering : ModSystem
         for (int i = 0; i < activeShootingStars.Length; i++)
             activeShootingStars[i].Draw(spriteBatch, device, alpha);
 
-        spriteBatch.Restart(in snapshot);
+        spriteBatch.End();
     }
 
     #endregion

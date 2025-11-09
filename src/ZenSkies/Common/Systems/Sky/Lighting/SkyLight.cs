@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using Terraria.ModLoader;
 using ZenSkies.Common.DataStructures;
 
 
 namespace ZenSkies.Common.Systems.Sky.Lighting;
 
-public abstract class SkyLight
+public abstract class SkyLight : ILoadable
 {
     #region Public Delegates
 
@@ -33,6 +34,20 @@ public abstract class SkyLight
     protected abstract float Size { get; }
 
     protected virtual Texture2D? Texture => null;
+
+    #endregion
+
+    #region Loading
+
+    void ILoadable.Load(Mod mod)
+    {
+        SkyLightSystem.Lights.Add(this);
+        Load();
+    }
+
+    public virtual void Load() { }
+
+    public virtual void Unload() { }
 
     #endregion
 

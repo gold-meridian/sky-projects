@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Daybreak.Common.Rendering;
+using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.GameContent;
@@ -43,7 +44,7 @@ public sealed class FlingSunAndMoonSystem : ModSystem
 
     #region Flinging
 
-    private void FlingSunAndMoonPostDraw(SpriteBatch spriteBatch)
+    private void FlingSunAndMoonPostDraw(SpriteBatch spriteBatch, in SpriteBatchSnapshot snapshot)
     {
         if (!Main.gameMenu || Main.netMode == NetmodeID.MultiplayerClient)
             return;

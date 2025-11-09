@@ -6,19 +6,12 @@ using ZenSkies.Core.Utils;
 
 namespace ZenSkies.Common.Systems.Sky.Lighting;
 
-public sealed class SkyLightSystem : ModSystem
+public static class SkyLightSystem
 {
     #region Public Properties
 
     public static List<SkyLight> Lights { get; }
         = [];
-
-    #endregion
-
-    #region Loading
-
-    public override void PostSetupContent() =>
-        Lights.AddRange(Utilities.GetAllInstancesOf<SkyLight>(Mod.Code));
 
     #endregion
 

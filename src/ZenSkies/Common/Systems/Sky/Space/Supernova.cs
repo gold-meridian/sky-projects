@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using ZenSkies.Core.Utils;
+using Star = ZenSkies.Common.DataStructures.Star;
 
-namespace ZenSkies.Common.DataStructures;
+namespace ZenSkies.Common.Systems.Sky.Space;
 
-/// <summary>
-/// Structure that contains data pertaining to a <see cref="Star"/>'s supernova.
-/// </summary>
-public struct Supernova
+public sealed class Supernova : IStarModifier
 {
     #region Private Fields
 
@@ -35,8 +33,6 @@ public struct Supernova
     private readonly Color StartingColor;
     private readonly float StartingScale;
 
-    private readonly unsafe Star* Target;
-
     #endregion
 
     #region Public Properties
@@ -59,17 +55,15 @@ public struct Supernova
     /// <param name="target">The <see cref="Star"/> that this supernova belongs to; will be modified during updating.</param>
     /// <param name="supernovaColor">The color of the inital explosion effect.</param>
     /// <param name="nebulaHue">The hue of the resulting nebula(e).</param>
-    public unsafe Supernova(Star* target, Color? supernovaColor = null, float nebulaHue = -1f)
+    public Supernova(Star star, Color? supernovaColor = null, float nebulaHue = -1f)
     {
-        Target = target;
-
-        StartingColor = Target->Color;
-        StartingScale = Target->Scale;
+        StartingColor = star.Color;
+        StartingScale = star.Scale;
 
             // Have smaller stars explode faster.
-        Multiplier = Utils.Remap(Target->Scale, MinStarScale, MaxStarScale, SmallMultiplier, BigMultiplier);
+        Multiplier = Utils.Remap(star.Scale, MinStarScale, MaxStarScale, SmallMultiplier, BigMultiplier);
 
-        SupernovaColor = supernovaColor ?? Target->Color;
+        SupernovaColor = supernovaColor ?? star.Color;
 
         if (nebulaHue == -1f)
             nebulaHue = Main.rand.NextFloat();
@@ -87,44 +81,37 @@ public struct Supernova
 
     #region Updating
 
-    public void Update()
+    public void Update(ref Star star)
     {
-        switch (State)
+        State = State switch
         {
-            case SupernovaState.Contracting:
-                unsafe
-                {
-                    if (!UpdateContracting())
-                        return;
-
-                    State = SupernovaState.Expanding;
-                    Target->IsActive = false;
-                }
-                return;
-
-            default:
-                if (UpdateExpanding())
-                    IsActive = false;
-                return;
-        }
+            SupernovaState.Contracting => UpdateContracting(ref star),
+            SupernovaState.Expanding => UpdateExpanding(),
+            _ => SupernovaState.Complete
+        };
     }
 
-    private unsafe bool UpdateContracting()
+    private SupernovaState UpdateContracting(ref Star star)
     {
         Contract += Increment * ContractMultiplier * Multiplier;
         Contract = Utilities.Saturate(Contract);
 
         float colorInterpolator = Easings.OutQuint(Contract);
-        Target->Color = Color.Lerp(StartingColor, EndingColor, colorInterpolator);
+        star.Color = Color.Lerp(StartingColor, EndingColor, colorInterpolator);
 
-        // Have the star increase in scale slightly before shrinking.
+            // Have the star increase in scale slightly before shrinking.
         float scaleMultiplier = Easings.OutBack(1 - Contract, 7);
-        Target->Scale = StartingScale * scaleMultiplier;
+        star.Scale = StartingScale * scaleMultiplier;
 
-        return Contract >= 1f;
+        if (Contract < 1f)
+            return SupernovaState.Contracting;
+
+        star.IsActive = false;
+
+        return SupernovaState.Expanding;
     }
 
-    private bool UpdateExpanding()
+    private SupernovaState UpdateExpanding()
     {
         Expand += Increment * ExpandMultiplier * Multiplier;
         Expand = Utilities.Saturate(Expand);
@@ -132,22 +119,25 @@ public struct Supernova
         Decay += Increment * DecayMultiplier * Multiplier;
         Decay = Utilities.Saturate(Decay);
 
-        return Expand >= 1f && Decay >= 1f;
+        if (Expand < 1f || Decay < 1f)
+            return SupernovaState.Expanding;
+
+        IsActive = false;
+
+        return SupernovaState.Complete;
     }
 
     #endregion
 
     #region Drawing
 
-    public readonly void Draw(SpriteBatch spriteBatch, GraphicsDevice device, float alpha, float rotation)
+    public void Draw(SpriteBatch spriteBatch, GraphicsDevice device, ref Star star, float alpha, float rotation)
     {
-        Vector2 position = Vector2.Zero;
+        if (State == SupernovaState.Contracting)
+            return;
 
-        unsafe
-        {
-            position = Target->Position;
-            rotation = Target->Rotation + rotation;
-        }
+        Vector2 position = star.Position;
+        rotation = star.Rotation + rotation;
 
         SkyEffects.Supernova.Hue = NebulaHue;
         SkyEffects.Supernova.ExplosionColor = SupernovaColor.ToVector4();

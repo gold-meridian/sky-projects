@@ -465,30 +465,31 @@ public static class SunAndMoonRendering
 
         MoonTexture = GetBaseMoonTexture();
 
-        if (!SkyConfig.Instance.UseSunAndMoon)
-        {
-            if (InvokePreDrawSunAndMoon(spriteBatch))
-                orig(self, sceneArea, moonColor, sunColor, tempMushroomInfluence);
-
-            InvokePostDrawSunAndMoon(spriteBatch);
-            return;
-        }
-
         GraphicsDevice device = Main.instance.GraphicsDevice;
 
-        if (InvokePreDrawSunAndMoon(spriteBatch))
+        spriteBatch.End(out var snapshot);
+
+        if (InvokePreDrawSunAndMoon(spriteBatch, in snapshot))
         {
-            spriteBatch.End(out var snapshot);
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, snapshot.DepthStencilState, snapshot.RasterizerState, null, snapshot.TransformMatrix);
+            if (SkyConfig.Instance.UseSunAndMoon)
+            {
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, snapshot.DepthStencilState, snapshot.RasterizerState, null, snapshot.TransformMatrix);
 
-            DrawSunAndMoon(spriteBatch, device, Main.dayTime && ShowSun, !Main.dayTime && ShowMoon);
+                DrawSunAndMoon(spriteBatch, device, Main.dayTime && ShowSun, !Main.dayTime && ShowMoon);
 
-            spriteBatch.Restart(in snapshot);
+                spriteBatch.End();
+            }
+
+            spriteBatch.Begin(in snapshot);
+
+            orig(self, sceneArea, moonColor, sunColor, tempMushroomInfluence);
+
+            spriteBatch.End();
         }
 
-        orig(self, sceneArea, moonColor, sunColor, tempMushroomInfluence);
+        InvokePostDrawSunAndMoon(spriteBatch, in snapshot);
 
-        InvokePostDrawSunAndMoon(spriteBatch);
+        spriteBatch.Begin(in snapshot);
     }
 
     #endregion
