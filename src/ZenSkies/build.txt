@@ -10,6 +10,6 @@ weakReferences = BetterNightSky@1.24, CoolerMenu@1.31, FancyLighting@1.0.0, Ligh
 
 modReferences = Daybreak@2.2.0
 
-buildIgnore = .tml-build\* lib\*, .vs\*, *.tmp, Properties\*, *.csproj, *.user, obj\*, bin\*, *.config, LICENSE, .editorconfig, TemplateEngineHost\*
+buildIgnore = .tml-build\*, lib\*, .idea\*, .vs\*, *.tmp, Assets\Effects\Compiler\*, Properties\*, *.csproj, *.user, obj\*, bin\*, *.config, LICENSE, .editorconfig, TemplateEngineHost\*
 
 homepage = https://github.com/ZenTheMod/SkyProjects
