@@ -4,7 +4,7 @@ using Terraria;
 
 namespace ZenSkies.Common.Authorship;
 
-public sealed class ZoeyTag : ZenSkiesAuthorTag
+public class ZoeyTag : ZenSkiesAuthorTag
 {
     #region Private Fields
 

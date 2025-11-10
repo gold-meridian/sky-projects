@@ -1,3 +1,3 @@
 ﻿namespace ZenSkies.Common.Authorship;
 
-public sealed class SprunoliaTag : ZenSkiesAuthorTag;
+public class SprunoliaTag : ZenSkiesAuthorTag;

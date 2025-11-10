@@ -67,10 +67,13 @@ If you feel any feature lacks certain cross compatibility that you'd like, pleas
 ### Developer(s)
 - Zoey (`@z_e_n_.`)
 
-### Help with Development
+### Contributors
 - www​.sprunolia.com
 - tomat
 - Ebonfly
+- Verminoid Creature
+
+### Misc
 - Roton
 - Lion8cake
 - jupiter.ryo
@@ -78,7 +81,6 @@ If you feel any feature lacks certain cross compatibility that you'd like, pleas
 - Plushie
 - Tuna
 - Oli
-- dreitone
 
 ### Textures
 - www​.sprunolia.com
