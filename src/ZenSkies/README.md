@@ -71,7 +71,7 @@ If you feel any feature lacks certain cross compatibility that you'd like, pleas
 - www​.sprunolia.com
 - tomat
 - Ebonfly
-- Verminoid Creature
+- verminoid creature
 
 ### Misc
 - Roton
