@@ -125,7 +125,7 @@ public sealed class ButtonColorController : MenuController
 
         Picker.Top.Set(56f, 0f);
 
-        Picker.OnAcceptInput += (p) =>
+        Picker.Inputs.OnAcceptInput += (p) =>
         {
             ModifyingUse = true;
             Modifying = p.Color;

@@ -28,7 +28,9 @@ public class GradientElement : DropDownConfigElement<Gradient>
 
     #region Public Properties
 
-    public override float ExpandedHeight => BaseHeight + 36 + 300f + 52f + 20;
+        // TODO: Better calculation here.
+    public override float ExpandedHeight =>
+        BaseHeight + 36 + 256f + 52f + 20;
 
     #endregion
 
@@ -36,13 +38,17 @@ public class GradientElement : DropDownConfigElement<Gradient>
 
     protected override void OnExpand()
     {
+        float margin = 10;
+
+        #region Slider
+
         Slider = new(Value);
 
         Slider.Top.Set(BaseHeight + 5, 0f);
 
         Slider.HAlign = .5f;
 
-        Slider.Width.Set(-20f, 1f);
+        Slider.Width.Set(-margin * 2, 1f);
 
             // For whatever reason most -- maybe all(?) -- ConfigElements don't make any sound for hovering, nor clicking.
         Slider.Mute = true;
@@ -52,14 +58,19 @@ public class GradientElement : DropDownConfigElement<Gradient>
 
         Append(Slider);
 
+        #endregion
+
+        float topMargin = BaseHeight + 5 + Slider.Height.Pixels + 5;
+
+        #region Color Picker
+
         Picker = new();
 
-        Picker.Top.Set(BaseHeight + 36, 0f);
+        Picker.Top.Set(topMargin, 0f);
 
-        Picker.Left.Set(10, 0f);
+        Picker.Left.Set(margin, 0f);
 
-        Picker.Width.Set(1f, 0f);
-        Picker.MinWidth.Set(300f, 0f);
+        Picker.Width.Set(-margin, .5f);
 
         Picker.Mute = true;
 
@@ -67,25 +78,42 @@ public class GradientElement : DropDownConfigElement<Gradient>
 
         Append(Picker);
 
+            // Sketchy but forces the color inputs to use the width of the entire panel.
+        Picker.RemoveChild(Picker.Inputs);
+
+        float inputsMargin = Picker.Inputs.Height.Pixels + margin;
+
+        Picker.Inputs.Top.Set(-inputsMargin, 1f);
+
+        Picker.Inputs.HAlign = .5f;
+
+        Picker.Inputs.Width.Set(-margin * 2, 1f);
+
+        Append(Picker.Inputs);
+
+        #endregion
+
         UIPanel easingPanel =
-            new(UITextures.EmptyPanel, MiscTextures.Invis, 6);
+            new(UITextures.EmptyPanel, MiscTextures.Invis);
 
-        easingPanel.Top.Set(BaseHeight + 36, 0f);
+        easingPanel.SetPadding(6);
 
-        easingPanel.Left.Set(315f, 0f);
+        easingPanel.Top.Set(topMargin, 0f);
 
-        easingPanel.Width.Set(-325f, 1f);
+        easingPanel.Left.Set(margin, .5f);
 
-        easingPanel.Height.Set(-BaseHeight - 46, 1f);
+        easingPanel.Width.Set(-margin * 2, .5f);
+
+        easingPanel.Height.Set(-topMargin - inputsMargin - margin, 1f);
 
         easingPanel.BackgroundColor = backgroundColor;
 
         UIPanel inner =
-            new(UITextures.FullPanel, MiscTextures.Invis, 6);
+            new(UITextures.FullPanel, MiscTextures.Invis);
 
         inner.Width.Set(0f, 1f);
 
-        inner.Height.Set(30, 1f);
+        inner.Height.Set(30, 0f);
 
         inner.BackgroundColor = backgroundColor;
 

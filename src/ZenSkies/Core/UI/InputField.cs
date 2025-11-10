@@ -73,8 +73,8 @@ public class InputField : UIPanel
         _backgroundTexture = UITextures.EmptyPanel;
         _borderTexture = MiscTextures.Invis;
 
-        Height.Set(26f, 0f);
         Width.Set(0f, 1f);
+        Height.Set(26f, 0f);
     }
 
     #endregion
