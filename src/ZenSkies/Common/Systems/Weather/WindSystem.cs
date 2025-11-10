@@ -16,9 +16,9 @@ public sealed class WindSystem : ModSystem
 {
     #region Private Fields
 
-    private const float MinWind = 0.17f;
+    private const float MinWind = .17f;
     private const float WindSpawnChance = 35f;
-    private const int WindLoopChance = 14;
+    private const int WindLoopChance = 10;
 
     private const int Margin = 100;
 

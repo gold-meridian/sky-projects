@@ -117,7 +117,7 @@ public static class WindRendering
 
     private static void DrawWinds(SpriteBatch spriteBatch, GraphicsDevice device, SpriteBatchSnapshot snapshot)
     {
-        Matrix matrix = snapshot.TransformMatrix * Matrix.CreateTranslation(new(-Main.screenPosition, 0));
+        Matrix matrix = snapshot.TransformMatrix* Matrix.CreateTranslation(new(-Main.screenPosition, 0));
 
         spriteBatch.Begin(snapshot.SortMode, snapshot.BlendState, snapshot.SamplerState, snapshot.DepthStencilState, snapshot.RasterizerState, null, matrix);
 

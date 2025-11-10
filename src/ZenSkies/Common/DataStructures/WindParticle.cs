@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using ZenSkies.Common.Config;
 using ZenSkies.Core.Particles;
+using ZenSkies.Core.Rendering;
 
 namespace ZenSkies.Common.DataStructures;
 
@@ -14,9 +16,9 @@ public record struct WindParticle : IParticle
 
     private const int MaxOldPositions = 43;
 
-    private const float WidthAmplitude = 2f;
+    private const float WidthAmplitude = 3.5f;
 
-    private const float LifeTimeIncrement = 0.004f;
+    private const float LifeTimeIncrement = .004f;
 
     private const float SinLifeTimeFrequency = 7f;
     private const float SinGlobalTimeFrequency = .6f;
@@ -24,6 +26,8 @@ public record struct WindParticle : IParticle
     private const float SinAmplitude = .1f;
 
     private const float LoopRange = .06f;
+
+    private const float LoopMaxOffset = .3f;
 
     private const float Magnitude = 13f;
 
@@ -38,6 +42,8 @@ public record struct WindParticle : IParticle
     public Vector2 Velocity { get; set; }
 
     public float Wind { get; init; }
+
+    public float LoopOffset { get; init; }
 
     public bool ShouldLoop { get; init; }
 
@@ -55,6 +61,7 @@ public record struct WindParticle : IParticle
         OldPositions = new Vector2[MaxOldPositions];
         Velocity = Vector2.Zero;
         Wind = wind;
+        LoopOffset = Main.rand.NextFloat(-LoopMaxOffset, LoopMaxOffset);
         ShouldLoop = shouldLoop;
         LifeTime = 0f;
         IsActive = true;
@@ -80,7 +87,9 @@ public record struct WindParticle : IParticle
             float range = LoopRange / MathHelper.Clamp(MathF.Abs(Wind), .01f, 1);
             range *= .5f;
 
-            float interpolator = Utils.Remap(LifeTime, .5f - range, .5f + range, 0f, 1f);
+            float offset = .5f + LoopOffset;
+
+            float interpolator = Utils.Remap(LifeTime, offset - range, offset + range, 0f, 1f);
 
             newVelocity = newVelocity.RotatedBy(MathHelper.TwoPi * interpolator * -MathF.Sign(Wind));
         }
@@ -102,35 +111,31 @@ public record struct WindParticle : IParticle
 
     readonly void IParticle.Draw(SpriteBatch spriteBatch, GraphicsDevice device)
     {
-        Vector2[] positions = [.. OldPositions.Where(pos => pos != default)];
+            // TODO: Better method of applying a matrix to these blasted particles.
+        IReadOnlyList<Vector3> positions =
+            [.. OldPositions.Where(pos => pos != default)
+            .Select(p => new Vector3(Vector2.Transform(p, spriteBatch.transformMatrix), 0))];
 
-        if (positions.Length <= 2)
+        if (positions.Count <= 2)
             return;
-
-        VertexPositionColorTexture[] vertices = new VertexPositionColorTexture[(positions.Length - 1) * 2];
 
         float brightness = MathF.Sin(LifeTime * MathHelper.Pi) * Main.atmo * MathF.Abs(Wind);
 
         float alpha = SkyConfig.Instance.WindOpacity;
 
-        for (int i = 0; i < positions.Length - 1; i++)
-        {
-            float progress = (float)i / positions.Length;
-            float width = MathF.Sin(progress * MathHelper.Pi) * brightness * WidthAmplitude;
+            // Get the color based on the lighting at the center of the trail.
+        Vector3 center = positions[positions.Count / 2];
 
-            Vector2 position = Vector2.Transform(positions[i], spriteBatch.transformMatrix);
+        Point tilePosition = (new Vector2(center.X, center.Y) - Main.screenPosition).ToTileCoordinates();
 
-            float direction = (positions[i] - positions[i + 1]).ToRotation();
-            Vector2 offset = new Vector2(width, 0).RotatedBy(direction + MathHelper.PiOver2);
+        Color color = Lighting.GetColor(tilePosition).MultiplyRGB(Main.ColorOfTheSkies) * brightness * alpha;
+        color.A = 0;
 
-            Point tilePosition = (position - Main.screenPosition).ToTileCoordinates();
-
-            Color color = Lighting.GetColor(tilePosition).MultiplyRGB(Main.ColorOfTheSkies) * brightness * alpha;
-            color.A = 0;
-
-            vertices[i * 2] = new(new(position - offset, 0), color, new(progress, 0f));
-            vertices[i * 2 + 1] = new(new(position + offset, 0), color, new(progress, 1f));
-        }
+        VertexPositionColorTexture[] vertices =
+            TriangleStripBuilder.BuildPath(positions,
+            t => MathF.Sin(t * MathHelper.Pi) * brightness * WidthAmplitude,
+            t => color,
+            smoothingSubdivisions: 3);
 
         if (vertices.Length > 3)
             device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertices, 0, vertices.Length - 2);
