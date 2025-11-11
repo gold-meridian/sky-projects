@@ -23,7 +23,7 @@ public sealed class ExplodeStars : ModCommand
 
         SupernovaSystem.ResetSupernovae();
 
-            // StarSystem.GenerateStars();
+        StarSystem.GenerateStars();
 
         for (int i = 0; i < count; i++)
             SupernovaSystem.CreateRandomSupernovae();

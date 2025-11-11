@@ -138,7 +138,8 @@ public sealed class StarSystem : ModSystem, IPacketHandler
         StarRotation %= MathHelper.TwoPi;
 
         for (int i = 0; i < StarModifiers.Length; i++)
-            if (StarModifiers[i]?.IsActive ?? false)
+            if (Stars[i].IsActive &&
+                (StarModifiers[i]?.IsActive ?? false))
                 StarModifiers[i].Update(ref Stars[i]);
 
         InvokeUpdateStars();
@@ -291,7 +292,8 @@ public sealed class StarSystem : ModSystem, IPacketHandler
         if (index == -1)
             index = Main.rand.Next(StarCount);
 
-        if (StarModifiers[index]?.IsActive ?? false)
+        if (!Stars[index].IsActive ||
+            (StarModifiers[index]?.IsActive ?? false))
             return;
 
         StarModifiers[index] = modifier(Stars[index]);

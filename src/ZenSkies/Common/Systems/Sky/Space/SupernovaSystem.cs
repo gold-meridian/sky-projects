@@ -59,13 +59,10 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
         {
             tag["Supernovae" + index] = i;
 
-            tag[nameof(Supernova.SupernovaColor) + index] = s.SupernovaColor.PackedValue;
-
-            tag[nameof(Supernova.NebulaHue) + index] = s.NebulaHue;
+            tag[nameof(Supernova.NebulaColor) + index] = s.NebulaColor.PackedValue;
 
             tag[nameof(Supernova.Contract) + index] = s.Contract;
             tag[nameof(Supernova.Expand) + index] = s.Expand;
-            tag[nameof(Supernova.Decay) + index] = s.Decay;
 
             index++;
         });
@@ -82,20 +79,16 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
                 int index = tag.Get<int>("Supernovae" + i);
 
                     // Load the color from the packed value.
-                Color supernovaColor = new(tag.Get<uint>(nameof(Supernova.SupernovaColor) + i));
-
-                float nebulaHue = tag.Get<float>(nameof(Supernova.NebulaHue) + i);
+                Color nebulaColor = new(tag.Get<uint>(nameof(Supernova.NebulaColor) + i));
 
                     // Create a new active supernova.
-                Supernova s = new(Stars[index], supernovaColor, nebulaHue);
+                Supernova s = new(Stars[index], nebulaColor);
 
                 float contract = tag.Get<float>(nameof(Supernova.Contract) + i);
                 float expand = tag.Get<float>(nameof(Supernova.Expand) + i);
-                float decay = tag.Get<float>(nameof(Supernova.Decay) + i);
 
                 s.Contract = contract;
                 s.Expand = expand;
-                s.Decay = decay;
 
                 AddStarModifier(su => s, index);
             }
@@ -126,13 +119,10 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
         {
             writer.Write7BitEncodedInt(i);
 
-            writer.Write(s.SupernovaColor.PackedValue);
-
-            writer.Write(s.NebulaHue);
+            writer.Write(s.NebulaColor.PackedValue);
 
             writer.Write(s.Contract);
             writer.Write(s.Expand);
-            writer.Write(s.Decay);
         });
     }
 
@@ -150,12 +140,10 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
                 int index = reader.Read7BitEncodedInt();
 
                     // Load the color from the packed value.
-                Color supernovaColor = new(reader.ReadUInt32());
-
-                float nebulaHue = reader.ReadSingle();
+                Color nebulaColor = new(reader.ReadUInt32());
 
                     // Create a new active supernova.
-                Supernova s = new(Stars[index], supernovaColor, nebulaHue);
+                Supernova s = new(Stars[index], nebulaColor);
 
                 float contract = reader.ReadSingle();
                 float expand = reader.ReadSingle();
@@ -163,7 +151,6 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
 
                 s.Contract = contract;
                 s.Expand = expand;
-                s.Decay = decay;
 
                 AddStarModifier(su => s, index);
             }

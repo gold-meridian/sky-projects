@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using ZenSkies.Core.Utils;
 using Star = ZenSkies.Common.DataStructures.Star;
@@ -9,42 +11,37 @@ public sealed class Supernova : IStarModifier
 {
     #region Private Fields
 
-    private const float Increment = .003f;
-
-    private const float ContractMultiplier = 1.25f;
-    private const float ExpandMultiplier = .55f;
-    private const float DecayMultiplier = .035f;
+    private const float ContractIncrement = .002f;
+    private const float ExpandIncrement = .0005f;
 
     private const float MinStarScale = .3f;
     private const float MaxStarScale = 1.25f;
 
-    private const float SmallMultiplier = 1.5f;
-    private const float BigMultiplier = .5f;
+    private const float SmallSpeedMultiplier = 1.5f;
+    private const float BigSpeedMultiplier = .5f;
 
-    private const float MinAlpha = .25f;
-    private const float MaxAlpha = 1f;
-
-    private const float Scale = .04f;
-
-    private readonly Color EndingColor = Color.White;
-
-    private readonly float Multiplier;
+    private readonly float SpeedMultiplier;
 
     private readonly Color StartingColor;
+    private readonly Color EndingColor = Color.White;
+
     private readonly float StartingScale;
+
+    private const float FlareWaveFrequency = .1f;
+    private const float FlareWaveAmplitude = .2f;
+
+    private static readonly Vector2 FlareSize = new(.8f, .15f);
 
     #endregion
 
     #region Public Properties
 
-    public Color SupernovaColor { get; private init; }
-    public float NebulaHue { get; private init; }
+    public Color NebulaColor { get; private init; }
 
     public SupernovaState State { get; private set; }
 
     public float Contract { get; set; }
     public float Expand { get; set; }
-    public float Decay { get; set; }
 
     public bool IsActive { get; set; }
 
@@ -55,24 +52,18 @@ public sealed class Supernova : IStarModifier
     /// <param name="target">The <see cref="Star"/> that this supernova belongs to; will be modified during updating.</param>
     /// <param name="supernovaColor">The color of the inital explosion effect.</param>
     /// <param name="nebulaHue">The hue of the resulting nebula(e).</param>
-    public Supernova(Star star, Color? supernovaColor = null, float nebulaHue = -1f)
+    public Supernova(Star star, Color? nebulaColor = null)
     {
         StartingColor = star.Color;
         StartingScale = star.Scale;
 
-            // Have smaller stars explode faster.
-        Multiplier = Utils.Remap(star.Scale, MinStarScale, MaxStarScale, SmallMultiplier, BigMultiplier);
+            // Smaller stars should explode faster.
+        SpeedMultiplier = Utils.Remap(star.Scale, MinStarScale, MaxStarScale, SmallSpeedMultiplier, BigSpeedMultiplier);
 
-        SupernovaColor = supernovaColor ?? star.Color;
-
-        if (nebulaHue == -1f)
-            nebulaHue = Main.rand.NextFloat();
-
-        NebulaHue = nebulaHue;
+        NebulaColor = nebulaColor ?? Utilities.HSVToColor(Main.rand.NextFloat());
 
         Contract = 0f;
         Expand = 0f;
-        Decay = 0f;
 
         IsActive = true;
     }
@@ -87,20 +78,21 @@ public sealed class Supernova : IStarModifier
         {
             SupernovaState.Contracting => UpdateContracting(ref star),
             SupernovaState.Expanding => UpdateExpanding(),
-            _ => SupernovaState.Complete
+            _ => UpdateComplete()
         };
     }
 
     private SupernovaState UpdateContracting(ref Star star)
     {
-        Contract += Increment * ContractMultiplier * Multiplier;
+        Contract += ContractIncrement * SpeedMultiplier;
         Contract = Utilities.Saturate(Contract);
 
-        float colorInterpolator = Easings.OutQuint(Contract);
+            // Have the start fade to white.
+        float colorInterpolator = MathF.Sin(Contract * MathHelper.Pi);
         star.Color = Color.Lerp(StartingColor, EndingColor, colorInterpolator);
 
-            // Have the star increase in scale slightly before shrinking.
-        float scaleMultiplier = Easings.OutBack(1 - Contract, 7);
+            // Have the star quickly fade out allowing the flare to take prominence.
+        float scaleMultiplier = Easings.InCubic(1 - Contract);
         star.Scale = StartingScale * scaleMultiplier;
 
         if (Contract < 1f)
@@ -113,15 +105,17 @@ public sealed class Supernova : IStarModifier
 
     private SupernovaState UpdateExpanding()
     {
-        Expand += Increment * ExpandMultiplier * Multiplier;
+        Expand += ExpandIncrement * SpeedMultiplier;
         Expand = Utilities.Saturate(Expand);
 
-        Decay += Increment * DecayMultiplier * Multiplier;
-        Decay = Utilities.Saturate(Decay);
-
-        if (Expand < 1f || Decay < 1f)
+        if (Expand < 1f)
             return SupernovaState.Expanding;
 
+        return SupernovaState.Complete;
+    }
+
+    private SupernovaState UpdateComplete()
+    {
         IsActive = false;
 
         return SupernovaState.Complete;
@@ -133,38 +127,39 @@ public sealed class Supernova : IStarModifier
 
     public void Draw(SpriteBatch spriteBatch, GraphicsDevice device, ref Star star, float alpha, float rotation)
     {
-        if (State == SupernovaState.Contracting)
-            return;
-
         Vector2 position = star.Position;
-        rotation = star.Rotation + rotation;
 
-        SkyEffects.Supernova.Hue = NebulaHue;
-        SkyEffects.Supernova.ExplosionColor = SupernovaColor.ToVector4();
+        float scale = StartingScale;
 
-        SkyEffects.Supernova.Expand = Expand;
-        SkyEffects.Supernova.Decay = Decay;
+        Color color = star.Color;
 
-        SkyEffects.Supernova.GlobalTime = Main.GlobalTimeWrappedHourly;
+        if (State == SupernovaState.Contracting)
+            DrawFlare(spriteBatch, position, color, scale, rotation);
+    }
 
-            // Arbitrary noise offset.
-        SkyEffects.Supernova.Offset = position;
-
-            // Textures[1] is reserved for Realistic Sky's atmosphere effect.
-        device.Textures[2] = SkyTextures.SupernovaNoise[1];
-        device.SamplerStates[2] = SamplerState.PointWrap;
-
-        SkyEffects.Supernova.Apply();
-
-        Texture2D texture = SkyTextures.SupernovaNoise[0];
+    private void DrawFlare(SpriteBatch spriteBatch, Vector2 position, Color color, float scale, float rotation)
+    {
+        Texture2D texture = StarTextures.FourPointedStar;
 
         Vector2 origin = texture.Size() * .5f;
 
-        Color color = SupernovaColor * Utils.Remap(alpha, 0, 1, MinAlpha, MaxAlpha);
+            // Pulse the flare out smoothly.
+        float pulse = MathF.Sin(Contract * MathHelper.Pi);
+        scale *= pulse;
 
-        float scale = Scale * StartingScale;
+            // Subtle triangle wave to make it feel chaotic.
+        float time = Main.GlobalTimeWrappedHourly * 8f;
 
-        spriteBatch.Draw(texture, position, null, color, rotation, origin, scale, SpriteEffects.None, 0f);
+        float wave = MathF.Abs((time % 2) - 1f) * .05f * Easings.InCubic(pulse);
+        wave += 1;
+        scale *= wave;
+
+            // Flare will be longer horizontally.
+        Vector2 size = scale * FlareSize;
+
+        color.A = 0;
+
+        spriteBatch.Draw(texture, position, null, color, rotation, origin, size, SpriteEffects.None, 0f);
     }
 
     #endregion

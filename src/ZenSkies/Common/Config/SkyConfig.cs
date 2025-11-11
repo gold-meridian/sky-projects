@@ -44,7 +44,7 @@ public sealed class SkyConfig : ModConfig
 
     [Header("Stars")]
 
-    [DefaultValue(StarVisual.Vanilla)]
+    [DefaultValue(StarVisual.Random)]
     [CustomModConfigItem(typeof(StarEnumElement))]
     public StarVisual StarStyle;
 

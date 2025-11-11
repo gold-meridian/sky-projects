@@ -7,7 +7,6 @@ using Terraria.GameContent;
 using Terraria.ModLoader;
 using ZenSkies.Common.Config;
 using ZenSkies.Core;
-using ZenSkies.Core.DataStructures;
 using ZenSkies.Core.Exceptions;
 using ZenSkies.Core.ModCall;
 using ZenSkies.Core.Utils;
