@@ -27,10 +27,10 @@ public sealed class Supernova : IStarModifier
 
     private readonly float StartingScale;
 
-    private const float FlareWaveFrequency = .1f;
-    private const float FlareWaveAmplitude = .2f;
+    private const float FlareWaveFrequency = 8f;
+    private const float FlareWaveAmplitude = .06f;
 
-    private static readonly Vector2 FlareSize = new(.8f, .15f);
+    private static readonly Vector2 FlareSize = new(.9f, .17f);
 
     #endregion
 
@@ -148,9 +148,9 @@ public sealed class Supernova : IStarModifier
         scale *= pulse;
 
             // Subtle triangle wave to make it feel chaotic.
-        float time = Main.GlobalTimeWrappedHourly * 8f;
+        float time = Main.GlobalTimeWrappedHourly * FlareWaveFrequency;
 
-        float wave = MathF.Abs((time % 2) - 1f) * .05f * Easings.InCubic(pulse);
+        float wave = MathF.Abs((time % 2) - 1f) * FlareWaveAmplitude * Easings.InCubic(pulse);
         wave += 1;
         scale *= wave;
 
