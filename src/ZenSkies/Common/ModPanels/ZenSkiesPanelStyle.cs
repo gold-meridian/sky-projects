@@ -177,8 +177,11 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
     }
 
         // Remove the panel behind the enable toggle.
-    public override Dictionary<TextureKind, Asset<Texture2D>> TextureOverrides { get; } =
-         new() { {TextureKind.InnerPanel, MiscTextures.Invis} };
+    public override Dictionary<TextureKind, Asset<Texture2D>> TextureOverrides { get; } = new()
+         {
+             {TextureKind.InnerPanel, MiscTextures.Invis},
+             {TextureKind.Deps, PanelStyleTextures.DepsButton}
+         };
 
     public override UIImage? ModifyModIcon(UIModItem element, UIImage modIcon, ref int modIconAdjust) => null;
 
