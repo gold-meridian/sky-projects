@@ -135,7 +135,7 @@ public record struct WindParticle : IParticle
             TriangleStripBuilder.BuildPath(positions,
             t => MathF.Sin(t * MathHelper.Pi) * brightness * WidthAmplitude,
             t => color,
-            smoothingSubdivisions: 3);
+            smoothingSubdivisions: 1);
 
         if (vertices.Length > 3)
             device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertices, 0, vertices.Length - 2);
