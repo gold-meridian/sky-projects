@@ -123,9 +123,11 @@ public class ColorInputFields : UIElement
 
     private void AcceptRGB(InputField field, int component)
     {
+        string text = field.Text;
+
         field.Text = string.Empty;
 
-        if (!int.TryParse(field.Text, out int value))
+        if (!int.TryParse(text, out int value))
             return;
 
         Color = component switch
@@ -157,7 +159,7 @@ public class ColorInputFields : UIElement
         RGBInputs[i].WhitelistedChars = AllowedRGBChars;
 
         RGBInputs[i].OnEnter +=
-            (f) => AcceptRGB(f, i);
+            f => AcceptRGB(f, i);
 
         RGBInputs[i].BackgroundColor = panelColor ?? RGBInputs[i].BackgroundColor;
 

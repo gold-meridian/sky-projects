@@ -14,13 +14,15 @@ public sealed class ColorSquare : UIElement
 
     private static readonly Color Outline = new(215, 215, 215);
 
+    private float hue;
+
+    private Vector2 pickerPosition;
+
+    private Color color;
+
     #endregion
 
     #region Public Fields
-
-    public float Hue;
-
-    public Vector2 PickerPosition;
 
     public bool IsHeld;
 
@@ -30,16 +32,40 @@ public sealed class ColorSquare : UIElement
 
     #region Public Properties
 
+    public float Hue
+    {
+        get => hue;
+        set
+        {
+            color = Utilities.HSVToColor(new(value, PickerPosition.X, 1 - PickerPosition.Y));
+
+            hue = value;
+        }
+    }
+
+    public Vector2 PickerPosition
+    {
+        get => pickerPosition;
+        set
+        {
+            color = Utilities.HSVToColor(new(Hue, value.X, 1 - value.Y));
+
+            pickerPosition = value;
+        }
+    }
+
     public Color Color
     {
-        get => Utilities.HSVToColor(new(Hue, PickerPosition.X, 1 - PickerPosition.Y));
-        set 
+        get => color;
+        set
         {
             Vector3 hsl = Utilities.ColorToHSV(value);
 
-            Hue = hsl.X;
+            hue = hsl.X;
 
-            PickerPosition = new(hsl.Y, 1 - hsl.Z);
+            pickerPosition = new(hsl.Y, 1 - hsl.Z);
+
+            color = value;
         }
     }
 

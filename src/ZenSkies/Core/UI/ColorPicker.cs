@@ -68,7 +68,8 @@ public sealed class ColorPicker : UIElement
     {
         base.Update(gameTime);
 
-        Picker.Hue = HueSlider.Ratio;
+        if (Picker.Hue != HueSlider.Ratio)
+            Picker.Hue = HueSlider.Ratio;
 
         Picker.Mute = Mute;
         HueSlider.Mute = Mute;
