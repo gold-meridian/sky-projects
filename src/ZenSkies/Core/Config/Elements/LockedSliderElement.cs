@@ -75,6 +75,7 @@ public abstract class LockedSliderElement<T> : PrimitiveRangeElement<T>, ILocked
         if (IngameOptions.inBar || rightLock == this)
         {
             rightHover = this;
+
             if (PlayerInput.Triggers.Current.MouseLeft && rightLock == this)
                 Proportion = ratio;
         }
@@ -102,7 +103,7 @@ public abstract class LockedSliderElement<T> : PrimitiveRangeElement<T>, ILocked
             colorBar.Width,
             colorBar.Height);
 
-        bool isHovering = rectangle.Contains(Utilities.MousePosition) || rightLock == this;
+        bool isHovering = rectangle.Contains(Utilities.UIMousePosition) || rightLock == this;
 
         if (rightLock != this && rightLock is not null || IsLocked)
             isHovering = false;

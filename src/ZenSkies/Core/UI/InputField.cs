@@ -178,7 +178,7 @@ public class InputField : UIPanel
         if (Text == string.Empty)
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, font, Hint, position, Color.Gray, 0f, origin, Vector2.One);
 
-        spriteBatch.SlowDrawStringWithShadow(font, Text, position, Color.White, origin, Vector2.One, out MousePosition, drawBlinker, Input.CursorPositon);
+        spriteBatch.SlowDrawStringWithShadow(Utilities.UIMousePosition, font, Text, position, Color.White, origin, Vector2.One, out MousePosition, drawBlinker, Input.CursorPositon);
 
         if (!IsWriting)
             return;

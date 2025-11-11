@@ -155,7 +155,9 @@ public static partial class Utilities
 
     #region Text
 
-    public static void SlowDrawStringWithShadow(this SpriteBatch spriteBatch,
+    public static void SlowDrawStringWithShadow(
+        this SpriteBatch spriteBatch,
+        Vector2 mousePosition,
         DynamicSpriteFont font,
         string text,
         Vector2 position,
@@ -187,14 +189,14 @@ public static partial class Utilities
 
             Vector2 charSize = font.MeasureChar(c, first, lastKerning, out lastKerning);
 
-            if (MousePosition.X >= position.X && MousePosition.X <= position.X + charSize.X)
-                hoveredChar = MousePosition.X >= position.X + (charSize.X * .5f) ? i + 1 : i;
+            if (mousePosition.X >= position.X && mousePosition.X <= position.X + charSize.X)
+                hoveredChar = mousePosition.X >= position.X + (charSize.X * .5f) ? i + 1 : i;
 
             position.X += font.MeasureChar(c, first, lastKerning, out lastKerning).X;
             first = false;
         }
 
-        if (MousePosition.X >= position.X)
+        if (mousePosition.X >= position.X)
             hoveredChar = text.Length;
 
         if (drawBlinker &&
