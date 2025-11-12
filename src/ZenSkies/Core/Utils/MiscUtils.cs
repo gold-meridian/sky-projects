@@ -64,6 +64,10 @@ public static partial class Utilities
     {
         Color output = new();
 
+            // Filter the starting hash.
+        if (hexString.StartsWith('#'))
+            hexString = hexString[1..];
+
         if (uint.TryParse(hexString, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out uint hex))
         {
             uint r = (hex >> 16) & 0xFFu;

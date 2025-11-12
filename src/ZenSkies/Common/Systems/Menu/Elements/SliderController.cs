@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.UI;
 using ZenSkies.Core.UI;
 
 namespace ZenSkies.Common.Systems.Menu.Elements;
@@ -15,7 +14,7 @@ public abstract class SliderController : MenuController
 
     #region Public Fields
 
-    public readonly UISlider? Slider;
+    public UISlider? Slider;
 
     #endregion
 
@@ -30,67 +29,26 @@ public abstract class SliderController : MenuController
 
     #endregion
 
-    public SliderController()
-        : base()
+    #region Initialization
+
+    public override void OnInitialize()
     {
+        base.OnInitialize();
+
         Height.Set(DefaultHeight, 0f);
 
         Slider = new();
 
-        Slider.Top.Set(35f, 0f);
+        Slider.Top.Set(30f, 0f);
 
         Slider.InnerColor = InnerColor;
-
-        MenuImageButton leftButton = new(ButtonTextures.ArrowLeft)
-        {
-            HAlign = 0f
-        };
-
-        leftButton.Width.Set(14f, 0f);
-        leftButton.Height.Set(14f, 0f);
-        leftButton.Top.Set(16f, 0f);
-
-        leftButton.OnLeftMouseDown += (evt, listeningElement) => 
-        { 
-            Slider.Ratio = 0f;
-
-            Modifying = MinRange;
-
-            OnSet();
-            Refresh();
-        };
-
-        leftButton.OnMouseOver += DisableHoveringWhileGrabbingSunOrMoon;
-
-        MenuImageButton rightButton = new(ButtonTextures.ArrowRight)
-        {
-            HAlign = 1f
-        };
-
-        rightButton.Width.Set(14f, 0f);
-        rightButton.Height.Set(14f, 0f);
-        rightButton.Top.Set(16f, 0f);
-
-        rightButton.OnLeftMouseDown += (evt, listeningElement) => 
-        {
-            Slider.Ratio = 1f;
-
-            Modifying = MaxRange;
-
-            OnSet();
-            Refresh();
-        };
-
-        rightButton.OnMouseOver += DisableHoveringWhileGrabbingSunOrMoon;
-
-        Append(leftButton);
-        Append(rightButton);
 
         Append(Slider);
     }
 
-    private void DisableHoveringWhileGrabbingSunOrMoon(UIMouseEvent evt, UIElement listeningElement) =>
-        listeningElement.IsMouseHovering = !Main.alreadyGrabbingSunOrMoon;
+    #endregion
+
+    #region Updating
 
     public override void Update(GameTime gameTime)
     {
@@ -109,6 +67,8 @@ public abstract class SliderController : MenuController
         else
             Slider.Ratio = Utils.Remap(Modifying, MinRange, MaxRange, 0, 1);
     }
+
+    #endregion
 
     public virtual void OnSet() { }
 }

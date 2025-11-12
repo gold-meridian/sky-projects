@@ -60,6 +60,8 @@ public abstract class MenuController : UIPanel, ILocalizedModType, ILoadable
 
     public override void OnInitialize()
     {
+        RemoveAllChildren();
+
         UIName = new(DisplayName)
         {
             HAlign = .5f

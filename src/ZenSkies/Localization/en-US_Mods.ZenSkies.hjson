@@ -37,3 +37,7 @@ Configs: {
 		Press <right> on points to remove them.
 		'''
 }
+
+Copy: Copy
+Paste: Paste
+Reset: Reset

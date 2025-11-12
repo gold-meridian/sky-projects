@@ -38,7 +38,7 @@ public class GradientElement : DropDownConfigElement<Gradient>
 
     protected override void OnExpand()
     {
-        float margin = 10;
+        const float margin = 10;
 
         #region Slider
 

@@ -8,6 +8,6 @@ CloudDensity.DisplayName: Cloud Density
 
 ButtonColor: {
 	DisplayName: Menu Button Colors
-	ColorDisplayHover: Button Color (<right> to reset.)
-	HoverColorDisplayHover: Button Hover Color (<right> to reset.)
+	ColorButtonName: Normal
+	HoverColorButtonName: Hover
 }

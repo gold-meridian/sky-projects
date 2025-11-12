@@ -48,22 +48,22 @@ public sealed class MenuControllerState : UIState
             // Setup the container panel.
         Panel = new();
 
-        Panel.Width.Set(386f, 0f);
+        Panel.Width.Set(410f, 0f);
         Panel.MaxWidth.Set(0f, 0.8f);
-        Panel.MinWidth.Set(374f, 0f);
+        Panel.MinWidth.Set(400f, 0f);
 
-        Panel.Height.Set(500f, 0f);
+        Panel.Height.Set(600f, 0f);
         Panel.MaxHeight.Set(0f, 1f);
-        Panel.MinHeight.Set(200f, 0f);
+        Panel.MinHeight.Set(510f, 0f);
 
         Panel.Top.Set(Bottom.Y - Panel.Height.GetValue(dims.Height) - VerticalGap, 0f);
-        Panel.Left.Set(Bottom.X - Panel.Width.GetValue(dims.Width) * 0.5f, 0f);
+        Panel.Left.Set(Bottom.X - Panel.Width.GetValue(dims.Width) * .5f, 0f);
 
         Append(Panel);
 
-        UIText header = new(Language.GetText(Header), 0.5f, true)
+        UIText header = new(Language.GetText(Header), .5f, true)
         {
-            HAlign = 0.5f
+            HAlign = .5f
         };
 
         Panel.Append(header);
@@ -74,7 +74,7 @@ public sealed class MenuControllerState : UIState
             HAlign = 1f
         };
 
-        ResetButton.Width.Set(24f, 0f);
+        ResetButton.Width.Set(20f, 0f);
         ResetButton.Height.Set(20f, 0f);
 
         ResetButton.OnLeftMouseDown += ClickReset;

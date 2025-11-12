@@ -1,11 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoMod.Cil;
+using ReLogic.OS;
 using System;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.UI;
+using Terraria.UI;
 using ZenSkies.Common.Config;
 using ZenSkies.Common.Systems.Menu.Elements;
 using ZenSkies.Core;
@@ -34,15 +38,18 @@ public sealed class ButtonColorController : MenuController
 
     private ColorPicker Picker;
 
-    private HoverImageButton ColorDisplay;
-    private HoverImageButton HoverColorDisplay;
+    private UITextPanel<LocalizedText> ColorButton;
+    private UITextPanel<LocalizedText> HoverColorButton;
 
     private static bool SettingHover;
 
-    private const string ColorDisplayHoverKey = "ColorDisplayHover";
-    private const string HoverColorDisplayHoverKey = "HoverColorDisplayHover";
+    private const string ColorButtonNameKey = "ColorButtonName";
 
-    private static readonly Color Outline = new(215, 215, 215);
+    private const string HoverColorButtonNameKey = "HoverColorButtonName";
+
+    private const string CopyKey = "Mods.ZenSkies.Copy";
+    private const string PasteKey = "Mods.ZenSkies.Paste";
+    private const string ResetKey = "Mods.ZenSkies.Reset";
 
     #endregion
 
@@ -55,11 +62,11 @@ public sealed class ButtonColorController : MenuController
 
     #region Private Properties
 
-    private LocalizedText ColorDisplayHover =>
-        this.GetLocalization(ColorDisplayHoverKey);
+    private LocalizedText ColorButtonName =>
+        this.GetLocalization(ColorButtonNameKey);
 
-    private LocalizedText HoverColorDisplayHover =>
-        this.GetLocalization(HoverColorDisplayHoverKey);
+    private LocalizedText HoverColorButtonName =>
+        this.GetLocalization(HoverColorButtonNameKey);
 
     private static ref Color Modifying =>
         ref SettingHover ? ref MenuConfig.Instance.MenuButtonHoverColor : ref MenuConfig.Instance.MenuButtonColor;
@@ -86,7 +93,8 @@ public sealed class ButtonColorController : MenuController
 
                 MenuControllerSystem.State?.Controllers?.ViewPosition += height;
             }
-            else if (!value)
+            else if (!value &&
+                Picker is not null)
             {
                 RemoveChild(Picker);
 
@@ -119,11 +127,13 @@ public sealed class ButtonColorController : MenuController
     {
         base.OnInitialize();
 
+        ShowPicker = false;
+
         Height.Set(DefaultHeight, 0f);
 
         Picker = new();
 
-        Picker.Top.Set(56f, 0f);
+        Picker.Top.Set(64f, 0f);
 
         Picker.Inputs.OnAcceptInput += (p) =>
         {
@@ -133,11 +143,8 @@ public sealed class ButtonColorController : MenuController
             Refresh();
         };
 
-        ColorDisplay = CreateColorDisplay(false);
-        HoverColorDisplay = CreateColorDisplay(true);
-
-        Append(ColorDisplay);
-        Append(HoverColorDisplay);
+        ColorButton = CreateColorButton(false);
+        HoverColorButton = CreateColorButton(true);
     }
 
     #endregion
@@ -149,8 +156,9 @@ public sealed class ButtonColorController : MenuController
         MainThreadSystem.Enqueue(() =>
             IL_Main.DrawMenu += ModifyColors);
 
-        _ = ColorDisplayHover;
-        _ = HoverColorDisplayHover;
+        _ = ColorButtonName;
+
+        _ = HoverColorButtonName;
     }
 
     public override void Unload() => 
@@ -309,58 +317,121 @@ public sealed class ButtonColorController : MenuController
             Refresh();
         }
 
-        ColorDisplay.InnerColor = ButtonColor;
-        HoverColorDisplay.InnerColor = ButtonHoverColor;
-
-        if (ShowPicker)
-        {
-            ColorDisplay.OuterColor = SettingHover ? Outline : Color.White;
-            HoverColorDisplay.OuterColor = SettingHover ? Color.White : Outline;
-        }
-        else
-        {
-            ColorDisplay.OuterColor = Outline;
-            HoverColorDisplay.OuterColor = Outline;
-        }
+        ColorButton.TextColor = ButtonColor;
+        HoverColorButton.TextColor = ButtonHoverColor;
     }
 
     public override void Recalculate()
     {
         base.Recalculate();
 
-        if (!ShowPicker)
-        {
-            Height.Set(75f, 0f);
-            return;
-        }
+        const float margin = 12f;
 
-        Height.Set(75 + Picker.Dimensions.Height + 16, 0f);
+        const float expandedMargin = 22f;
+
+        if (!ShowPicker)
+            Height.Set(DefaultHeight + margin, 0f);
+        else
+            Height.Set(DefaultHeight + Picker.Dimensions.Height + expandedMargin, 0f);
     }
 
     #endregion
 
     #region Private Methods
 
-    private HoverImageButton CreateColorDisplay(bool isHoverDisplay)
+    private UITextPanel<LocalizedText> CreateColorButton(bool isHover)
     {
-        HoverImageButton display = new(ButtonTextures.ColorInner, Color.White, ButtonTextures.ColorOuter);
+        UITextPanel<LocalizedText> button = new(isHover ? HoverColorButtonName : ColorButtonName);
 
-        display.Width.Set(28f, 0f);
-        display.Height.Set(28f, 0f);
+        button.SetPadding(6f);
 
-        display.Top.Set(20f, 0f);
+            // Reset the text with the new padding.
+        button.SetText(button._text);
 
-        display.Left.Set(-14f, isHoverDisplay ? .666f : .333f);
+        button.Top.Set(30f, 0f);
 
-        display.OnLeftMouseDown += (evt, listeningElement) => ShowColor(isHoverDisplay);
+        button.Left.Set(isHover ? -button.MinWidth.Pixels : 64f, isHover ? 1f : 0f);
 
-        display.OnRightMouseDown +=
-            (evt, listeningElement) => ResetColor(isHoverDisplay);
+        button._backgroundTexture = UITextures.FullPanel;
+        button._borderTexture = MiscTextures.Invis;
 
-        LocalizedText hover = isHoverDisplay ? HoverColorDisplayHover : ColorDisplayHover;
-        display.HoverText = Utilities.GetTextValueWithGlyphs(hover.Key);
+        button.BackgroundColor = UICommon.DefaultUIBlue;
 
-        return display;
+        button.OnLeftMouseDown +=
+            (evt, listeningElement) => ShowColor(isHover);
+
+        button.OnUpdate +=
+            affectedElement => UpdateButton(affectedElement, isHover);
+
+        button.OnMouseOver +=
+            (evt, listeningElement) => SoundEngine.PlaySound(SoundID.MenuTick);
+
+        Append(button);
+
+        const float buttonPadding = 2f;
+        const float buttonSize = 20f;
+        const float buttonTop = 35f;
+
+        #region Copy/Paste
+
+        MenuImageButton copyButton = new(ButtonTextures.Copy);
+
+        copyButton.Top.Set(buttonTop, 0f);
+
+        copyButton.Width.Set(buttonSize, 0f);
+        copyButton.Height.Set(buttonSize, 0f);
+
+        copyButton.Left.Set(isHover ? (-button.MinWidth.Pixels - ((buttonSize + buttonPadding) * 3)) : 0f, isHover ? 1f : 0f);
+
+        copyButton.OnLeftClick +=
+            (evt, listeningElement) => CopyColor(isHover);
+
+        copyButton.OnUpdate +=
+            affectedElement => HoverText(affectedElement, CopyKey);
+
+        Append(copyButton);
+
+        MenuImageButton pasteButton = new(ButtonTextures.Paste);
+
+        pasteButton.Top.Set(buttonTop, 0f);
+
+        pasteButton.Width.Set(buttonSize, 0f);
+        pasteButton.Height.Set(buttonSize, 0f);
+
+        pasteButton.Left.Set(isHover ? (-button.MinWidth.Pixels - ((buttonSize + buttonPadding) * 2)) : buttonSize + buttonPadding, isHover ? 1f : 0f);
+
+        pasteButton.OnLeftClick +=
+            (evt, listeningElement) => PasteColor(isHover);
+
+        pasteButton.OnUpdate +=
+            affectedElement => HoverText(affectedElement, PasteKey);
+
+        Append(pasteButton);
+
+        #endregion
+
+        #region Reset
+
+        MenuImageButton resetButton = new(ButtonTextures.Reset);
+
+        resetButton.Top.Set(buttonTop, 0f);
+
+        resetButton.Width.Set(buttonSize, 0f);
+        resetButton.Height.Set(buttonSize, 0f);
+
+        resetButton.Left.Set(isHover ? (-button.MinWidth.Pixels - buttonSize - buttonPadding) : ((buttonSize + buttonPadding) * 2), isHover ? 1f : 0f);
+
+        resetButton.OnLeftClick +=
+            (evt, listeningElement) => ResetColor(isHover);
+
+        resetButton.OnUpdate +=
+            affectedElement => HoverText(affectedElement, ResetKey);
+
+        Append(resetButton);
+
+        #endregion
+
+        return button;
     }
 
     private void ShowColor(bool isHover)
@@ -377,15 +448,78 @@ public sealed class ButtonColorController : MenuController
         SoundEngine.PlaySound(in SoundID.MenuOpen);
     }
 
-    private static void ResetColor(bool isHover)
+    private void UpdateButton(UIElement element, bool isHover)
+    {
+        if (element is not UIPanel panel)
+            return;
+
+        if (panel.IsMouseHovering ||
+            (SettingHover == isHover &&
+            ShowPicker))
+            panel.BackgroundColor = UICommon.DefaultUIBlue;
+        else
+            panel.BackgroundColor = UICommon.DefaultUIBlueMouseOver;
+    }
+
+    private static void HoverText(UIElement element, string key)
+    {
+        if (element.IsMouseHovering)
+            Main.instance.MouseText(Language.GetTextValue(key));
+    }
+
+    #region Copy/Paste
+
+    private static void CopyColor(bool isHover)
+    {
+        SettingHover = isHover;
+
+        if (!ModifyingUse)
+            return;
+
+        Platform.Get<IClipboard>().Value = Utils.Hex3(Modifying);
+
+        SoundEngine.PlaySound(in SoundID.MenuOpen);
+    }
+
+    private void PasteColor(bool isHover)
+    {
+        SettingHover = isHover;
+
+        if (!ModifyingUse)
+            return;
+
+        string hex = Platform.Get<IClipboard>().Value;
+
+        Color color = Utilities.FromHex3(hex);
+
+        if (color.A < byte.MaxValue)
+            return;
+
+        ModifyingUse = true;
+        Modifying = color;
+
+        Refresh();
+
+        SoundEngine.PlaySound(in SoundID.MenuOpen);
+    }
+
+    #endregion
+
+    #region Reset
+
+    private void ResetColor(bool isHover)
     {
         SettingHover = isHover;
 
         ModifyingUse = false;
         Modifying = Color.Red;
 
+        Refresh();
+
         SoundEngine.PlaySound(in SoundID.MenuOpen);
     }
+
+    #endregion
 
     #endregion
 }

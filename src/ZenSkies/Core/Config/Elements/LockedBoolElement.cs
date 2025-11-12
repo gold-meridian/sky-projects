@@ -14,8 +14,6 @@ public sealed class LockedBoolElement : ConfigElement<bool>, ILockedConfigElemen
 {
     #region Private Fields
 
-    private const string LockTooltipKey = "LockReason";
-
     private const float LockedBackgroundMultiplier = 0.4f;
 
     #endregion
