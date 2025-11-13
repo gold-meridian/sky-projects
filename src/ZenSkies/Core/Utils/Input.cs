@@ -27,14 +27,25 @@ public static class Input
 
     public static bool WritingText
     {
-        get => PlayerInput.WritingText;
-        set => PlayerInput.WritingText = value;
+        get
+        {
+            bool ret = field;
+
+            field = PlayerInput.WritingText;
+
+            return ret;
+        }
+        set
+        {
+            field = value;
+            PlayerInput.WritingText = value;
+        }
     }
 
     public static int CursorPositon { get; set; }
 
     public static string KeyStroke { get; private set; }
-        = "";
+        = string.Empty;
 
     public static int BackspaceTimer { get; private set; }
         = KeyDelay;
@@ -60,8 +71,7 @@ public static class Input
 
     private static void OnKeyStroke(char key)
     {
-        if (WritingText &&
-            KeyStroke.Length <= MaxStrokeLength)
+        if (KeyStroke.Length <= MaxStrokeLength)
             KeyStroke += key;
     }
 
@@ -217,7 +227,8 @@ public static class Input
                 // if (!Platform.IsWindows && Main.inputText.IsKeyDown(Keys.Escape) && !Main.oldInputText.IsKeyDown(Keys.Escape))
         if (Keys.Escape.JustPressed)
         {
-            WritingText = false;
+                // Definitly sketchy, but is designed to prevent UI from vanishing whilst typing.
+            PlayerInput.WritingText = false;
             return Escaped;
         }
 

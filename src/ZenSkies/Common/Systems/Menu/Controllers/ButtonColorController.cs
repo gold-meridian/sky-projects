@@ -87,11 +87,11 @@ public sealed class ButtonColorController : MenuController
 
                 Recalculate();
 
-                MenuControllerSystem.State?.Controllers?.Recalculate();
+                MenuControllerSystem.MenuControllerState.Controllers?.Recalculate();
 
                 float height = Height.Pixels - DefaultHeight;
 
-                MenuControllerSystem.State?.Controllers?.ViewPosition += height;
+                MenuControllerSystem.MenuControllerState.Controllers?.ViewPosition += height;
             }
             else if (!value &&
                 Picker is not null)
@@ -99,10 +99,10 @@ public sealed class ButtonColorController : MenuController
                 RemoveChild(Picker);
 
                 float height = Height.Pixels - DefaultHeight;
-                MenuControllerSystem.State?.Controllers?.ViewPosition -= height;
+                MenuControllerSystem.MenuControllerState.Controllers?.ViewPosition -= height;
 
                 Recalculate();
-                MenuControllerSystem.State?.Controllers?.Recalculate();
+                MenuControllerSystem.MenuControllerState.Controllers?.Recalculate();
             }
         }
     }

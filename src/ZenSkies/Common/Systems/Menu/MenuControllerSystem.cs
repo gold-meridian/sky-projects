@@ -21,6 +21,7 @@ using ZenSkies.Core;
 using ZenSkies.Core.Utils;
 using ZenSkies.Core.Exceptions;
 using static System.Reflection.BindingFlags;
+using Terraria.Initializers;
 
 namespace ZenSkies.Common.Systems.Menu;
 
@@ -40,6 +41,10 @@ namespace ZenSkies.Common.Systems.Menu;
 ///     <item>
 ///         <see cref="UpdateInterface"/><br/>
 ///         Hook to have our interface update on the menu, seeing as <see cref="ModSystem.UpdateUI"/> doesn't work on the main menu.
+///     </item>
+///     <item>
+///         <see cref="EscapeControllerUI"/><br/>
+///         Sets the interface's state to null on a 'back button command,' without having to use vanilla's menu interface.
 ///     </item>
 ///     <item>
 ///         <see cref="CloseMenuOnResolutionChanged"/><br/>
@@ -65,7 +70,6 @@ public sealed class MenuControllerSystem : ModSystem
     private static Hook? PatchSaveConfig;
 
     private static readonly UserInterface MenuControllerInterface = new();
-    private static readonly MenuControllerState MenuController = new();
 
     #endregion
 
@@ -76,15 +80,28 @@ public sealed class MenuControllerSystem : ModSystem
 
     public static readonly List<MenuController> Controllers = [];
 
+    public static readonly MenuControllerState MenuControllerState = new();
+
     #endregion
 
     #region Public Properties
 
-    public static MenuControllerState State => MenuController;
+    public static UIState? State
+    {
+        get => MenuControllerInterface.CurrentState;
+        set
+        {
+            MenuControllerInterface.SetState(value);
+            value?.OnInitialize();
+
+            if (value is null)
+                ConfigManager.Save(MenuConfig.Instance);
+        }
+    }
 
     public static bool InUI => MenuControllerInterface?.CurrentState is not null;
 
-    public static bool Hovering => InUI && MenuController?.Panel?.IsMouseHovering is true;
+    public static bool Hovering => InUI && MenuControllerState?.Panel?.IsMouseHovering is true;
 
     #endregion
 
@@ -102,6 +119,9 @@ public sealed class MenuControllerSystem : ModSystem
 
             IL_Main.DrawMenu += ModifyInteraction;
             On_Main.UpdateUIStates += UpdateInterface;
+
+            On_UILinksInitializer.FancyExit += EscapeControllerUI;
+
             Main.OnResolutionChanged += CloseMenuOnResolutionChanged;
         });
 
@@ -111,7 +131,7 @@ public sealed class MenuControllerSystem : ModSystem
             PatchSaveConfig = new(save,
                 RefreshOnSave);
 
-        MenuController?.Activate();
+        MenuControllerState?.Activate();
     }
 
     public override void Unload()
@@ -124,6 +144,9 @@ public sealed class MenuControllerSystem : ModSystem
 
             IL_Main.DrawMenu -= ModifyInteraction;
             On_Main.UpdateUIStates -= UpdateInterface;
+
+            On_UILinksInitializer.FancyExit -= EscapeControllerUI;
+
             Main.OnResolutionChanged -= CloseMenuOnResolutionChanged;
         });
 
@@ -206,13 +229,10 @@ public sealed class MenuControllerSystem : ModSystem
 
         if (hovering && Main.mouseLeft && Main.mouseLeftRelease)
         {
-            if (InUI)
-                ConfigManager.Save(MenuConfig.Instance);
+            MenuControllerState.Bottom = new(popupRect.Center.X, position.Y);
 
-            MenuControllerInterface?.SetState(InUI ? null : MenuController);
-            MenuController.Bottom = new(popupRect.Center.X, position.Y);
+            State = InUI ? null : MenuControllerState;
 
-            MenuController?.OnInitialize();
             SoundEngine.PlaySound(SoundID.MenuTick);
         }
     }
@@ -259,20 +279,35 @@ public sealed class MenuControllerSystem : ModSystem
 
     #region Updating
 
-    private void UpdateInterface(On_Main.orig_UpdateUIStates orig, GameTime gameTime)
+    private static void UpdateInterface(On_Main.orig_UpdateUIStates orig, GameTime gameTime)
     {
         if (InUI)
         {
             if (AllowedMenuModes.Contains(Main.menuMode))
                 MenuControllerInterface?.Update(gameTime);
             else
-            {
-                MenuControllerInterface?.SetState(null);
-                ConfigManager.Save(MenuConfig.Instance);
-            }
+                State = null;
         }
 
         orig(gameTime);
+    }
+
+    #endregion
+
+    #region FancyExit
+
+    private static void EscapeControllerUI(On_UILinksInitializer.orig_FancyExit orig)
+    {
+        orig();
+
+            // Should not exit interface while typing.
+        if (State is null ||
+            Input.WritingText)
+            return;
+
+        State = null;
+
+        SoundEngine.PlaySound(in SoundID.MenuClose);
     }
 
     #endregion
@@ -287,11 +322,8 @@ public sealed class MenuControllerSystem : ModSystem
             RefreshAll();
     }
 
-    private void CloseMenuOnResolutionChanged(Vector2 obj)
-    {
-        MenuControllerInterface?.SetState(null);
-        ConfigManager.Save(MenuConfig.Instance);
-    }
+    private void CloseMenuOnResolutionChanged(Vector2 obj) =>
+        State = null;
 
     public override void OnWorldUnload() =>
         RefreshAll();

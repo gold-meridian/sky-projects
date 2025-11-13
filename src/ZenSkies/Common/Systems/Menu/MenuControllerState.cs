@@ -135,6 +135,8 @@ public sealed class MenuControllerState : UIState
             return;
 
         Main.instance.MouseText(Hover);
+
+        Hover = string.Empty;
     }
 
     #endregion

@@ -50,12 +50,10 @@ public class InputField : UIPanel
 
     public bool IsWriting
     {
-        get => field;
-
+        get =>
+            field;
         set
         {
-            Input.WritingText = value;
-
             field = value;
         }
     }
@@ -120,12 +118,11 @@ public class InputField : UIPanel
             (Main.mouseLeft &&
             !IsMouseHovering);
 
-        if (clickedOff)
-        {
-            if (IsWriting)
-                OnEnter?.Invoke(this);
-            IsWriting = false;
-        }
+        if (!clickedOff || !IsWriting)
+            return;
+
+        OnEnter?.Invoke(this);
+        IsWriting = false;
     }
 
     #endregion
@@ -134,7 +131,7 @@ public class InputField : UIPanel
 
     private void HandleInput()
     {
-        Input.WritingText = IsWriting;
+        Input.WritingText = true;
 
         switch (Input.GetInput(Text, out string newText, false, BlacklistedChars, WhitelistedChars))
         {
