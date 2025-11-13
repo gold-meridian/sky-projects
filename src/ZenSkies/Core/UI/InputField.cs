@@ -48,15 +48,7 @@ public class InputField : UIPanel
 
     #region Public Properties
 
-    public bool IsWriting
-    {
-        get =>
-            field;
-        set
-        {
-            field = value;
-        }
-    }
+    public bool IsWriting { get; set; }
 
     #endregion
 
