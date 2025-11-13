@@ -18,19 +18,15 @@ namespace ZenSkies.Common.Systems.Compat;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="AddToggle"/><br/>
-///         Adds a small toggle in the style of a dropdown (▼ : ▲) to the main menu, on the right side of the button to change menu styles.
-///     </item>
-///     <item>
-///         <see cref="ModifyCoreToggle"/><br/>
-///         Disables interactions with the core menu toggle while hovering the controller interface.
-///     </item>
-///     <item>
-///         <see cref="ModifyButtons"/><br/>
-///         Disables interactions with main menu buttons while hovering the controller interface.<br/>
-///         Additonally modifies the color of the buttons.
-///     </item>
+///     <see cref="AddToggle"/><br/>
+///     Adds a small toggle in the style of a dropdown (▼ : ▲) to the main menu, on the right side of the button to change menu styles.
+///     <item/>
+///     <see cref="ModifyCoreToggle"/><br/>
+///     Disables interactions with the core menu toggle while hovering the controller interface.
+///     <item/>
+///     <see cref="ModifyButtons"/><br/>
+///     Disables interactions with main menu buttons while hovering the controller interface.<br/>
+///     Additonally modifies the color of the buttons.
 /// </list>
 /// </summary>
 [JITWhenModsEnabled("CoolerMenu")]

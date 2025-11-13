@@ -24,10 +24,8 @@ namespace ZenSkies.Common.ModPanels;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="ReorderUIModList"/><br/>
-///         Reorders <see cref="UIMods.modList"/> to be placed after all buttons.
-///     </item>
+///     <see cref="ReorderUIModList"/><br/>
+///     Reorders <see cref="UIMods.modList"/> to be placed after all buttons.
 /// </list>
 /// </summary>
 public sealed class ZenSkiesPanelStyle : ModPanelStyleExt

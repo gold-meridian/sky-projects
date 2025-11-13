@@ -19,10 +19,8 @@ namespace ZenSkies.Common.Systems.Sky.SunAndMoon;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="ModifyDrawing"/><br/>
-///         Injects vanilla drawing to capture a <see cref="SunAndMoonInfo"/> from the sun/moon.
-///     </item>
+///     <see cref="ModifyDrawing"/><br/>
+///     Injects vanilla drawing to capture a <see cref="SunAndMoonInfo"/> from the sun/moon.</item>
 /// </list>
 /// </summary>
 [Autoload(Side = ModSide.Client)]

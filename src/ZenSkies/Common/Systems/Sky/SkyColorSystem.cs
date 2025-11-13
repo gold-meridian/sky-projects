@@ -19,22 +19,17 @@ namespace ZenSkies.Common.Systems.Sky;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="LightingInMenu"/><br/>
-///         Allows <see cref="ModSystem.ModifySunLightColor"/> to run on the main menu using <see cref="ModifyInMenu"/>.
-///     </item>
-///     <item>
-///         <see cref="DrawBlackNonSolid"/><br/>
-///         Fixes multiple issues where DrawBlack would render over non-solid/edge tiles/walls.
-///     </item>
-///     <item>
-///         <see cref="DrawTilesNonSolid"/><br/>
-///         Forces non-solid/edge tiles to draw regardless of low light.
-///     </item>
-///     <item>
-///         <see cref="DrawWallsNonSolid"/><br/>
-///         Forces non-solid/edge walls to draw regardless of low light.
-///     </item>
+///     <see cref="LightingInMenu"/><br/>
+///     Allows <see cref="ModSystem.ModifySunLightColor"/> to run on the main menu using <see cref="ModifyInMenu"/>.
+///     <item/>
+///     <see cref="DrawBlackNonSolid"/><br/>
+///     Fixes multiple issues where DrawBlack would render over non-solid/edge tiles/walls.
+///     <item/>
+///     <see cref="DrawTilesNonSolid"/><br/>
+///     Forces non-solid/edge tiles to draw regardless of low light.
+///     <item/>
+///     <see cref="DrawWallsNonSolid"/><br/>
+///     Forces non-solid/edge walls to draw regardless of low light.
 /// </list>
 /// </summary>
 [Autoload(Side = ModSide.Client)]

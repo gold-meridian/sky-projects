@@ -30,30 +30,23 @@ namespace ZenSkies.Common.Systems.Menu;
 /// 
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="AddToggle"/><br/>
-///         Adds a small toggle in the style of a dropdown (▼ : ▲) to the main menu, on the right side of the button to change menu styles.
-///     </item>
-///     <item>
-///         <see cref="ModifyInteraction"/><br/>
-///         Disables interactions with main menu buttons while hovering the controller interface.
-///     </item>
-///     <item>
-///         <see cref="UpdateInterface"/><br/>
-///         Hook to have our interface update on the menu, seeing as <see cref="ModSystem.UpdateUI"/> doesn't work on the main menu.
-///     </item>
-///     <item>
-///         <see cref="EscapeControllerUI"/><br/>
-///         Sets the interface's state to null on a 'back button command,' without having to use vanilla's menu interface.
-///     </item>
-///     <item>
-///         <see cref="CloseMenuOnResolutionChanged"/><br/>
-///         Self-explanitory.
-///     </item>
-///     <item>
-///         <see cref="RefreshOnSave"/><br/>
-///         Likely redunant but refreshes controllers when the config is saved.
-///     </item>
+///     <see cref="AddToggle"/><br/>
+///     Adds a small toggle in the style of a dropdown (▼ : ▲) to the main menu, on the right side of the button to change menu styles.
+///     <item/>
+///     <see cref="ModifyInteraction"/><br/>
+///     Disables interactions with main menu buttons while hovering the controller interface.
+///     <item/>
+///     <see cref="UpdateInterface"/><br/>
+///     Hook to have our interface update on the menu, seeing as <see cref="ModSystem.UpdateUI"/> doesn't work on the main menu.
+///     <item/>
+///     <see cref="EscapeControllerUI"/><br/>
+///     Sets the interface's state to null on a 'back button command,' without having to use vanilla's menu interface.
+///     <item/>
+///     <see cref="CloseMenuOnResolutionChanged"/><br/>
+///     Self-explanitory.
+///     <item/>
+///     <see cref="RefreshOnSave"/><br/>
+///     Likely redunant but refreshes controllers when the config is saved.
 /// </list>
 /// </summary>
 [Autoload(Side = ModSide.Client)]

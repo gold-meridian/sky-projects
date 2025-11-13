@@ -13,12 +13,10 @@ namespace ZenSkies.Common.Systems.Menu.Controllers;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="ModifyMenuTime"/><br/>
-///         Modifies the speed of the time on the main menu, allowing time to run backwards.<br/>
-///         Additionally this allows for every available moon style (beyond vanilla's 8) to be used,
-///         as well as fixing a timeless bug that prevents the moon from reaching the waxing gibbous phase.
-///     </item>
+///     <see cref="ModifyMenuTime"/><br/>
+///     Modifies the speed of the time on the main menu, allowing time to run backwards.<br/>
+///     Additionally this allows for every available moon style (beyond vanilla's 8) to be used,
+///     as well as fixing a timeless bug that prevents the moon from reaching the waxing gibbous phase.
 /// </list>
 /// </summary>
 public sealed class TimeController : SliderController

@@ -17,10 +17,8 @@ namespace ZenSkies.Common.Systems.Background;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="CloudLighting"/><br/>
-///         Injects into vanilla sky drawing to apply a cloud lighting shader.
-///     </item>
+///     <see cref="CloudLighting"/><br/>
+///     Injects into vanilla sky drawing to apply a cloud lighting shader.
 /// </list>
 /// </summary>
 [Autoload(Side = ModSide.Client)]

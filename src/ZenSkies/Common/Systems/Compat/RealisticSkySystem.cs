@@ -33,26 +33,20 @@ namespace ZenSkies.Common.Systems.Compat;
 /// 
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="RemoveBias"/><br/>
-///         Removes the restriction on sun/moon orbit, allowing once again for it to be dragged on the menu.
-///     </item>
-///     <item>
-///         <see cref="StarRotation"/><br/>
-///         Corrects Realistic Sky's star matrix to use <see cref="StarSystem.StarRotation"/>.
-///     </item>
-///     <item>
-///         <see cref="GalaxyRotation"/><br/>
-///         Corrects Realistic Sky's galaxy renderer to rotate around the center of the sky with <see cref="StarSystem.StarRotation"/>..
-///     </item>
-///     <item>
-///         <see cref="CommonRequestsInvertedGravity"/>/<see cref="CommonShaderInvertedGravity"/> + <see cref="ModifySunPosition"/><br/>
-///         Corrects various <see cref="ARenderTargetContentByRequest"/>s/renderers to correctly account for inverted gravity.
-///     </item>
-///     <item>
-///         <see cref="DrawSky"/><br/>
-///         Bulk patch to skip/modify/replace some rendering.
-///     </item>
+///     <see cref="RemoveBias"/><br/>
+///     Removes the restriction on sun/moon orbit, allowing once again for it to be dragged on the menu.
+///     <item/>
+///     <see cref="StarRotation"/><br/>
+///     Corrects Realistic Sky's star matrix to use <see cref="StarSystem.StarRotation"/>.
+///     <item/>
+///     <see cref="GalaxyRotation"/><br/>
+///     Corrects Realistic Sky's galaxy renderer to rotate around the center of the sky with <see cref="StarSystem.StarRotation"/>..
+///     <item/>
+///     <see cref="CommonRequestsInvertedGravity"/>/<see cref="CommonShaderInvertedGravity"/> + <see cref="ModifySunPosition"/><br/>
+///     Corrects various <see cref="ARenderTargetContentByRequest"/>s/renderers to correctly account for inverted gravity.
+///     <item/>
+///     <see cref="DrawSky"/><br/>
+///     Bulk patch to skip/modify/replace some rendering.
 /// </list>
 /// </summary>
 [JITWhenModsEnabled("RealisticSky")]

@@ -15,10 +15,8 @@ namespace ZenSkies.Common.Systems.Menu;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="FlingSunAndMoonPostDraw"/><br/>
-///         Self-explanitory.
-///     </item>
+///     <see cref="FlingSunAndMoonPostDraw"/><br/>
+///     Self-explanitory.
 /// </list>
 /// </summary>
 [Autoload(Side = ModSide.Client)]

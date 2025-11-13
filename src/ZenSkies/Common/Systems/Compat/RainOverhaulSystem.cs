@@ -14,15 +14,12 @@ namespace ZenSkies.Common.Systems.Compat;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="UpdateRainShaders"/><br/>
-///         Manually update the rain shader when on the main menu.
-///     </item>
-///     <item>
-///         <see cref="ApplyNoiseTexture"/><br/>
-///         See <a href="https://github.com/supchyan/terraria-rain-overhaul/issues/1">this issue</a> for more information.<br/>
-///         TL;DR Rain Overhaul assumes the use of a vanilla noise texture.
-///     </item>
+///     <see cref="UpdateRainShaders"/><br/>
+///     Manually update the rain shader when on the main menu.
+///     <item/>
+///     <see cref="ApplyNoiseTexture"/><br/>
+///     See <a href="https://github.com/supchyan/terraria-rain-overhaul/issues/1">this issue</a> for more information.<br/>
+///     TL;DR Rain Overhaul assumes the use of a vanilla noise texture.
 /// </list>
 /// </summary>
 [JITWhenModsEnabled("RainOverhaul")]

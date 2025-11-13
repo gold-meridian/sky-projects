@@ -23,14 +23,11 @@ namespace ZenSkies.Common.Systems.Compat;
 /// 
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="DrawStars"/><br/>
-///         Draws our stars over the Macrocosm ones.
-///     </item>
-///     <item>
-///         <see cref="ReverseRotation"/><br/>
-///         Reverse the direction of the sun's orbit when <see cref="RedSunSystem.FlipSunAndMoon"/> is enabled.
-///     </item>
+///     <see cref="DrawStars"/><br/>
+///     Draws our stars over the Macrocosm ones.
+///     <item/>
+///     <see cref="ReverseRotation"/><br/>
+///     Reverse the direction of the sun's orbit when <see cref="RedSunSystem.FlipSunAndMoon"/> is enabled.
 /// </list>
 /// </summary>
 [JITWhenModsEnabled("Macrocosm", "SubworldLibrary")]

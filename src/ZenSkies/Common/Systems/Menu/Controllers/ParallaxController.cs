@@ -12,10 +12,8 @@ namespace ZenSkies.Common.Systems.Menu.Controllers;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="ChangeParallaxDirection"/><br/>
-///         Modifies the speed of the menu parallax.
-///     </item>
+///     <see cref="ChangeParallaxDirection"/><br/>
+///     Modifies the speed of the menu parallax.
 /// </list>
 /// </summary>
 public sealed class ParallaxController : SliderController

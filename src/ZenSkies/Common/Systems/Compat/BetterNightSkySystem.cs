@@ -27,27 +27,21 @@ namespace ZenSkies.Common.Systems.Compat;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="On_Main_DrawStarsInBackground"/><br/>
-///         Deliberately unapply this hook to use our star rendering.
-///     </item>
-///     <item>
-///         <see cref="JumpReset"/><br/>
-///         Fix the resetting of star types to not index a texture out of bounds;
-///         additionally stops the replacement of moon textures when the Sun and Moon rework is active.
-///     </item>
-///     <item>
-///         <see cref="JumpReplacement"/><br/>
-///         Stops moon textures from being replaced when the Sun and Moon rework is active.
-///     </item>
-///     <item>
-///         <see cref="NoReloading"/><br/>
-///         Allows the config controling the large moon texture in this mod to be swapped freely when the Sun and Moon rework is active.
-///     </item>
-///     <item>
-///         <see cref="IgnoreReload"/><br/>
-///         Fixes the config menu for the above.
-///     </item>
+///     <see cref="On_Main_DrawStarsInBackground"/><br/>
+///     Deliberately unapply this hook to use our star rendering.
+///     <item/>
+///     <see cref="JumpReset"/><br/>
+///     Fix the resetting of star types to not index a texture out of bounds;
+///     additionally stops the replacement of moon textures when the Sun and Moon rework is active.
+///     <item/>
+///     <see cref="JumpReplacement"/><br/>
+///     Stops moon textures from being replaced when the Sun and Moon rework is active.
+///     <item/>
+///     <see cref="NoReloading"/><br/>
+///     Allows the config controling the large moon texture in this mod to be swapped freely when the Sun and Moon rework is active.
+///     <item/>
+///     <see cref="IgnoreReload"/><br/>
+///     Fixes the config menu for the above.
 /// </list>
 /// </summary>
 [ExtendsFromMod("BetterNightSky")]

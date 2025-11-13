@@ -20,10 +20,8 @@ namespace ZenSkies.Common.Systems.Compat;
 /// 
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="SetPosition"/><br/>
-///         Makes the Lights and Shadows™ Godrays™ effect use an accurate sun/moon position.
-///     </item>
+///     <see cref="SetPosition"/><br/>
+///     Makes the Lights and Shadows™ Godrays™ effect use an accurate sun/moon position.
 /// </list>
 /// </summary>
 [JITWhenModsEnabled("Lights")]

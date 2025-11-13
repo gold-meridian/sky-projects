@@ -11,10 +11,8 @@ namespace ZenSkies.Common.Systems.Background.AmbientEntities;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="ModifyMeteorSpawn"/><br/>
-///         Replaces the vanilla ambient background meteor with <see cref="FancyMeteor"/> for special drawing.
-///     </item>
+///     <see cref="ModifyMeteorSpawn"/><br/>
+///     Replaces the vanilla ambient background meteor with <see cref="FancyMeteor"/> for special drawing.
 /// </list>
 /// </summary>
 [Autoload(Side = ModSide.Client)]

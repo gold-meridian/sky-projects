@@ -17,18 +17,14 @@ namespace ZenSkies.Common.Systems.Weather;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="SpawnMenuRain"/><br/>
-///         Allows rain to be spawned on the main menu.
-///     </item>
-///     <item>
-///         <see cref="DontDegradeRain"/><br/>
-///         Removes the check that causes rain to decay on the main menu.
-///     </item>
-///     <item>
-///         <see cref="RainWindAmbience"/><br/>
-///         Plays rain/wind ambience on the main menu, where its normally disabled.
-///     </item>
+///     <see cref="SpawnMenuRain"/><br/>
+///     Allows rain to be spawned on the main menu.
+///     <item/>
+///     <see cref="DontDegradeRain"/><br/>
+///     Removes the check that causes rain to decay on the main menu.
+///     <item/>
+///     <see cref="RainWindAmbience"/><br/>
+///     Plays rain/wind ambience on the main menu, where its normally disabled.
 /// </list>
 /// </summary>
 [Autoload(Side = ModSide.Client)]

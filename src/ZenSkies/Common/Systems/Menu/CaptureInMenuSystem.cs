@@ -12,17 +12,14 @@ namespace ZenSkies.Common.Systems.Menu;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="AllowCapturingOnMainMenu"/><br/>
-///         Allows screen shaders/filters to be applied on the main menu;
-///         <a href="https://github.com/tModLoader/tModLoader/pull/4796">this PR</a> is heavily based on this system as well as Retro Lighting Fix's;
-///         additionally note <a href="https://github.com/tModLoader/tModLoader/pull/4716#issuecomment-3300875862">this proposal</a> from Tyfyter.<br/>
-///         This is to be removed assuming screen shaders are allowed in some capacity on the main menu in the future.
-///     </item>
-///     <item>
-///         <see cref="DontDisableEffectsOnMenu"/><br/>
-///         Potentially dangerous, but allows for <see cref="Filter"/>s to be applied on the main menu without being automatically disabled.
-///     </item>
+///     <see cref="AllowCapturingOnMainMenu"/><br/>
+///     Allows screen shaders/filters to be applied on the main menu;
+///     <a href="https://github.com/tModLoader/tModLoader/pull/4796">this PR</a> is heavily based on this system as well as Retro Lighting Fix's;
+///     additionally note <a href="https://github.com/tModLoader/tModLoader/pull/4716#issuecomment-3300875862">this proposal</a> from Tyfyter.<br/>
+///     This is to be removed assuming screen shaders are allowed in some capacity on the main menu in the future.
+///     <item/>
+///     <see cref="DontDisableEffectsOnMenu"/><br/>
+///     Potentially dangerous, but allows for <see cref="Filter"/>s to be applied on the main menu without being automatically disabled.
 /// </list>
 /// </summary>
 [Autoload(Side = ModSide.Client)]

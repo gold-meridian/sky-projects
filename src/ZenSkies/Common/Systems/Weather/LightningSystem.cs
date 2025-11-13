@@ -13,10 +13,8 @@ namespace ZenSkies.Common.Systems.Weather;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="UpdateLightning"/><br/>
-///         Allows lightning strikes on the main menu during stormy weather.
-///     </item>
+///     <see cref="UpdateLightning"/><br/>
+///     Allows lightning strikes on the main menu during stormy weather.
 /// </list>
 /// </summary>
 public sealed class LightningSystem : ModSystem

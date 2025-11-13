@@ -15,10 +15,8 @@ namespace ZenSkies.Common.Systems.Sky.Space;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="ModifyInGameStarFall"/> + <see cref="ModifyInGameStarFall"/> + <see cref="ModifyFallingStarSpawn"/><br/>
-///         Modifies vanilla to spawn our shooting stars.
-///     </item>
+///     <see cref="ModifyInGameStarFall"/> + <see cref="ModifyInGameStarFall"/> + <see cref="ModifyFallingStarSpawn"/><br/>
+///     Modifies vanilla to spawn our shooting stars.
 /// </list>
 /// </summary>
 [Autoload(Side = ModSide.Client)]

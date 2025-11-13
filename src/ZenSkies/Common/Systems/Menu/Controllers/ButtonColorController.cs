@@ -24,10 +24,8 @@ namespace ZenSkies.Common.Systems.Menu.Controllers;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="ModifyColors"/><br/>
-///         Modifies the color of the main menu buttons.
-///     </item>
+///     <see cref="ModifyColors"/><br/>
+///     Modifies the color of the main menu buttons.
 /// </list>
 /// </summary>
 public sealed class ButtonColorController : MenuController

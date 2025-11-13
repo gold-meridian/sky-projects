@@ -23,10 +23,8 @@ namespace ZenSkies.Common.Systems.Compat;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="ModifyDrawing"/><br/>
-///         Reapplies <see cref="SunAndMoonSystem.ModifyDrawing"/> on <see cref="GeneralLightingIL.ChangePositionAndDrawDayMoon"/>
-///     </item>
+///     <see cref="ModifyDrawing"/><br/>
+///     Reapplies <see cref="SunAndMoonSystem.ModifyDrawing"/> on <see cref="GeneralLightingIL.ChangePositionAndDrawDayMoon"/>
 /// </list>
 /// </summary>
 [JITWhenModsEnabled("RedSunAndRealisticSky")]

@@ -10,14 +10,11 @@ namespace ZenSkies.Common.Systems.Compat;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="FancyLightingMod._Main_DrawSunAndMoon"/><br/>
-///         Unapply unwanted shader effect on the sun when the Sun and Moon Rework is active.
-///     </item>
-///     <item>
-///         <see cref="FancySkyRendering._Main_DrawStarsInBackground"/><br/>
-///         Reapply hook to allow it to take priority over <see cref="StarRendering.DrawStarsInBackground"/>.
-///     </item>
+///     <see cref="FancyLightingMod._Main_DrawSunAndMoon"/><br/>
+///     Unapply unwanted shader effect on the sun when the Sun and Moon Rework is active.
+///     <item/>
+///     <see cref="FancySkyRendering._Main_DrawStarsInBackground"/><br/>
+///     Reapply hook to allow it to take priority over <see cref="StarRendering.DrawStarsInBackground"/>.
 /// </list>
 /// </summary>
 [JITWhenModsEnabled("FancyLighting")]

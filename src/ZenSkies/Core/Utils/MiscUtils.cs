@@ -198,16 +198,13 @@ public static partial class Utilities
     #region Collections
 
     /// <param name="accending">
-    ///     <list type="bullet">
-    ///         <item>
-    ///             <term><see cref="false"/></term>
-    ///             The instance of <typeparamref name="T"/> should be found based on preceding order.
-    ///         </item>
-    ///         <item>
-    ///             <term><see cref="true"/></term>
-    ///             The instance of <typeparamref name="T"/> should be found based on accending order.
-    ///         </item>
-    ///     </list>
+    /// <list type="bullet">
+    ///     <term><see cref="false"/></term>
+    ///     The instance of <typeparamref name="T"/> should be found based on preceding order.
+    ///     <item/>
+    ///     <term><see cref="true"/></term>
+    ///     The instance of <typeparamref name="T"/> should be found based on accending order.
+    /// </list>
     /// </param>
     public static T CompareFor<T>(
         this IEnumerable<T> collection,
@@ -255,6 +252,7 @@ public static partial class Utilities
         return matching;
     }
 
+    /// <returns>Inclusive range between <paramref name="start"/> and <paramref name="end"/>.</returns>
     public static IEnumerable<char> Range(this char start, char end) =>
         Enumerable.Range(start, end - start + 1).Select(i => (char)i);
 

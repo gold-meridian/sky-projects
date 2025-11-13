@@ -23,21 +23,17 @@ namespace ZenSkies.Common.Systems.Menu;
 /// <summary>
 /// Edits and Hooks:
 /// <list type="bullet">
-///     <item>
-///         <see cref="LogoDrawing"/><br/>
-///         Forces the credits to draw after <see cref="ModMenu.PreDrawLogo"/>, and draws a lighting effect over the logo.<br/>
-///         The former fixes a bug where credits are hidden on mods that have <a href="https://i.imgur.com/IqsIGYT.png">obnoxious</a> menu backkgrounds;
-///         see <a href="https://github.com/tModLoader/tModLoader/pull/4716#issuecomment-3146423549">this comment</a> for more details.<br/>
-///         The latter only works on the default logo (tModLoader's.)
-///     </item>
-///     <item>
-///         <see cref="UncapMoonTextures"/><br/>
-///         Uncaps the vanilla moon styles allowed on <see cref="ModMenu"/>s. - Untested, may inline.
-///     </item>
-///     <item>
-///         <see cref="HideCredits"/><br/>
-///         Hides vanilla credits seeing as we draw them after <see cref="ModMenu.PreDrawLogo"/>.
-///     </item>
+///     <see cref="LogoDrawing"/><br/>
+///     Forces the credits to draw after <see cref="ModMenu.PreDrawLogo"/>, and draws a lighting effect over the logo.<br/>
+///     The former fixes a bug where credits are hidden on mods that have <a href="https://i.imgur.com/IqsIGYT.png">obnoxious</a> menu backkgrounds;
+///     see <a href="https://github.com/tModLoader/tModLoader/pull/4716#issuecomment-3146423549">this comment</a> for more details.<br/>
+///     The latter only works on the default logo (tModLoader's.)
+///     <item/>
+///     <see cref="UncapMoonTextures"/><br/>
+///     Uncaps the vanilla moon styles allowed on <see cref="ModMenu"/>s. - Untested, may inline.
+///     <item/>
+///     <see cref="HideCredits"/><br/>
+///     Hides vanilla credits seeing as we draw them after <see cref="ModMenu.PreDrawLogo"/>.
 /// </list>
 /// </summary>
 [Autoload(Side = ModSide.Client)]
