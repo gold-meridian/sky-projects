@@ -302,7 +302,7 @@ public sealed class MenuControllerSystem : ModSystem
 
             // Should not exit interface while typing.
         if (State is null ||
-            Input.WritingText)
+            Input.WasWritingText)
             return;
 
         State = null;

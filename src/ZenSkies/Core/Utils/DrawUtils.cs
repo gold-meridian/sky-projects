@@ -155,58 +155,15 @@ public static partial class Utilities
 
     #region Text
 
-    public static void SlowDrawStringWithShadow(
-        this SpriteBatch spriteBatch,
-        Vector2 mousePosition,
+    public static void DrawString(this SpriteBatch spriteBatch,
         DynamicSpriteFont font,
         string text,
         Vector2 position,
         Color color,
+        float rotation,
         Vector2 origin,
-        Vector2 scale,
-        out int hoveredChar,
-        bool drawBlinker = false,
-        int blinkerIndex = -1)
-    {
-        bool first = true;
-        float lastKerning = 0f;
-
-        hoveredChar = 0;
-
-        for (int i = 0; i < text.Length; i++)
-        {
-            char c = text[i];
-
-            spriteBatch.DrawStringWithShadow(font, c.ToString(), position, color, Color.Black, 0f, origin, scale);
-
-            if (drawBlinker &&
-                i == blinkerIndex)
-            {
-                Vector2 blinkerPosition = new(position.X - (2f * scale.X), position.Y);
-
-                spriteBatch.DrawStringWithShadow(font, "|", blinkerPosition, color, Color.Black, 0f, origin, scale);
-            }
-
-            Vector2 charSize = font.MeasureChar(c, first, lastKerning, out lastKerning);
-
-            if (mousePosition.X >= position.X && mousePosition.X <= position.X + charSize.X)
-                hoveredChar = mousePosition.X >= position.X + (charSize.X * .5f) ? i + 1 : i;
-
-            position.X += font.MeasureChar(c, first, lastKerning, out lastKerning).X;
-            first = false;
-        }
-
-        if (mousePosition.X >= position.X)
-            hoveredChar = text.Length;
-
-        if (drawBlinker &&
-            blinkerIndex >= text.Length)
-        {
-            Vector2 blinkerPosition = new(position.X - (2f * scale.X), position.Y);
-
-            spriteBatch.DrawStringWithShadow(font, "|", blinkerPosition, color, Color.Black, 0f, origin, scale);
-        }
-    }
+        Vector2 scale) =>
+        spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
 
     public static void DrawStringWithShadow(this SpriteBatch spriteBatch,
         DynamicSpriteFont font,
@@ -219,8 +176,11 @@ public static partial class Utilities
         Vector2 scale,
         float spread = 2f)
     {
-        for (int i = 0; i < ChatManager.ShadowDirections.Length; i++)
-            spriteBatch.DrawString(font, text, position + ChatManager.ShadowDirections[i] * spread, shadowColor, rotation, origin, scale, SpriteEffects.None, 0f);
+        if (spread > 0f)
+        {
+            for (int i = 0; i < ChatManager.ShadowDirections.Length; i++)
+                spriteBatch.DrawString(font, text, position + ChatManager.ShadowDirections[i] * spread, shadowColor, rotation, origin, scale, SpriteEffects.None, 0f);
+        }
 
         spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
     }

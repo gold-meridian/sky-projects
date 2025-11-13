@@ -1,5 +1,7 @@
 ﻿using Daybreak.Common.Features.Hooks;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ReLogic.Graphics;
 using ReLogic.Localization.IME;
 using ReLogic.OS;
 using System;
@@ -11,6 +13,10 @@ using static ZenSkies.Core.Utils.InputCancellationType;
 
 namespace ZenSkies.Core.Utils;
 
+/// <summary>
+/// Simpler input system based on Vanilla's <see cref="Main.GetInputText"/>;
+/// with logic for input cancellation via the <see cref="InputCancellationType"/> enum.
+/// </summary>
 public static class Input
 {
     #region Private Fields
@@ -19,29 +25,37 @@ public static class Input
 
     private const int KeyDelay = 45;
 
-    private static readonly char[] InvalidChars = [.. '\x0'.Range('\x20'), '\x7F'];
+    private static readonly char[] InvalidChars =
+        [.. '\x0'.Range('\x1F'), // Invisible characters from Null to Unit Separator, stopping before Space.
+        '\x7F' // Delete.
+        ];
 
     #endregion
 
     #region Public Properties
 
+    /// <summary>
+    /// If text can be input.<br/>
+    /// Simply a wrapper for <see cref="PlayerInput.WritingText"/>.
+    /// </summary>
     public static bool WritingText
     {
-        get
-        {
-            bool ret = field;
-
-            field = PlayerInput.WritingText;
-
-            return ret;
-        }
+        get => PlayerInput.WritingText;
         set
         {
-            field = value;
+            WasWritingText |= value;
             PlayerInput.WritingText = value;
         }
     }
 
+    /// <summary>
+    /// If text was being written outside of a drawing scope, where most input logic unfortunatly takes place.
+    /// </summary>
+    public static bool WasWritingText { get; private set; }
+
+    /// <summary>
+    /// The index of the "cursor" where written text is inserted.
+    /// </summary>
     public static int CursorPositon { get; set; }
 
     public static string KeyStroke { get; private set; }
@@ -53,7 +67,6 @@ public static class Input
     public static int LeftArrowTimer { get; private set; }
         = KeyDelay;
 
-
     public static int RightArrowTimer { get; private set; }
         = KeyDelay;
 
@@ -62,16 +75,29 @@ public static class Input
     #region Loading
 
     [OnLoad]
-    public static void Load() =>
+    public static void Load()
+    {
+        On_Main.DoUpdate_HandleInput += UpdateWasWritingText;
         Platform.Get<IImeService>().AddKeyListener(OnKeyStroke);
+    }
 
     [OnUnload]
-    public static void Unload() =>
+    public static void Unload()
+    {
+        On_Main.DoUpdate_HandleInput -= UpdateWasWritingText;
         Platform.Get<IImeService>().RemoveKeyListener(OnKeyStroke);
+    }
+
+    private static void UpdateWasWritingText(On_Main.orig_DoUpdate_HandleInput orig, Main self)
+    {
+        WasWritingText = WritingText;
+        orig(self);
+    }
 
     private static void OnKeyStroke(char key)
     {
-        if (KeyStroke.Length <= MaxStrokeLength)
+        if (WritingText && 
+            KeyStroke.Length <= MaxStrokeLength)
             KeyStroke += key;
     }
 
@@ -79,6 +105,17 @@ public static class Input
 
     #region Input
 
+    /// <summary>
+    /// Vastly simplified, and improved; vanilla logic for handling text input, should be calling during drawing to prevent issues.<br/>
+    /// Additional features include:
+    /// <list type="bullet">
+    ///     Support for a "cursor" to specify where text should be inserted, best used with <c>DrawInputString</c> methods.
+    ///     <item/>
+    ///     Black-listing/white-listing of specific characters with <paramref name="blacklistedChars"/>, and <paramref name="whitelistedChars"/>.
+    ///     <item/>
+    ///     Better input cancellation system using <see cref="InputCancellationType"/>.
+    /// </list>
+    /// </summary>
     public static InputCancellationType GetInput(
         string input,
         out string output,
@@ -246,6 +283,103 @@ public static class Input
     private static string GetPaste(string input, bool allowLineBreaks) =>
         input.Insert(CursorPositon,
             allowLineBreaks ? Platform.Get<IClipboard>().MultiLineValue : Platform.Get<IClipboard>().Value);
+
+    #endregion
+
+    #region Drawing
+
+    /// <summary>
+    /// Ultimately slower version of typical string drawing methods, that allows for a cursor to be drawn in-between characters.<br/>
+    /// Made for use with <c>Input.GetInput</c>, and <see cref="CursorPositon"/> as <paramref name="blinkerIndex"/>.
+    /// </summary>
+    /// <param name="mousePosition">Position that should be checked to find <paramref name="hoveredChar"/>.</param>
+    /// <param name="drawBlinker">Weither or not the cursor/"blinker" should be drawn, best used with a timer.</param>
+    /// <param name="blinkerIndex">The index at which the blinker should be drawn, usually <see cref="CursorPositon"/>.</param>
+    public static void DrawInputString(
+        this SpriteBatch spriteBatch,
+        Vector2 mousePosition,
+        DynamicSpriteFont font,
+        string text,
+        Vector2 position,
+        Color color,
+        Vector2 origin,
+        Vector2 scale,
+        out int hoveredChar,
+        bool drawBlinker = false,
+        int blinkerIndex = -1) =>
+        spriteBatch.DrawInputStringWithShadow(mousePosition, font, text, position, color, Color.Black, origin, scale, out hoveredChar, drawBlinker, blinkerIndex, -1f);
+
+    /// <inheritdoc cref="DrawInputString"/>
+    public static void DrawInputStringWithShadow(
+        this SpriteBatch spriteBatch,
+        Vector2 mousePosition,
+        DynamicSpriteFont font,
+        string text,
+        Vector2 position,
+        Color color,
+        Vector2 origin,
+        Vector2 scale,
+        out int hoveredChar,
+        bool drawBlinker = false,
+        int blinkerIndex = -1,
+        float spread = 2f) =>
+        spriteBatch.DrawInputStringWithShadow(mousePosition, font, text, position, color, Color.Black, origin, scale, out hoveredChar, drawBlinker, blinkerIndex, spread);
+
+    /// <inheritdoc cref="DrawInputString"/>
+    public static void DrawInputStringWithShadow(
+        this SpriteBatch spriteBatch,
+        Vector2 mousePosition,
+        DynamicSpriteFont font,
+        string text,
+        Vector2 position,
+        Color color,
+        Color shadowColor,
+        Vector2 origin,
+        Vector2 scale,
+        out int hoveredChar,
+        bool drawBlinker = false,
+        int blinkerIndex = -1,
+        float spread = 2f)
+    {
+        bool first = true;
+        float lastKerning = 0f;
+
+        hoveredChar = 0;
+
+        for (int i = 0; i < text.Length; i++)
+        {
+            char c = text[i];
+
+            spriteBatch.DrawStringWithShadow(font, c.ToString(), position, color, shadowColor, 0f, origin, scale, spread);
+
+            if (drawBlinker &&
+                i == blinkerIndex)
+            {
+                Vector2 blinkerPosition = new(position.X - (2f * scale.X), position.Y);
+
+                spriteBatch.DrawStringWithShadow(font, "|", blinkerPosition, color, shadowColor, 0f, origin, scale, spread);
+            }
+
+            Vector2 charSize = font.MeasureChar(c, first, lastKerning, out lastKerning);
+
+            if (mousePosition.X >= position.X && mousePosition.X <= position.X + charSize.X)
+                hoveredChar = mousePosition.X >= position.X + (charSize.X * .5f) ? i + 1 : i;
+
+            position.X += font.MeasureChar(c, first, lastKerning, out lastKerning).X;
+            first = false;
+        }
+
+        if (mousePosition.X >= position.X)
+            hoveredChar = text.Length;
+
+        if (drawBlinker &&
+            blinkerIndex >= text.Length)
+        {
+            Vector2 blinkerPosition = new(position.X - (2f * scale.X), position.Y);
+
+            spriteBatch.DrawStringWithShadow(font, "|", blinkerPosition, color, shadowColor, 0f, origin, scale, spread);
+        }
+    }
 
     #endregion
 
