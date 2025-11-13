@@ -160,7 +160,7 @@ public sealed class ButtonColorController : MenuController
 
         button.Top.Set(30f, 0f);
 
-        button.Left.Set(isHover ? -button.MinWidth.Pixels : 64f, isHover ? 1f : 0f);
+        button.Left.Set(isHover ? -button.MinWidth.Pixels : 66f, isHover ? 1f : 0f);
 
         button._backgroundTexture = UITextures.FullPanel;
         button._borderTexture = MiscTextures.Invis;
