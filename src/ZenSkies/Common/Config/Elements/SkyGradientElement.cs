@@ -1,22 +1,32 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader.Config.UI;
+﻿using Terraria.ModLoader.Config.UI;
+using Terraria.UI;
 using ZenSkies.Core.Config.Elements;
+using ZenSkies.Core.UI;
 using ZenSkies.Core.Utils;
 
 namespace ZenSkies.Common.Config.Elements;
 
 public class SkyGradientElement : GradientElement
 {
-    #region Drawing
+    #region Drop Down
 
-    protected override void DrawSelf(SpriteBatch spriteBatch)
+    protected override void OnExpand()
     {
-        base.DrawSelf(spriteBatch);
+        base.OnExpand();
 
-        if (Slider is null || !Slider.IsHeld)
+        Slider?.OnUpdate += UpdateSlider;
+    }
+
+    #endregion
+
+    #region Updating
+
+    private void UpdateSlider(UIElement affectedElement)
+    {
+        if (affectedElement is not GradientSlider slider || !slider.IsHeld)
             return;
 
-        string tooltip = Utilities.GetReadableTime(Slider.TargetSegment.Position * 24f);
+        string tooltip = Utilities.GetReadableTime(slider.TargetSegment.Position * 24f);
 
         UIModConfig.Tooltip = tooltip;
     }

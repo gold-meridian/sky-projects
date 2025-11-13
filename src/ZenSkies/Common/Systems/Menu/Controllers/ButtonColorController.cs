@@ -147,6 +147,186 @@ public sealed class ButtonColorController : MenuController
         HoverColorButton = CreateColorButton(true);
     }
 
+    #region Buttons
+
+    private UITextPanel<LocalizedText> CreateColorButton(bool isHover)
+    {
+        UITextPanel<LocalizedText> button = new(isHover ? HoverColorButtonName : ColorButtonName);
+
+        button.SetPadding(6f);
+
+        // Reset the text with the new padding.
+        button.SetText(button._text);
+
+        button.Top.Set(30f, 0f);
+
+        button.Left.Set(isHover ? -button.MinWidth.Pixels : 64f, isHover ? 1f : 0f);
+
+        button._backgroundTexture = UITextures.FullPanel;
+        button._borderTexture = MiscTextures.Invis;
+
+        button.BackgroundColor = UICommon.DefaultUIBlue;
+
+        button.OnLeftMouseDown +=
+            (evt, listeningElement) => ShowColor(isHover);
+
+        button.OnUpdate +=
+            affectedElement => UpdateButton(affectedElement, isHover);
+
+        button.OnMouseOver +=
+            (evt, listeningElement) => SoundEngine.PlaySound(SoundID.MenuTick);
+
+        Append(button);
+
+        const float buttonPadding = 2f;
+        const float buttonSize = 20f;
+        const float buttonTop = 35f;
+
+        #region Copy/Paste
+
+        MenuImageButton copyButton = new(ButtonTextures.Copy);
+
+        copyButton.Top.Set(buttonTop, 0f);
+
+        copyButton.Width.Set(buttonSize, 0f);
+        copyButton.Height.Set(buttonSize, 0f);
+
+        copyButton.Left.Set(isHover ? (-button.MinWidth.Pixels - ((buttonSize + buttonPadding) * 3)) : 0f, isHover ? 1f : 0f);
+
+        copyButton.OnLeftClick +=
+            (evt, listeningElement) => CopyColor(isHover);
+
+        copyButton.OnUpdate +=
+            affectedElement => MenuControllerState.HoverTooltip(affectedElement, CopyKey);
+
+        Append(copyButton);
+
+        MenuImageButton pasteButton = new(ButtonTextures.Paste);
+
+        pasteButton.Top.Set(buttonTop, 0f);
+
+        pasteButton.Width.Set(buttonSize, 0f);
+        pasteButton.Height.Set(buttonSize, 0f);
+
+        pasteButton.Left.Set(isHover ? (-button.MinWidth.Pixels - ((buttonSize + buttonPadding) * 2)) : buttonSize + buttonPadding, isHover ? 1f : 0f);
+
+        pasteButton.OnLeftClick +=
+            (evt, listeningElement) => PasteColor(isHover);
+
+        pasteButton.OnUpdate +=
+            affectedElement => MenuControllerState.HoverTooltip(affectedElement, PasteKey);
+
+        Append(pasteButton);
+
+        #endregion
+
+        #region Reset
+
+        MenuImageButton resetButton = new(ButtonTextures.Reset);
+
+        resetButton.Top.Set(buttonTop, 0f);
+
+        resetButton.Width.Set(buttonSize, 0f);
+        resetButton.Height.Set(buttonSize, 0f);
+
+        resetButton.Left.Set(isHover ? (-button.MinWidth.Pixels - buttonSize - buttonPadding) : ((buttonSize + buttonPadding) * 2), isHover ? 1f : 0f);
+
+        resetButton.OnLeftClick +=
+            (evt, listeningElement) => ResetColor(isHover);
+
+        resetButton.OnUpdate +=
+            affectedElement => MenuControllerState.HoverTooltip(affectedElement, ResetKey);
+
+        Append(resetButton);
+
+        #endregion
+
+        return button;
+    }
+
+    private void ShowColor(bool isHover)
+    {
+        if (SettingHover == isHover)
+            ShowPicker = !ShowPicker;
+        else
+            ShowPicker = true;
+
+        SettingHover = isHover;
+
+        Picker.Color = Modifying;
+
+        SoundEngine.PlaySound(in SoundID.MenuOpen);
+    }
+
+    private void UpdateButton(UIElement element, bool isHover)
+    {
+        if (element is not UIPanel panel)
+            return;
+
+        if (panel.IsMouseHovering ||
+            (SettingHover == isHover &&
+            ShowPicker))
+            panel.BackgroundColor = UICommon.DefaultUIBlue;
+        else
+            panel.BackgroundColor = UICommon.DefaultUIBlueMouseOver;
+    }
+
+    #region Copy/Paste
+
+    private static void CopyColor(bool isHover)
+    {
+        SettingHover = isHover;
+
+        if (!ModifyingUse)
+            return;
+
+        Platform.Get<IClipboard>().Value = Utils.Hex3(Modifying);
+
+        SoundEngine.PlaySound(in SoundID.MenuOpen);
+    }
+
+    private void PasteColor(bool isHover)
+    {
+        SettingHover = isHover;
+
+        if (!ModifyingUse)
+            return;
+
+        string hex = Platform.Get<IClipboard>().Value;
+
+        Color color = Utilities.FromHex3(hex);
+
+        if (color.A < byte.MaxValue)
+            return;
+
+        ModifyingUse = true;
+        Modifying = color;
+
+        Refresh();
+
+        SoundEngine.PlaySound(in SoundID.MenuOpen);
+    }
+
+    #endregion
+
+    #region Reset
+
+    private void ResetColor(bool isHover)
+    {
+        SettingHover = isHover;
+
+        ModifyingUse = false;
+        Modifying = Color.Red;
+
+        Refresh();
+
+        SoundEngine.PlaySound(in SoundID.MenuOpen);
+    }
+
+    #endregion
+
+    #endregion
+
     #endregion
 
     #region Loading
@@ -301,6 +481,7 @@ public sealed class ButtonColorController : MenuController
 
         if (config.UseMenuButtonColor)
             ButtonColor = config.MenuButtonColor;
+
         if (config.UseMenuButtonHoverColor)
             ButtonHoverColor = config.MenuButtonHoverColor;
     }
@@ -334,192 +515,6 @@ public sealed class ButtonColorController : MenuController
         else
             Height.Set(DefaultHeight + Picker.Dimensions.Height + expandedMargin, 0f);
     }
-
-    #endregion
-
-    #region Private Methods
-
-    private UITextPanel<LocalizedText> CreateColorButton(bool isHover)
-    {
-        UITextPanel<LocalizedText> button = new(isHover ? HoverColorButtonName : ColorButtonName);
-
-        button.SetPadding(6f);
-
-            // Reset the text with the new padding.
-        button.SetText(button._text);
-
-        button.Top.Set(30f, 0f);
-
-        button.Left.Set(isHover ? -button.MinWidth.Pixels : 64f, isHover ? 1f : 0f);
-
-        button._backgroundTexture = UITextures.FullPanel;
-        button._borderTexture = MiscTextures.Invis;
-
-        button.BackgroundColor = UICommon.DefaultUIBlue;
-
-        button.OnLeftMouseDown +=
-            (evt, listeningElement) => ShowColor(isHover);
-
-        button.OnUpdate +=
-            affectedElement => UpdateButton(affectedElement, isHover);
-
-        button.OnMouseOver +=
-            (evt, listeningElement) => SoundEngine.PlaySound(SoundID.MenuTick);
-
-        Append(button);
-
-        const float buttonPadding = 2f;
-        const float buttonSize = 20f;
-        const float buttonTop = 35f;
-
-        #region Copy/Paste
-
-        MenuImageButton copyButton = new(ButtonTextures.Copy);
-
-        copyButton.Top.Set(buttonTop, 0f);
-
-        copyButton.Width.Set(buttonSize, 0f);
-        copyButton.Height.Set(buttonSize, 0f);
-
-        copyButton.Left.Set(isHover ? (-button.MinWidth.Pixels - ((buttonSize + buttonPadding) * 3)) : 0f, isHover ? 1f : 0f);
-
-        copyButton.OnLeftClick +=
-            (evt, listeningElement) => CopyColor(isHover);
-
-        copyButton.OnUpdate +=
-            affectedElement => HoverText(affectedElement, CopyKey);
-
-        Append(copyButton);
-
-        MenuImageButton pasteButton = new(ButtonTextures.Paste);
-
-        pasteButton.Top.Set(buttonTop, 0f);
-
-        pasteButton.Width.Set(buttonSize, 0f);
-        pasteButton.Height.Set(buttonSize, 0f);
-
-        pasteButton.Left.Set(isHover ? (-button.MinWidth.Pixels - ((buttonSize + buttonPadding) * 2)) : buttonSize + buttonPadding, isHover ? 1f : 0f);
-
-        pasteButton.OnLeftClick +=
-            (evt, listeningElement) => PasteColor(isHover);
-
-        pasteButton.OnUpdate +=
-            affectedElement => HoverText(affectedElement, PasteKey);
-
-        Append(pasteButton);
-
-        #endregion
-
-        #region Reset
-
-        MenuImageButton resetButton = new(ButtonTextures.Reset);
-
-        resetButton.Top.Set(buttonTop, 0f);
-
-        resetButton.Width.Set(buttonSize, 0f);
-        resetButton.Height.Set(buttonSize, 0f);
-
-        resetButton.Left.Set(isHover ? (-button.MinWidth.Pixels - buttonSize - buttonPadding) : ((buttonSize + buttonPadding) * 2), isHover ? 1f : 0f);
-
-        resetButton.OnLeftClick +=
-            (evt, listeningElement) => ResetColor(isHover);
-
-        resetButton.OnUpdate +=
-            affectedElement => HoverText(affectedElement, ResetKey);
-
-        Append(resetButton);
-
-        #endregion
-
-        return button;
-    }
-
-    private void ShowColor(bool isHover)
-    {
-        if (SettingHover == isHover)
-            ShowPicker = !ShowPicker;
-        else
-            ShowPicker = true;
-
-        SettingHover = isHover;
-
-        Picker.Color = Modifying;
-
-        SoundEngine.PlaySound(in SoundID.MenuOpen);
-    }
-
-    private void UpdateButton(UIElement element, bool isHover)
-    {
-        if (element is not UIPanel panel)
-            return;
-
-        if (panel.IsMouseHovering ||
-            (SettingHover == isHover &&
-            ShowPicker))
-            panel.BackgroundColor = UICommon.DefaultUIBlue;
-        else
-            panel.BackgroundColor = UICommon.DefaultUIBlueMouseOver;
-    }
-
-    private static void HoverText(UIElement element, string key)
-    {
-        if (element.IsMouseHovering)
-            Main.instance.MouseText(Language.GetTextValue(key));
-    }
-
-    #region Copy/Paste
-
-    private static void CopyColor(bool isHover)
-    {
-        SettingHover = isHover;
-
-        if (!ModifyingUse)
-            return;
-
-        Platform.Get<IClipboard>().Value = Utils.Hex3(Modifying);
-
-        SoundEngine.PlaySound(in SoundID.MenuOpen);
-    }
-
-    private void PasteColor(bool isHover)
-    {
-        SettingHover = isHover;
-
-        if (!ModifyingUse)
-            return;
-
-        string hex = Platform.Get<IClipboard>().Value;
-
-        Color color = Utilities.FromHex3(hex);
-
-        if (color.A < byte.MaxValue)
-            return;
-
-        ModifyingUse = true;
-        Modifying = color;
-
-        Refresh();
-
-        SoundEngine.PlaySound(in SoundID.MenuOpen);
-    }
-
-    #endregion
-
-    #region Reset
-
-    private void ResetColor(bool isHover)
-    {
-        SettingHover = isHover;
-
-        ModifyingUse = false;
-        Modifying = Color.Red;
-
-        Refresh();
-
-        SoundEngine.PlaySound(in SoundID.MenuOpen);
-    }
-
-    #endregion
 
     #endregion
 }

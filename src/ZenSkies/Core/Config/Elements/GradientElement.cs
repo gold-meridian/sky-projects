@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.Config.UI;
+using Terraria.UI;
 using ZenSkies.Core.DataStructures;
 using ZenSkies.Core.UI;
 using ZenSkies.Core.Utils;
@@ -55,6 +56,8 @@ public class GradientElement : DropDownConfigElement<Gradient>
 
         Slider.OnSegmentSelected +=
             (s) => Picker?.Color = s.TargetSegment.Color;
+
+        Slider.OnUpdate += UpdateSlider;
 
         Append(Slider);
 
@@ -126,15 +129,20 @@ public class GradientElement : DropDownConfigElement<Gradient>
 
     #region Updating
 
-    public override void Update(GameTime gameTime)
+    private void UpdateSlider(UIElement affectedElement)
     {
-        base.Update(gameTime);
-
-        if (Slider is null ||
+        if (affectedElement is not GradientSlider slider ||
             Picker is null)
             return;
 
-        Slider.TargetSegment.Color = Picker.Color;
+        slider.TargetSegment.Color = Picker.Color;
+
+        if (!slider.IsMouseHovering || slider.IsHeld)
+            return;
+
+        string tooltip = Utilities.GetTextValueWithGlyphs(SliderHoverKey);
+
+        UIModConfig.Tooltip = tooltip;
     }
 
     #endregion
@@ -148,16 +156,6 @@ public class GradientElement : DropDownConfigElement<Gradient>
         if (!MenuOpen)
             DrawDisplaySlider(spriteBatch);
 
-        if (Slider is null ||
-            Picker is null)
-            return;
-
-        if (Slider.IsMouseHovering && !Slider.IsHeld)
-        {
-            string tooltip = Utilities.GetTextValueWithGlyphs(SliderHoverKey);
-
-            UIModConfig.Tooltip = tooltip;
-        }
     }
 
     protected void DrawDisplaySlider(SpriteBatch spriteBatch)

@@ -24,6 +24,8 @@ public sealed class MenuControllerState : UIState
 
     private const string ResetTooltip = "Mods.ZenSkies.MenuController.ResetTooltip";
 
+    private static string? Hover;
+
     #endregion
 
     #region Public Fields
@@ -79,6 +81,9 @@ public sealed class MenuControllerState : UIState
 
         ResetButton.OnLeftMouseDown += ClickReset;
 
+        ResetButton.OnUpdate +=
+            affectedElement => HoverTooltip(affectedElement, ResetTooltip);
+
         Panel.Append(ResetButton);
 
             // Setup the controller list.
@@ -126,11 +131,20 @@ public sealed class MenuControllerState : UIState
     {
         base.Update(gameTime);
 
-        if (ResetButton?.IsMouseHovering is not true)
+        if (string.IsNullOrEmpty(Hover))
             return;
 
-        string tooltip = Language.GetTextValue(ResetTooltip);
-        Main.instance.MouseText(tooltip);
+        Main.instance.MouseText(Hover);
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    public static void HoverTooltip(UIElement element, string key)
+    {
+        if (element.IsMouseHovering)
+            Hover = Language.GetTextValue(key);
     }
 
     #endregion
