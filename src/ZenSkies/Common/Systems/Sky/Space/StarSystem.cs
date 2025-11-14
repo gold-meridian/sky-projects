@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
@@ -13,7 +14,6 @@ using ZenSkies.Core.Net;
 using ZenSkies.Core.Utils;
 using static ZenSkies.Common.Systems.Sky.Space.StarHooks;
 using static ZenSkies.Core.Net.NetMessageHooks;
-using Star = ZenSkies.Common.DataStructures.Star;
 
 namespace ZenSkies.Common.Systems.Sky.Space;
 
@@ -42,7 +42,7 @@ public sealed class StarSystem : ModSystem, IPacketHandler
     public const int StarCount = 1200;
     public static readonly Star[] Stars = new Star[StarCount];
 
-    public static readonly IStarModifier[] StarModifiers = new IStarModifier[StarCount];
+    public static readonly Dictionary<int, IStarModifier> StarModifiers =[];
 
     #endregion
 
@@ -92,11 +92,6 @@ public sealed class StarSystem : ModSystem, IPacketHandler
         }
     }
 
-    public static SupernovaSystem Instance =>
-        ModContent.GetInstance<SupernovaSystem>();
-
-    public static IPacketHandler Packet => Instance;
-
     #endregion
 
     #region Loading
@@ -105,16 +100,20 @@ public sealed class StarSystem : ModSystem, IPacketHandler
     {
         GenerateStars();
 
-        MainThreadSystem.Enqueue(() =>
-            On_Star.UpdateStars += UpdateStars);
+        MainThreadSystem.Enqueue(() => {
+            On_Main.DoUpdate += UpdateStars;
+            On_Star.UpdateStars += DisableVanillaStars;
+        });
 
         OnSyncWorldData += WorldDataStars;
     }
 
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() =>
-            On_Star.UpdateStars -= UpdateStars);
+        MainThreadSystem.Enqueue(() => {
+            On_Main.DoUpdate -= UpdateStars;
+            On_Star.UpdateStars -= DisableVanillaStars;
+        });
 
         StarHooks.Clear();
     }
@@ -123,13 +122,9 @@ public sealed class StarSystem : ModSystem, IPacketHandler
 
     #region Updating
 
-    private void UpdateStars(On_Star.orig_UpdateStars orig)
+    private void UpdateStars(On_Main.orig_DoUpdate orig, Main self, ref GameTime gameTime)
     {
-        if (!ZenSkies.CanDrawSky)
-        {
-            orig();
-            return;
-        }
+        orig(self, ref gameTime);
 
         float dayRateDivisor = Main.gameMenu ? MainMenuDayRateDivisor : GameDayRateDivisor;
 
@@ -137,12 +132,24 @@ public sealed class StarSystem : ModSystem, IPacketHandler
 
         StarRotation %= MathHelper.TwoPi;
 
-        for (int i = 0; i < StarModifiers.Length; i++)
-            if (Stars[i].IsActive &&
-                (StarModifiers[i]?.IsActive ?? false))
-                StarModifiers[i].Update(ref Stars[i]);
+        foreach (KeyValuePair<int, IStarModifier> pair in StarModifiers)
+        {
+            if (Stars[pair.Key].IsActive &&
+                pair.Value.IsActive)
+                pair.Value.Update(ref Stars[pair.Key]);
+            else
+                StarModifiers.Remove(pair.Key);
+        }
 
         InvokeUpdateStars();
+    }
+
+    private void DisableVanillaStars(On_Star.orig_UpdateStars orig)
+    {
+        if (ZenSkies.CanDrawSky)
+            return;
+
+        orig();
     }
 
     #endregion
@@ -214,9 +221,6 @@ public sealed class StarSystem : ModSystem, IPacketHandler
 
     void IPacketHandler.Write(BinaryWriter writer)
     {
-        if (!Mod.IsNetSynced)
-            return;
-
         writer.Write(StarRotation);
 
         int count = Stars.Count(s => !s.IsActive);
@@ -237,9 +241,6 @@ public sealed class StarSystem : ModSystem, IPacketHandler
 
     void IPacketHandler.Receive(BinaryReader reader)
     {
-        if (!Mod.IsNetSynced)
-            return;
-        
         try
         {
             StarRotation = reader.ReadSingle();
@@ -269,23 +270,24 @@ public sealed class StarSystem : ModSystem, IPacketHandler
     [ModCall("RegenStars", "RegenerateStars")]
     public static void GenerateStars(int seed = DefaultStarGenerationSeed)
     {
-        Array.Clear(StarModifiers);
-
-        if (Main.dedServ)
-        {
-            Array.Clear(Stars);
-            return;
-        }
+        StarModifiers.Clear();
 
         UnifiedRandom rand = new(seed);
 
         StarRotation = 0f;
 
-        for (int i = 0; i < StarCount; i++)
-            Stars[i] = new(rand, CircularRadius);
+        if (Main.dedServ)
+            Array.Clear(Stars);
+        else
+        {
+            for (int i = 0; i < StarCount; i++)
+                Stars[i] = new(rand, CircularRadius);
+        }
 
         InvokeGenerateStars(rand, seed);
     }
+
+    #region Modifiers
 
     public static void AddStarModifier<T>(Func<Star, T> modifier, int index = -1) where T : class, IStarModifier
     {
@@ -293,35 +295,46 @@ public sealed class StarSystem : ModSystem, IPacketHandler
             index = Main.rand.Next(StarCount);
 
         if (!Stars[index].IsActive ||
-            (StarModifiers[index]?.IsActive ?? false))
+            StarModifiers.ContainsKey(index))
             return;
 
-        StarModifiers[index] = modifier(Stars[index]);
+        StarModifiers.Add(index, modifier(Stars[index]));
+    }
+
+    public static int StarModifiersCount<T>() where T : class, IStarModifier =>
+        StarModifiers.Count(m => m.Value.IsActive && m.Value is T);
+
+    public static void ForStarModifiers<T>(Action<int, T> action) where T : class, IStarModifier
+    {
+        foreach (KeyValuePair<int, IStarModifier> pair in StarModifiers)
+        {
+            if (pair.Value is T modifier)
+                action(pair.Key, modifier);
+        }
     }
 
     public static void DrawStarModifiers<T>(SpriteBatch spriteBatch, GraphicsDevice device, float alpha, float rotation) where T : class, IStarModifier
     {
-        for (int i = 0; i < StarModifiers.Length; i++)
-            if ((StarModifiers[i]?.IsActive ?? false) && StarModifiers[i] is T m)
-                m.Draw(spriteBatch, device, ref Stars[i], alpha, rotation);
+        foreach (KeyValuePair<int, IStarModifier> pair in StarModifiers)
+        {
+            if (Stars[pair.Key].IsActive &&
+                pair.Value.IsActive)
+                pair.Value.Draw(spriteBatch, device, ref Stars[pair.Key], alpha, rotation);
+            else
+                StarModifiers.Remove(pair.Key);
+        }
     }
 
-    public static void ForActiveStarModifiers<T>(Action<int, T> action) where T : class, IStarModifier
+    public static void RemoveStarModifiers<T>() where T : class, IStarModifier
     {
-        for (int i = 0; i < StarModifiers.Length; i++)
-            if ((StarModifiers[i]?.IsActive ?? false) && StarModifiers[i] is T m)
-                action(i, m);
+        foreach (KeyValuePair<int, IStarModifier> pair in StarModifiers)
+        {
+            if (pair.Value is T)
+                StarModifiers.Remove(pair.Key);
+        }
     }
 
-    public static int StarModifiersCount<T>() where T : class, IStarModifier =>
-        StarModifiers.Count(m => (m?.IsActive ?? false) && m is T);
-
-    public static void DisableStarModifiers<T>() where T : class, IStarModifier
-    {
-        for (int i = 0; i < StarModifiers.Length; i++)
-            if ((StarModifiers[i]?.IsActive ?? false) && StarModifiers[i] is T)
-                StarModifiers[i].IsActive = false;
-    }
+    #endregion
 
     #endregion
 }

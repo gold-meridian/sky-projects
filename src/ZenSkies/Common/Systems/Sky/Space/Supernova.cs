@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using ZenSkies.Core.Utils;
-using Star = ZenSkies.Common.DataStructures.Star;
+using Star = ZenSkies.Common.Systems.Sky.Space.Star;
 
 namespace ZenSkies.Common.Systems.Sky.Space;
 

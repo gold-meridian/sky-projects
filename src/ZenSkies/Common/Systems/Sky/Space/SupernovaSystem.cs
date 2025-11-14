@@ -55,7 +55,7 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
 
         int index = 0;
 
-        ForActiveStarModifiers((int i, Supernova s) =>
+        ForStarModifiers((int i, Supernova s) =>
         {
             tag["Supernovae" + index] = i;
 
@@ -115,7 +115,7 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
 
         writer.Write7BitEncodedInt(count);
 
-        ForActiveStarModifiers((int i, Supernova s) =>
+        ForStarModifiers((int i, Supernova s) =>
         {
             writer.Write7BitEncodedInt(i);
 
@@ -171,7 +171,7 @@ public sealed class SupernovaSystem : ModSystem, IPacketHandler
     [ModCall("ResetSupernova", "ResetSupernovas",
         "ClearSupernova", "ClearSupernovas", "ClearSupernovae")]
     public static void ResetSupernovae() =>
-        DisableStarModifiers<Supernova>();
+        RemoveStarModifiers<Supernova>();
 
     #endregion
 }

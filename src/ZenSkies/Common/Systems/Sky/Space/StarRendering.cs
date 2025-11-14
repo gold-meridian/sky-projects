@@ -8,14 +8,12 @@ using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.ModLoader;
 using ZenSkies.Common.Config;
-using ZenSkies.Common.DataStructures;
 using ZenSkies.Common.Systems.Compat;
 using ZenSkies.Core;
 using ZenSkies.Core.ModCall;
 using ZenSkies.Core.Utils;
 using static ZenSkies.Common.Systems.Sky.Space.StarHooks;
 using static ZenSkies.Common.Systems.Sky.Space.StarSystem;
-using Star = ZenSkies.Common.DataStructures.Star;
 
 namespace ZenSkies.Common.Systems.Sky.Space;
 

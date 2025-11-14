@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using Terraria.ModLoader.Config;
 using ZenSkies.Common.Config.Elements;
-using ZenSkies.Common.DataStructures;
 using ZenSkies.Common.Systems.Compat;
+using ZenSkies.Common.Systems.Sky.Space;
 using ZenSkies.Core.Config.Elements;
 using ZenSkies.Core.DataStructures;
 

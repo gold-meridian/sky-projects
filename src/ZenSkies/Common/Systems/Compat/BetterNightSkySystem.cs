@@ -135,7 +135,7 @@ public sealed class BetterNightSkySystem : ModSystem
 
             ILLabel skipLoopTarget = c.DefineLabel();
 
-            // Make sure the reset star type does not try to index out of bounds.
+                // Make sure the reset star type does not try to index out of bounds.
             c.TryGotoNext(MoveType.After,
                 i => i.MatchLdcI4(4));
 

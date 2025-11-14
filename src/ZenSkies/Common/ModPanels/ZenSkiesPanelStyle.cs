@@ -17,7 +17,7 @@ using ZenSkies.Common.Systems.Sky.Space;
 using ZenSkies.Core.Particles;
 using ZenSkies.Core.Utils;
 using static System.Reflection.BindingFlags;
-using Star = ZenSkies.Common.DataStructures.Star;
+using Star = ZenSkies.Common.Systems.Sky.Space.Star;
 
 namespace ZenSkies.Common.ModPanels;
 

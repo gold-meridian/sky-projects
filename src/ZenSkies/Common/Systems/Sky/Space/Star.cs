@@ -7,13 +7,13 @@ using Terraria.GameContent;
 using Terraria.Utilities;
 using ZenSkies.Core.Utils;
 
-namespace ZenSkies.Common.DataStructures;
+namespace ZenSkies.Common.Systems.Sky.Space;
 
-    // Thanks to jupiter.ryo for early help with this.
 /// <summary>
 /// A simpler version of <see cref="Terraria.Star"/> that allows for multiple styles.
 /// </summary>
 public record struct Star
+    (Vector2 Position, Color Color, float Scale, float Rotation, float TwinklePhase, int Style, bool IsActive = true)
 {
     #region Private Fields
 
@@ -55,45 +55,17 @@ public record struct Star
 
     #endregion
 
-    #region Public Properties
-
-    public Vector2 Position { get; set; }
-
-    public Color Color { get; set; }
-
-    public float Scale { get; set; }
-
-    public float Rotation { get; init; }
-
-    public float TwinklePhase { get; init; }
-
-    public int Style { get; init; }
-
-    public bool IsActive { get; set; } = true;
-
-    #endregion
-
     #region Public Constructors
 
     public Star(UnifiedRandom rand, float circularRadius)
-    {
-        Position = rand.NextUniformVector2Circular(circularRadius);
-        Color = GenerateColor(rand.NextFloat(1));
-        Scale = rand.NextFloat(MinScale, MaxScale);
-        Style = rand.Next(0, StarStyles);
-        Rotation = rand.NextFloatDirection();
-        TwinklePhase = rand.NextFloat(MaxTwinkle);
-    }
-
-    public Star(UnifiedRandom rand, Rectangle rectangle)
-    {
-        Position = rand.NextVector2FromRectangle(rectangle);
-        Color = GenerateColor(rand.NextFloat(1));
-        Scale = rand.NextFloat(MinScale, MaxScale);
-        Style = rand.Next(0, StarStyles);
-        Rotation = rand.NextFloatDirection();
-        TwinklePhase = rand.NextFloat(MaxTwinkle);
-    }
+        : this(
+              rand.NextUniformVector2Circular(circularRadius),
+              GenerateColor(rand.NextFloat(1)),
+              rand.NextFloat(MinScale, MaxScale),
+              rand.NextFloatDirection(),
+              rand.NextFloat(MaxTwinkle),
+              rand.Next(0, StarStyles))
+    { }
 
     #endregion
 
