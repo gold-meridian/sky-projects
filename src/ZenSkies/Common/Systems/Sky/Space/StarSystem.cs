@@ -276,13 +276,8 @@ public sealed class StarSystem : ModSystem, IPacketHandler
 
         StarRotation = 0f;
 
-        if (Main.dedServ)
-            Array.Clear(Stars);
-        else
-        {
-            for (int i = 0; i < StarCount; i++)
-                Stars[i] = new(rand, CircularRadius);
-        }
+        for (int i = 0; i < StarCount; i++)
+            Stars[i] = new(rand, CircularRadius);
 
         InvokeGenerateStars(rand, seed);
     }

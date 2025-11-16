@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using ZenSkies.Core.Utils;
-using Star = ZenSkies.Common.Systems.Sky.Space.Star;
 
 namespace ZenSkies.Common.Systems.Sky.Space;
 
@@ -30,13 +29,15 @@ public sealed class Supernova : IStarModifier
     private const float FlareWaveFrequency = 8f;
     private const float FlareWaveAmplitude = .06f;
 
-    private static readonly Vector2 FlareSize = new(.9f, .17f);
+    private static readonly Vector2 FlareSize = new(.16f, .27f);
+
+    private const float GlowSize = .05f;
 
     #endregion
 
     #region Public Properties
 
-    public Color NebulaColor { get; private init; }
+    public Color NebulaColor { get; private set; }
 
     public SupernovaState State { get; private set; }
 
@@ -78,7 +79,7 @@ public sealed class Supernova : IStarModifier
         {
             SupernovaState.Contracting => UpdateContracting(ref star),
             SupernovaState.Expanding => UpdateExpanding(),
-            _ => UpdateComplete()
+            _ => UpdateComplete(ref star)
         };
     }
 
@@ -95,10 +96,15 @@ public sealed class Supernova : IStarModifier
         float scaleMultiplier = Easings.InCubic(1 - Contract);
         star.Scale = StartingScale * scaleMultiplier;
 
+            // Start the 'explosion' halfway during the flare animation.
+        if (Contract >= .5f)
+        {
+            Expand += ExpandIncrement * SpeedMultiplier;
+            Expand = Utilities.Saturate(Expand);
+        }
+
         if (Contract < 1f)
             return SupernovaState.Contracting;
-
-        star.IsActive = false;
 
         return SupernovaState.Expanding;
     }
@@ -114,9 +120,11 @@ public sealed class Supernova : IStarModifier
         return SupernovaState.Complete;
     }
 
-    private SupernovaState UpdateComplete()
+    private SupernovaState UpdateComplete(ref Star star)
     {
         IsActive = false;
+
+        star.IsActive = false;
 
         return SupernovaState.Complete;
     }
@@ -131,10 +139,11 @@ public sealed class Supernova : IStarModifier
 
         float scale = StartingScale;
 
-        Color color = star.Color;
-
         if (State == SupernovaState.Contracting)
-            DrawFlare(spriteBatch, position, color, scale, rotation);
+            DrawFlare(spriteBatch, position, star.Color, scale, rotation);
+
+        if (Expand > 0)
+            DrawGlow(spriteBatch, position, NebulaColor, scale, rotation);
     }
 
     private void DrawFlare(SpriteBatch spriteBatch, Vector2 position, Color color, float scale, float rotation)
@@ -154,12 +163,31 @@ public sealed class Supernova : IStarModifier
         wave += 1;
         scale *= wave;
 
-            // Flare will be longer horizontally.
         Vector2 size = scale * FlareSize;
 
         color.A = 0;
 
         spriteBatch.Draw(texture, position, null, color, rotation, origin, size, SpriteEffects.None, 0f);
+    }
+
+    private void DrawGlow(SpriteBatch spriteBatch, Vector2 position, Color color, float scale, float rotation)
+    {
+        Texture2D texture = SkyTextures.SunBloom;
+
+        Vector2 origin = texture.Size() * .5f;
+
+        float pulse = Easings.OutPolynomial(Expand, 2);
+        scale *= pulse;
+
+        scale *= GlowSize;
+
+        float alpha = 1f - Easings.OutPolynomial(Expand, 2);
+
+        color *= alpha;
+
+        color.A = 0;
+
+        spriteBatch.Draw(texture, position, null, color, rotation, origin, scale, SpriteEffects.None, 0f);
     }
 
     #endregion
