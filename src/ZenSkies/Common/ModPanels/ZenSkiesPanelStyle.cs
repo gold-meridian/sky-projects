@@ -401,7 +401,7 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
         RenderTargetLease leasedTarget = RenderTargetPool.Shared.Rent(device, (int)size.X, (int)size.Y, RenderTargetDescriptor.Default);
 
             // BG.
-        using (new RenderTargetScope(device, leasedTarget.Target, true, true, Color.Transparent))
+        using (new RenderTargetScope(leasedTarget.Target, true, Color.Transparent))
             DrawPanelBackground(spriteBatch, size);
 
         DrawAsPanel(spriteBatch, snapshot, device, leasedTarget.Target, source, element);
@@ -410,7 +410,7 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
         DrawBird(spriteBatch, snapshot, device, element);
 
             // FG.
-        using (new RenderTargetScope(device, leasedTarget.Target, true, true, Color.Transparent))
+        using (new RenderTargetScope(leasedTarget.Target, true, Color.Transparent))
             DrawPanelForeground(spriteBatch, device, size);
         
         DrawAsPanel(spriteBatch, snapshot, device, leasedTarget.Target, source, element, Color.Transparent);

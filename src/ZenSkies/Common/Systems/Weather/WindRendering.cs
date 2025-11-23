@@ -90,9 +90,9 @@ public static class WindRendering
 
         spriteBatch.End(out var snapshot);
 
-        RenderTargetLease leasedTarget = RenderTargetPool.Shared.Rent(device, viewport.Width, viewport.Height, RenderTargetDescriptor.Default);
+        RenderTargetLease leasedTarget = ScreenspaceTargetPool.Shared.Rent(device);
 
-        using (new RenderTargetScope(device, leasedTarget.Target, true, true, Color.Transparent))
+        using (new RenderTargetScope(leasedTarget.Target, true, Color.Transparent))
             DrawWinds(spriteBatch, device, snapshot);
 
         spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Matrix.Identity);

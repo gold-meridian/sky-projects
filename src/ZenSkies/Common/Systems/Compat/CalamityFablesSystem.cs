@@ -143,7 +143,7 @@ public sealed class CalamityFablesSystem : ModSystem
             // Lease a target from the pool.
         RenderTargetLease leasedTarget = RenderTargetPool.Shared.Rent(device, (int)targetSize.X, (int)targetSize.Y, RenderTargetDescriptor.Default with { Depth = DepthFormat.Depth16 });
 
-        using (new RenderTargetScope(device, leasedTarget.Target, true, true, Color.Transparent))
+        using (new RenderTargetScope(leasedTarget.Target, true, Color.Transparent))
         {
                 // The texture of the broken chunks.
             device.Textures[0] = moon;

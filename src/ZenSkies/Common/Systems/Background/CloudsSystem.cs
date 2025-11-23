@@ -258,7 +258,7 @@ public sealed class CloudsSystem : ModSystem
 
         Utilities.ReintializeTarget(ref LightTarget, device, width, height);
 
-        using (new RenderTargetScope(device, LightTarget, true, true, Color.Transparent))
+        using (new RenderTargetScope(LightTarget, true, Color.Transparent))
         {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 
