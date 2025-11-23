@@ -1,5 +1,9 @@
-﻿namespace ZenSkies.Core.Utils;
+﻿using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 
+namespace ZenSkies.Core.Utils;
+
+[JsonConverter(typeof(StringEnumConverter))]
 public enum EasingStyle : byte
 {
     Linear,

@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Converters;
-using System;
-using System.Text.Json.Serialization;
+﻿using System;
 using ZenSkies.Core.Utils;
 
 namespace ZenSkies.Core.DataStructures;
@@ -15,7 +13,6 @@ public class GradientSegment : IComparable<GradientSegment>
 
     public Color Color { get; set; }
 
-    [JsonConverter(typeof(StringEnumConverter))]
     public EasingStyle Easing { get; set; }
 
     #endregion
