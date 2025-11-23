@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 
@@ -17,10 +18,10 @@ public static partial class Utilities
             return true;
 
         Tile[] neighbors =
-            [Main.tile[i + 1, j],
-            Main.tile[i - 1, j],
-            Main.tile[i, j + 1],
-            Main.tile[i, j - 1]];
+            [Main.tile[Math.Min(i + 1, Main.tile.Width), j],
+            Main.tile[Math.Max(i - 1, 0), j],
+            Main.tile[i, Math.Min(j + 1, Main.tile.Height)],
+            Main.tile[i, Math.Max(j - 1, 0)]];
 
         return neighbors.Any(t => !t.BlocksLight);
     }
