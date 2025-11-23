@@ -25,6 +25,8 @@ public class EasingStyleOption : UITextPanel<LocalizedText>
     public EasingStyleOption(EasingStyle style, float textScale = .8f, bool large = false)
         : base(GetEasingName(style), textScale, large)
     {
+        Value = style;
+
         _backgroundTexture = UITextures.FullPanel;
         _borderTexture = MiscTextures.Invis;
 

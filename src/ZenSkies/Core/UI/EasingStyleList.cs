@@ -29,6 +29,8 @@ public class EasingStyleList : UIPanel
 
         Easings = [];
 
+        Easings.ListPadding = 2f;
+
         EasingStyle[] styles = Enum.GetValues<EasingStyle>();
 
         for (int i = 0; i < styles.Length; i++)
