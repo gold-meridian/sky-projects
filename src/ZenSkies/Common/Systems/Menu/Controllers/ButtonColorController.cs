@@ -165,6 +165,8 @@ public sealed class ButtonColorController : MenuController
 
         button.BackgroundColor = UICommon.DefaultUIBlue;
 
+        button.TextColor = isHover ? ButtonHoverColor : ButtonColor;
+
         button.OnLeftMouseDown +=
             (evt, listeningElement) => ShowColor(isHover);
 

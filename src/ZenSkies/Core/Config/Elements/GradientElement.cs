@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
 using ZenSkies.Core.DataStructures;
@@ -96,34 +95,29 @@ public class GradientElement : DropDownConfigElement<Gradient>
 
         #endregion
 
-        UIPanel easingPanel =
-            new(UITextures.EmptyPanel, MiscTextures.Invis);
+        EasingStyleList easings = new();
 
-        easingPanel.SetPadding(6);
+        easings.Top.Set(topMargin, 0f);
 
-        easingPanel.Top.Set(topMargin, 0f);
+        easings.Left.Set(margin, .5f);
 
-        easingPanel.Left.Set(margin, .5f);
+        easings.Width.Set(-margin * 2, .5f);
 
-        easingPanel.Width.Set(-margin * 2, .5f);
+        easings.Height.Set(-topMargin - inputsMargin - margin, 1f);
 
-        easingPanel.Height.Set(-topMargin - inputsMargin - margin, 1f);
+        easings.OnSelected += SetEasingStyle;
 
-        easingPanel.BackgroundColor = backgroundColor;
+        easings.BackgroundColor = backgroundColor;
 
-        UIPanel inner =
-            new(UITextures.FullPanel, MiscTextures.Invis);
-
-        inner.Width.Set(0f, 1f);
-
-        inner.Height.Set(30, 0f);
-
-        inner.BackgroundColor = backgroundColor;
-
-        easingPanel.Append(inner);
-
-        Append(easingPanel);
+        Append(easings);
     }
+
+    #endregion
+
+    #region Interactions
+
+    private void SetEasingStyle(EasingStyle style) =>
+        Slider?.TargetSegment.Easing = style;
 
     #endregion
 

@@ -99,7 +99,7 @@ public sealed class MenuControllerState : UIState
             // Use our modified scrollbar to prevent hovering while grabbing the sun or moon.
         MenuScrollbar uIScrollbar = new();
 
-        uIScrollbar.SetView(100f, 1000f); // This seems to be important ?
+        uIScrollbar.SetView(100f, 1000f);
         uIScrollbar.Height.Set(-HeaderHeight, 1f);
         uIScrollbar.HAlign = 1f;
 
