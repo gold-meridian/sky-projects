@@ -248,6 +248,9 @@ public static class SunAndMoonRendering
             // Run moon drawing not tied to a specific moon style outside of the extra drawing.
         if (InvokePreDrawMoon(spriteBatch, ref moon, ref position, ref color, ref rotation, ref scale, ref moonColor, ref shadowColor, ref drawExtras, eventMoon, device))
         {
+            spriteBatch.End(out var snapshot);
+            spriteBatch.Begin(snapshot with { SortMode = SpriteSortMode.Immediate });
+
             bool drawPlanet = true;
 
                 // Draw the moon style's extras (e.g. rings/debris) if applicable,
@@ -268,6 +271,8 @@ public static class SunAndMoonRendering
 
             if (drawExtras)
                 InvokePostDrawMoonExtras(spriteBatch, moon, position, color, rotation, scale, moonColor, shadowColor, eventMoon, device);
+
+            spriteBatch.Restart(in snapshot);
         }
 
         InvokePostDrawMoon(spriteBatch, moon, position, color, rotation, scale, moonColor, shadowColor, eventMoon, device);
@@ -473,7 +478,7 @@ public static class SunAndMoonRendering
         {
             if (SkyConfig.Instance.UseSunAndMoon)
             {
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, snapshot.DepthStencilState, snapshot.RasterizerState, null, snapshot.TransformMatrix);
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, snapshot.DepthStencilState, snapshot.RasterizerState, null, snapshot.TransformMatrix);
 
                 DrawSunAndMoon(spriteBatch, device, Main.dayTime && ShowSun, !Main.dayTime && ShowMoon);
 
