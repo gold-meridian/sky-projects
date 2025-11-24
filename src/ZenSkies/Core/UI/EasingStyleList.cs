@@ -45,19 +45,21 @@ public class EasingStyleList : UIPanel
         Easings.Width.Set(-25f, 1f);
         Easings.Height.Set(0f, 1f);
 
-        UIScrollbar uIScrollbar = new();
+        MenuScrollbar scrollbar = new();
 
-        uIScrollbar.SetView(100f, 1000f);
+        scrollbar.Mute = true;
 
-        uIScrollbar.Top.Set(6f, 0f);
+        scrollbar.SetView(100f, 1000f);
 
-        uIScrollbar.Height.Set(-12f, 1f);
-        uIScrollbar.Left.Set(-1f, 0f);
-        uIScrollbar.HAlign = 1f;
+        scrollbar.Top.Set(6f, 0f);
 
-        Append(uIScrollbar);
+        scrollbar.Height.Set(-12f, 1f);
+        scrollbar.Left.Set(-1f, 0f);
+        scrollbar.HAlign = 1f;
 
-        Easings.SetScrollbar(uIScrollbar);
+        Append(scrollbar);
+
+        Easings.SetScrollbar(scrollbar);
 
         Append(Easings);
     }
