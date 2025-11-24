@@ -174,7 +174,7 @@ public sealed class RealisticSkySystem : ModSystem
 
         if (!c.TryGotoNext(MoveType.After,
             i => i.MatchLdsfld<Main>(nameof(Main.Rasterizer))))
-            throw new ILEditException(Mod, il, null);
+            throw new ILEditException(il, null);
 
         c.EmitPop();
         c.EmitDelegate(() => RasterizerState.CullNone);
@@ -187,7 +187,7 @@ public sealed class RealisticSkySystem : ModSystem
         if (!c.TryGotoNext(MoveType.After,
             i => i.MatchLdloca(2),
             i => i.MatchCall<SkyPlayerSnapshot>($"get_{nameof(SkyPlayerSnapshot.InvertedGravity)}")))
-            throw new ILEditException(Mod, il, null);
+            throw new ILEditException(il, null);
 
         c.EmitPop();
         c.EmitLdcI4(0);
@@ -200,7 +200,7 @@ public sealed class RealisticSkySystem : ModSystem
         if (!c.TryGotoNext(MoveType.After,
             i => i.MatchBr(out _),
             i => i.MatchCall<SunPositionSaver>($"get_{nameof(SunPositionSaver.SunPosition)}")))
-            throw new ILEditException(Mod, il, null);
+            throw new ILEditException(il, null);
 
         c.EmitDelegate((Vector2 sunPosition) =>
         {
@@ -221,7 +221,7 @@ public sealed class RealisticSkySystem : ModSystem
 
         if (!c.TryGotoNext(MoveType.After,
             i => i.MatchCall(typeof(RealisticSkyManager).FullName ?? "RealisticSky.Content.RealisticSkyManager", "get_StarViewRotation")))
-            throw new ILEditException(Mod, il, null);
+            throw new ILEditException(il, null);
 
         c.EmitPop();
         c.EmitDelegate(() => StarSystem.StarRotation);
@@ -232,7 +232,7 @@ public sealed class RealisticSkySystem : ModSystem
             i => i.MatchCall<Matrix>("op_Multiply"),
             i => i.MatchLdloc(out _),
             i => i.MatchCall<Matrix>("op_Multiply")))
-            throw new ILEditException(Mod, il, null);
+            throw new ILEditException(il, null);
 
         c.EmitDelegate((Matrix mat) =>
         {
@@ -262,7 +262,7 @@ public sealed class RealisticSkySystem : ModSystem
         }
         catch (Exception e)
         {
-            throw new ILEditException(Mod, il, e);
+            throw new ILEditException(il, e);
         }
     }
 
@@ -352,7 +352,7 @@ public sealed class RealisticSkySystem : ModSystem
         }
         catch (Exception e)
         {
-            throw new ILEditException(Mod, il, e);
+            throw new ILEditException(il, e);
         }
     }
 

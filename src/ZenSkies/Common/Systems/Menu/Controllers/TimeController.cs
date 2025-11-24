@@ -130,7 +130,7 @@ public sealed class TimeController : SliderController
         }
         catch (Exception e)
         {
-            throw new ILEditException(ModContent.GetInstance<ZenSkies>(), il, e);
+            throw new ILEditException(il, e);
         }
     }
 

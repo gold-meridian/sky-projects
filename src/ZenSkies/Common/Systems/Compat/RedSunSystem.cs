@@ -285,7 +285,7 @@ public sealed class RedSunSystem : ModSystem
         }
         catch (Exception e)
         {
-            throw new ILEditException(Mod, il, e);
+            throw new ILEditException(il, e);
         }
     }
 

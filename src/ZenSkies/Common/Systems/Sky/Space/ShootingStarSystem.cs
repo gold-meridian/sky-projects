@@ -96,7 +96,7 @@ public sealed class ShootingStarSystem : ModSystem
         }
         catch (Exception e)
         {
-            throw new ILEditException(Mod, il, e);
+            throw new ILEditException(il, e);
         }
     }
 
@@ -122,7 +122,7 @@ public sealed class ShootingStarSystem : ModSystem
         }
         catch (Exception e)
         {
-            throw new ILEditException(Mod, il, e);
+            throw new ILEditException(il, e);
         }
     }
 

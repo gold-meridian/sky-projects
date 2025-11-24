@@ -139,7 +139,7 @@ public sealed class ModMenuSystem : ModSystem
         }
         catch (Exception e)
         {
-            throw new ILEditException(Mod, il, e);
+            throw new ILEditException(il, e);
         }
     }
 
@@ -253,7 +253,7 @@ public sealed class ModMenuSystem : ModSystem
         }
         catch (Exception e)
         {
-            throw new ILEditException(Mod, il, e);
+            throw new ILEditException(il, e);
         }
     }
 

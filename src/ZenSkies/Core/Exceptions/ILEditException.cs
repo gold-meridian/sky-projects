@@ -7,6 +7,10 @@ namespace ZenSkies.Core.Exceptions;
 
 public class ILEditException : Exception
 {
+    public ILEditException(ILContext il, Exception? inner)
+        : this(ModContent.GetInstance<ZenSkies>(), il, inner)
+    { }
+
     public ILEditException(Mod mod, ILContext il, Exception? inner)
         : base($"\"{mod.Name}\" failed to IL edit method \"{il.Method.FullName}!\"" +
             $"\nA dump of the edited method has been created at: \"{Path.Combine(Logging.LogDir, "ILDumps", mod.Name)}.\"", inner) =>

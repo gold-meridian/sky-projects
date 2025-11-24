@@ -277,7 +277,7 @@ public sealed class SunAndMoonSystem : ModSystem
         }
         catch (Exception e)
         {
-            throw new ILEditException(Mod, il, e);
+            throw new ILEditException(il, e);
         }
     }
 
