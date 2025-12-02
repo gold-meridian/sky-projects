@@ -130,12 +130,11 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
     public override void Unload() =>
         PatchOnInitialize?.Dispose();
 
-    private void ReorderUIModList(orig_OnInitialize orig, UIMods self)
+    private static void ReorderUIModList(orig_OnInitialize orig, UIMods self)
     {
         orig(self);
 
             // Move the mod list to the front to have it drawn after certain buttons.
-
         self.uIPanel.RemoveChild(self.modList);
         self.uIPanel.Append(self.modList);
     }

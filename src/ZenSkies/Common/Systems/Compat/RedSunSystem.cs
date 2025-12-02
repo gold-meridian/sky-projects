@@ -69,20 +69,17 @@ public sealed class RedSunSystem : ModSystem
     {
         IsEnabled = true;
 
-        MainThreadSystem.Enqueue(() =>
-        {
-            MethodInfo? changePositionAndDrawDayMoon = typeof(GeneralLightingIL).GetMethod(nameof(GeneralLightingIL.ChangePositionAndDrawDayMoon), NonPublic | Instance);
+        MethodInfo? changePositionAndDrawDayMoon = typeof(GeneralLightingIL).GetMethod(nameof(GeneralLightingIL.ChangePositionAndDrawDayMoon), NonPublic | Instance);
 
-            if (changePositionAndDrawDayMoon is not null)
-                PatchSunAndMoonDrawing = new(changePositionAndDrawDayMoon,
-                    ModifyDrawing);
-        });
+        if (changePositionAndDrawDayMoon is not null)
+            PatchSunAndMoonDrawing = new(changePositionAndDrawDayMoon,
+                ModifyDrawing);
 
         FlipSunAndMoon = ModContent.GetInstance<ClientConfig>().FlipSunAndMoon;
     }
 
     public override void Unload() =>
-        MainThreadSystem.Enqueue(() => PatchSunAndMoonDrawing?.Dispose());
+        PatchSunAndMoonDrawing?.Dispose();
 
     public override void PostSetupContent() =>
         SkyColorSystem.ModifyInMenu += ModContent.GetInstance<GeneralLighting>().ModifySunLightColor;

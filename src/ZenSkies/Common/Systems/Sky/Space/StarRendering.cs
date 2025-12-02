@@ -23,11 +23,11 @@ public static class StarRendering
 
     [OnLoad(Side = ModSide.Client)]
     public static void Load() => 
-        MainThreadSystem.Enqueue(() => On_Main.DrawStarsInBackground += DrawStarsInBackground);
+        On_Main.DrawStarsInBackground += DrawStarsInBackground;
 
     [OnUnload(Side = ModSide.Client)]
     public static void Unload() => 
-        MainThreadSystem.Enqueue(() => On_Main.DrawStarsInBackground -= DrawStarsInBackground);
+        On_Main.DrawStarsInBackground -= DrawStarsInBackground;
 
     #endregion
 

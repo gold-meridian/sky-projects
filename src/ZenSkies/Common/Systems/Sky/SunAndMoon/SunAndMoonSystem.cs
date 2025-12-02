@@ -90,12 +90,11 @@ public sealed class SunAndMoonSystem : ModSystem
     #region Loading
 
     public override void Load() =>
-        MainThreadSystem.Enqueue(() => IL_Main.DrawSunAndMoon += ModifyDrawing);
+        IL_Main.DrawSunAndMoon += ModifyDrawing;
 
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() =>
-            IL_Main.DrawSunAndMoon -= ModifyDrawing);
+        IL_Main.DrawSunAndMoon -= ModifyDrawing;
 
         Clear();
     }

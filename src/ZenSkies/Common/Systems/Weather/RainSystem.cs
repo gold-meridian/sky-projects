@@ -42,25 +42,20 @@ public sealed class RainSystem : ModSystem
 
     public override void Load()
     {
-        MainThreadSystem.Enqueue(() =>
-        {
-            IL_Main.DoUpdate += SpawnMenuRain;
-            IL_Main.DoDraw += DontDegradeRain;
-            IL_Main.UpdateAudio += RainWindAmbience;
+        IL_Main.DoUpdate += SpawnMenuRain;
+        IL_Main.DoDraw += DontDegradeRain;
+        IL_Main.UpdateAudio += RainWindAmbience;
 
-            On_Main.DrawBackgroundBlackFill += DrawMenuRain;
-        });
+        On_Main.DrawBackgroundBlackFill += DrawMenuRain;
     }
+
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() =>
-        {
-            IL_Main.DoUpdate -= SpawnMenuRain;
-            IL_Main.DoDraw -= DontDegradeRain;
-            IL_Main.UpdateAudio -= RainWindAmbience;
+        IL_Main.DoUpdate -= SpawnMenuRain;
+        IL_Main.DoDraw -= DontDegradeRain;
+        IL_Main.UpdateAudio -= RainWindAmbience;
 
-            On_Main.DrawBackgroundBlackFill -= DrawMenuRain;
-        });
+        On_Main.DrawBackgroundBlackFill -= DrawMenuRain;
     }
 
     #endregion

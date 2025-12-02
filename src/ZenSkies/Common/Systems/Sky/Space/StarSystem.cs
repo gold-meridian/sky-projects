@@ -100,20 +100,16 @@ public sealed class StarSystem : ModSystem, IPacketHandler
     {
         GenerateStars();
 
-        MainThreadSystem.Enqueue(() => {
-            On_Main.DoUpdate += UpdateStars;
-            On_Star.UpdateStars += DisableVanillaStars;
-        });
+        On_Main.DoUpdate += UpdateStars;
+        On_Star.UpdateStars += DisableVanillaStars;
 
         OnSyncWorldData += WorldDataStars;
     }
 
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() => {
-            On_Main.DoUpdate -= UpdateStars;
-            On_Star.UpdateStars -= DisableVanillaStars;
-        });
+        On_Main.DoUpdate -= UpdateStars;
+        On_Star.UpdateStars -= DisableVanillaStars;
 
         StarHooks.Clear();
     }

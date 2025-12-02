@@ -28,10 +28,10 @@ public sealed class LightningSystem : ModSystem
     #region Loading
 
     public override void Load() => 
-        MainThreadSystem.Enqueue(() => IL_Main.UpdateMenu += UpdateLightning);
+        IL_Main.UpdateMenu += UpdateLightning;
 
     public override void Unload() => 
-        MainThreadSystem.Enqueue(() => IL_Main.UpdateMenu -= UpdateLightning);
+        IL_Main.UpdateMenu -= UpdateLightning;
 
     #endregion
 

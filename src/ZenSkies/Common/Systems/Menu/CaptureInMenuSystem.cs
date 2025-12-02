@@ -29,20 +29,14 @@ public sealed class CaptureInMenuSystem : ModSystem
 
     public override void Load()
     {
-        MainThreadSystem.Enqueue(() =>
-        {
-            IL_Main.DoDraw += AllowCapturingOnMainMenu;
-            IL_Main.ClearVisualPostProcessEffects += DontDisableEffectsOnMenu;
-        });
+        IL_Main.DoDraw += AllowCapturingOnMainMenu;
+        IL_Main.ClearVisualPostProcessEffects += DontDisableEffectsOnMenu;
     }
 
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() =>
-        {
-            IL_Main.DoDraw -= AllowCapturingOnMainMenu;
-            IL_Main.ClearVisualPostProcessEffects -= DontDisableEffectsOnMenu;
-        });
+        IL_Main.DoDraw -= AllowCapturingOnMainMenu;
+        IL_Main.ClearVisualPostProcessEffects -= DontDisableEffectsOnMenu;
     }
 
     #endregion

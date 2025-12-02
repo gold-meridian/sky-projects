@@ -51,32 +51,26 @@ public sealed class ModMenuSystem : ModSystem
 
     public override void Load()
     {
-        MainThreadSystem.Enqueue(() =>
-        {
-            MethodInfo? updateAndDrawModMenuInner = typeof(MenuLoader).GetMethod(nameof(MenuLoader.UpdateAndDrawModMenuInner), NonPublic | Static);
+        MethodInfo? updateAndDrawModMenuInner = typeof(MenuLoader).GetMethod(nameof(MenuLoader.UpdateAndDrawModMenuInner), NonPublic | Static);
 
-            if (updateAndDrawModMenuInner is not null)
-                PatchUpdateAndDrawModMenuInner = new(updateAndDrawModMenuInner,
-                    LogoDrawing);
+        if (updateAndDrawModMenuInner is not null)
+            PatchUpdateAndDrawModMenuInner = new(updateAndDrawModMenuInner,
+                LogoDrawing);
 
-            MethodInfo? getMoonTexture = typeof(ModMenu).GetProperty(nameof(ModMenu.MoonTexture), Public | Instance)?.GetGetMethod();
+        MethodInfo? getMoonTexture = typeof(ModMenu).GetProperty(nameof(ModMenu.MoonTexture), Public | Instance)?.GetGetMethod();
 
-            if (getMoonTexture is not null)
-                PatchGetMoonTexture = new(getMoonTexture,
-                    UncapMoonTextures);
-        });
+        if (getMoonTexture is not null)
+            PatchGetMoonTexture = new(getMoonTexture,
+                UncapMoonTextures);
 
         On_CreditsRollSky.Draw += HideCredits;
     }
 
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() =>
-        {
-            PatchUpdateAndDrawModMenuInner?.Dispose();
+        PatchUpdateAndDrawModMenuInner?.Dispose();
 
-            PatchGetMoonTexture?.Dispose();
-        });
+        PatchGetMoonTexture?.Dispose();
 
         On_CreditsRollSky.Draw -= HideCredits;
     }

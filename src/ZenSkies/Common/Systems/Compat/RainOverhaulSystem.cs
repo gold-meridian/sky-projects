@@ -55,8 +55,7 @@ public sealed class RainOverhaulSystem : ModSystem
     {
         IsEnabled = true;
 
-        MainThreadSystem.Enqueue(() =>
-            On_Main.DoUpdate += UpdateRainShaders);
+        On_Main.DoUpdate += UpdateRainShaders;
 
         MethodInfo? postUpdateTime = typeof(RainSystem).GetMethod(nameof(RainSystem.PostUpdateTime), Public | Instance);
 
@@ -67,8 +66,7 @@ public sealed class RainOverhaulSystem : ModSystem
 
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() =>
-            On_Main.DoUpdate -= UpdateRainShaders);
+        On_Main.DoUpdate -= UpdateRainShaders;
 
         PatchPostUpdateTime?.Dispose();
     }

@@ -39,10 +39,10 @@ public sealed class TimeController : SliderController
     #region Loading
 
     public override void Load() => 
-        MainThreadSystem.Enqueue(() => IL_Main.UpdateMenu += ModifyMenuTime);
+        IL_Main.UpdateMenu += ModifyMenuTime;
 
     public override void Unload() => 
-        MainThreadSystem.Enqueue(() => IL_Main.UpdateMenu -= ModifyMenuTime);
+        IL_Main.UpdateMenu -= ModifyMenuTime;
 
     private void ModifyMenuTime(ILContext il)
     {

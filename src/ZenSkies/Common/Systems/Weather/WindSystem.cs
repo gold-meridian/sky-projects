@@ -34,10 +34,10 @@ public sealed class WindSystem : ModSystem
     #region Loading
 
     public override void Load() =>
-        MainThreadSystem.Enqueue(() => On_Main.DoUpdate += UpdateWind);
+        On_Main.DoUpdate += UpdateWind;
 
     public override void Unload() => 
-        MainThreadSystem.Enqueue(() => On_Main.DoUpdate -= UpdateWind);
+        On_Main.DoUpdate -= UpdateWind;
 
     #endregion
 

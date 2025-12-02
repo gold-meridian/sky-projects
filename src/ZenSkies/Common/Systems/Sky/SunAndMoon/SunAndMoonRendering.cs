@@ -84,8 +84,7 @@ public static class SunAndMoonRendering
     [OnLoad(Side = ModSide.Client)]
     public static void Load()
     {
-        MainThreadSystem.Enqueue(() =>
-            On_Main.DrawSunAndMoon += DrawSunAndMoonToSky);
+        On_Main.DrawSunAndMoon += DrawSunAndMoonToSky;
 
         PreDrawSun += SunEclipsePreDraw;
         PostDrawSun += SunSunglassesPostDraw;
@@ -100,7 +99,7 @@ public static class SunAndMoonRendering
 
     [OnUnload(Side = ModSide.Client)]
     public static void Unload() =>
-        MainThreadSystem.Enqueue(() => On_Main.DrawSunAndMoon -= DrawSunAndMoonToSky);
+        On_Main.DrawSunAndMoon -= DrawSunAndMoonToSky;
 
     #endregion
 

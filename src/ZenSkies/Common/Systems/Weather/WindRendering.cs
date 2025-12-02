@@ -16,8 +16,7 @@ public static class WindRendering
     [OnLoad(Side = ModSide.Client)]
     public static void Load() 
     {
-        MainThreadSystem.Enqueue(() =>
-            On_Main.DrawBackgroundBlackFill += MenuDraw);
+        On_Main.DrawBackgroundBlackFill += MenuDraw;
 
         On_Main.DrawInfernoRings += InGameDraw;
     }
@@ -25,8 +24,7 @@ public static class WindRendering
     [OnUnload(Side = ModSide.Client)]
     public static void Unload()
     {
-        MainThreadSystem.Enqueue(() =>
-            On_Main.DrawBackgroundBlackFill -= MenuDraw);
+        On_Main.DrawBackgroundBlackFill -= MenuDraw;
 
         On_Main.DrawInfernoRings -= InGameDraw;
     }

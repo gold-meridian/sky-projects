@@ -102,21 +102,18 @@ public sealed class MenuControllerSystem : ModSystem
 
     public override void Load()
     {
-        MainThreadSystem.Enqueue(() =>
-        {
-            MethodInfo? updateAndDrawModMenuInner = typeof(MenuLoader).GetMethod(nameof(MenuLoader.UpdateAndDrawModMenuInner), Static | NonPublic);
+        MethodInfo? updateAndDrawModMenuInner = typeof(MenuLoader).GetMethod(nameof(MenuLoader.UpdateAndDrawModMenuInner), Static | NonPublic);
 
-            if (updateAndDrawModMenuInner is not null)
-                PatchUpdateAndDrawModMenuInner = new(updateAndDrawModMenuInner, 
-                    AddToggle);
+        if (updateAndDrawModMenuInner is not null)
+            PatchUpdateAndDrawModMenuInner = new(updateAndDrawModMenuInner,
+                AddToggle);
 
-            IL_Main.DrawMenu += ModifyInteraction;
-            On_Main.UpdateUIStates += UpdateInterface;
+        IL_Main.DrawMenu += ModifyInteraction;
+        On_Main.UpdateUIStates += UpdateInterface;
 
-            On_UILinksInitializer.FancyExit += EscapeControllerUI;
+        On_UILinksInitializer.FancyExit += EscapeControllerUI;
 
-            Main.OnResolutionChanged += CloseMenuOnResolutionChanged;
-        });
+        Main.OnResolutionChanged += CloseMenuOnResolutionChanged;
 
         MethodInfo? save = typeof(ConfigManager).GetMethod(nameof(ConfigManager.Save), Static | NonPublic);
 
@@ -129,19 +126,16 @@ public sealed class MenuControllerSystem : ModSystem
 
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() =>
-        {
-            PatchUpdateAndDrawModMenuInner?.Dispose();
+        PatchUpdateAndDrawModMenuInner?.Dispose();
 
-            PatchSaveConfig?.Dispose();
+        PatchSaveConfig?.Dispose();
 
-            IL_Main.DrawMenu -= ModifyInteraction;
-            On_Main.UpdateUIStates -= UpdateInterface;
+        IL_Main.DrawMenu -= ModifyInteraction;
+        On_Main.UpdateUIStates -= UpdateInterface;
 
-            On_UILinksInitializer.FancyExit -= EscapeControllerUI;
+        On_UILinksInitializer.FancyExit -= EscapeControllerUI;
 
-            Main.OnResolutionChanged -= CloseMenuOnResolutionChanged;
-        });
+        Main.OnResolutionChanged -= CloseMenuOnResolutionChanged;
 
         PatchSaveConfig?.Dispose();
     }

@@ -36,10 +36,10 @@ public sealed class ParallaxController : SliderController
     #region Loading
 
     public override void Load() => 
-        MainThreadSystem.Enqueue(() => IL_Main.DrawMenu += ChangeParallaxDirection);
+        IL_Main.DrawMenu += ChangeParallaxDirection;
 
     public override void Unload() => 
-        MainThreadSystem.Enqueue(() => IL_Main.DrawMenu -= ChangeParallaxDirection);
+        IL_Main.DrawMenu -= ChangeParallaxDirection;
 
     private void ChangeParallaxDirection(ILContext il)
     {

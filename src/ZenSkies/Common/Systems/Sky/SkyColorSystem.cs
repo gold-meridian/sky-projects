@@ -53,14 +53,11 @@ public sealed class SkyColorSystem : ModSystem
 
     public override void Load()
     {
-        MainThreadSystem.Enqueue(() =>
-        {
-            MethodInfo? modifySunLightColor = typeof(SystemLoader).GetMethod(nameof(SystemLoader.ModifySunLightColor));
+        MethodInfo? modifySunLightColor = typeof(SystemLoader).GetMethod(nameof(SystemLoader.ModifySunLightColor));
 
-            if (modifySunLightColor is not null)
-                PatchSunLightColor = new(modifySunLightColor,
-                    LightingInMenu);
-        });
+        if (modifySunLightColor is not null)
+            PatchSunLightColor = new(modifySunLightColor,
+                LightingInMenu);
 
         ModifyInMenu += ModifySunLightColor;
 
@@ -73,8 +70,7 @@ public sealed class SkyColorSystem : ModSystem
 
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() => 
-            PatchSunLightColor?.Dispose());
+        PatchSunLightColor?.Dispose();
 
         ModifyInMenu = null;
 

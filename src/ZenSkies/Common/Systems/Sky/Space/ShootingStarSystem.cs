@@ -53,22 +53,18 @@ public sealed class ShootingStarSystem : ModSystem
     {
         Array.Clear(ShootingStars);
 
-        MainThreadSystem.Enqueue(() => {
-            IL_Main.DoUpdate += ModifyInGameStarFall;
-            IL_Main.UpdateMenu += ModifyMenuStarFall;
-            On_Star.StarFall += ModifyFallingStarSpawn;
-        });
+        IL_Main.DoUpdate += ModifyInGameStarFall;
+        IL_Main.UpdateMenu += ModifyMenuStarFall;
+        On_Star.StarFall += ModifyFallingStarSpawn;
 
         UpdateStars += Update;
     }
 
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() => {
-            IL_Main.DoUpdate -= ModifyInGameStarFall;
-            IL_Main.UpdateMenu -= ModifyMenuStarFall;
-            On_Star.StarFall -= ModifyFallingStarSpawn;
-        });
+        IL_Main.DoUpdate -= ModifyInGameStarFall;
+        IL_Main.UpdateMenu -= ModifyMenuStarFall;
+        On_Star.StarFall -= ModifyFallingStarSpawn;
     }
 
     #endregion

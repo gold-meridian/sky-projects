@@ -53,14 +53,14 @@ public sealed class CloudsSystem : ModSystem
     #region Loading
 
     public override void Load() =>
-        MainThreadSystem.Enqueue(() => IL_Main.DrawSurfaceBG += CloudLighting);
+        IL_Main.DrawSurfaceBG += CloudLighting;
 
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() =>
-        {
-            IL_Main.DrawSurfaceBG -= CloudLighting;
+        IL_Main.DrawSurfaceBG -= CloudLighting;
 
+        Main.QueueMainThreadAction(() =>
+        {
             BackgroundTarget?.Dispose();
             OccludersTarget?.Dispose();
             LightTarget?.Dispose();

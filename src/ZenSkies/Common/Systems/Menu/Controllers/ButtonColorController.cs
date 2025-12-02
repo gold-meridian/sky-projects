@@ -333,16 +333,15 @@ public sealed class ButtonColorController : MenuController
 
     public override void Load()
     {
-        MainThreadSystem.Enqueue(() =>
-            IL_Main.DrawMenu += ModifyColors);
+        IL_Main.DrawMenu += ModifyColors;
 
         _ = ColorButtonName;
 
         _ = HoverColorButtonName;
     }
 
-    public override void Unload() => 
-        MainThreadSystem.Enqueue(() => IL_Main.DrawMenu -= ModifyColors);
+    public override void Unload() =>
+        IL_Main.DrawMenu -= ModifyColors;
 
     private void ModifyColors(ILContext il)
     {

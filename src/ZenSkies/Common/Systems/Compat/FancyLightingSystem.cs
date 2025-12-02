@@ -34,16 +34,13 @@ public sealed class FancyLightingSystem : ModSystem
     {
         IsEnabled = true;
 
-        MainThreadSystem.Enqueue(() =>
-        {
-                // Remove their hook that applies an unwanted shader.
-            if (SkyConfig.Instance.UseSunAndMoon)
-                On_Main.DrawSunAndMoon -= ModContent.GetInstance<FancyLightingMod>()._Main_DrawSunAndMoon;
+            // Remove their hook that applies an unwanted shader.
+        if (SkyConfig.Instance.UseSunAndMoon)
+            On_Main.DrawSunAndMoon -= ModContent.GetInstance<FancyLightingMod>()._Main_DrawSunAndMoon;
 
-                // Reapply their background gradient hook so it takes priority over ours.
-            On_Main.DrawStarsInBackground -= FancySkyRendering._Main_DrawStarsInBackground;
-            On_Main.DrawStarsInBackground += FancySkyRendering._Main_DrawStarsInBackground;
-        });
+            // Reapply their background gradient hook so it takes priority over ours.
+        On_Main.DrawStarsInBackground -= FancySkyRendering._Main_DrawStarsInBackground;
+        On_Main.DrawStarsInBackground += FancySkyRendering._Main_DrawStarsInBackground;
     }
 
     #endregion

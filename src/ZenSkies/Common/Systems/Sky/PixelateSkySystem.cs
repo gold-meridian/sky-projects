@@ -31,24 +31,19 @@ public sealed class PixelateSkySystem : ModSystem
 
     public override void Load()
     {
-        MainThreadSystem.Enqueue(() => 
-        {
-            IL_Main.DoDraw += InjectDoDraw;
-            IL_Main.DrawSurfaceBG += InjectDrawSurfaceBG;
-        });
+        IL_Main.DoDraw += InjectDoDraw;
+        IL_Main.DrawSurfaceBG += InjectDrawSurfaceBG;
 
         IL_Main.DrawCapture += InjectDrawCapture;
     }
 
     public override void Unload()
     {
-        MainThreadSystem.Enqueue(() =>
-        {
-            IL_Main.DoDraw -= InjectDoDraw;
-            IL_Main.DrawSurfaceBG -= InjectDrawSurfaceBG;
+        Main.QueueMainThreadAction(() =>
+            SkyTarget?.Dispose());
 
-            SkyTarget?.Dispose();
-        });
+        IL_Main.DoDraw -= InjectDoDraw;
+        IL_Main.DrawSurfaceBG -= InjectDrawSurfaceBG;
 
         IL_Main.DrawCapture -= InjectDrawCapture;
     }

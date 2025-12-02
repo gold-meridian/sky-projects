@@ -33,25 +33,11 @@ public sealed class ZenSkies : Mod, IHasCustomAuthorMessage
 
     #region Loading
 
-    public override void Load()
-    {
-        if (Main.dedServ)
-            return;
-
-        MainThreadSystem.Enqueue(() =>
-        {
-                // Set the default render target usage to preserve to prevent issues when swaping targets.
-            Main.graphics.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-            Main.graphics.ApplyChanges();
-        });
-    }
-
     public override void Close()
     {
             // Technically redundant.
         CanDrawSky = false;
         Unloading = true;
-        MainThreadSystem.ClearQueue();
 
         base.Close();
     }
