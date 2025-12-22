@@ -1,14 +1,11 @@
 .vs/
 .vscode/
 .idea/
+.tml-build/
 
 bin/
 obj/
 
 *.user
-
-*.sln
-
-*.tml-build/
 
 TemplateEngineHost/
