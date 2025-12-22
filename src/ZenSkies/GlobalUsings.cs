@@ -4,20 +4,20 @@ global using Color = Microsoft.Xna.Framework.Color;
 global using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
     // Asset Namespaces.
-global using CompatEffects = ZenSkies.GeneratedAssets.Effects.Compat;
-global using SkyEffects = ZenSkies.GeneratedAssets.Effects.Sky;
-global using UIEffects = ZenSkies.GeneratedAssets.Effects.UI;
+global using CompatEffects = ZenSkies.GeneratedAssets.Assets.Effects.Compat;
+global using SkyEffects = ZenSkies.GeneratedAssets.Assets.Effects.Sky;
+global using UIEffects = ZenSkies.GeneratedAssets.Assets.Effects.UI;
 
-global using Models = ZenSkies.GeneratedAssets.Models;
+global using Models = ZenSkies.GeneratedAssets.Assets.Models;
 
-global using SkyTextures = ZenSkies.GeneratedAssets.Textures.Sky.Textures;
-global using FablesTextures = ZenSkies.GeneratedAssets.Textures.Sky.FablesMoons.Textures;
-global using StarTextures = ZenSkies.GeneratedAssets.Textures.Sky.StarStyles.Textures;
+global using SkyTextures = ZenSkies.GeneratedAssets.Assets.Textures.Sky.Textures;
+global using FablesTextures = ZenSkies.GeneratedAssets.Assets.Textures.Sky.FablesMoons.Textures;
+global using StarTextures = ZenSkies.GeneratedAssets.Assets.Textures.Sky.StarStyles.Textures;
 
-global using UITextures = ZenSkies.GeneratedAssets.Textures.UI.Textures;
-global using ButtonTextures = ZenSkies.GeneratedAssets.Textures.UI.Buttons.Textures;
-global using PanelStyleTextures = ZenSkies.GeneratedAssets.Textures.UI.PanelStyle.Textures;
+global using UITextures = ZenSkies.GeneratedAssets.Assets.Textures.UI.Textures;
+global using ButtonTextures = ZenSkies.GeneratedAssets.Assets.Textures.UI.Buttons.Textures;
+global using PanelStyleTextures = ZenSkies.GeneratedAssets.Assets.Textures.UI.PanelStyle.Textures;
 
-global using MiscTextures = ZenSkies.GeneratedAssets.Textures.Textures;
+global using MiscTextures = ZenSkies.GeneratedAssets.Assets.Textures.Textures;
 
-global using AuthorshipTextures = ZenSkies.GeneratedAssets.Textures.Authorship.Textures;
+global using AuthorshipTextures = ZenSkies.GeneratedAssets.Assets.Textures.Authorship.Textures;

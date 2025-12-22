@@ -121,12 +121,12 @@ public sealed class RealisticSkySystem : ModSystem
 
         #region Inverted Gravity Patches
 
-        MethodInfo? handleAtmosphereTargetReqest = typeof(AtmosphereTargetContent).GetMethod(nameof(AtmosphereTargetContent.HandleUseReqest), NonPublic | Instance);
+        MethodInfo? handleAtmosphereTargetReqest = typeof(AtmosphereTargetContent).GetMethod("HandleUseReqest", NonPublic | Instance);
         if (handleAtmosphereTargetReqest is not null)
             PatchAtmosphereTarget = new(handleAtmosphereTargetReqest,
                 CommonRequestsInvertedGravity);
 
-        MethodInfo? handleCloudsTargetReqest = typeof(CloudsTargetContent).GetMethod(nameof(CloudsTargetContent.HandleUseReqest), NonPublic | Instance);
+        MethodInfo? handleCloudsTargetReqest = typeof(CloudsTargetContent).GetMethod("HandleUseReqest", NonPublic | Instance);
         if (handleCloudsTargetReqest is not null)
             PatchCloudsTarget = new(handleCloudsTargetReqest,
                 CommonRequestsInvertedGravity);

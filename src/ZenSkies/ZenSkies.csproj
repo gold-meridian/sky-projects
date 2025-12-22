@@ -11,10 +11,10 @@
 	<ItemGroup>
 		<Publicize Include="tModLoader;ReLogic;FNA" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false"/>
 
-    	<DoNotPublicize Include="System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute"/>
-		
-		<!--Mods with difficult to access types -->
-		<Publicize Include="BetterNightSky;CoolerMenu;FancyLighting;RainOverhaul;RealisticSky;RedSunAndRealisticSky;Macrocosm" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false"/>
+		<!-- Mods with difficult to access types -->
+		<Publicize Include="BetterNightSky;CoolerMenu;FancyLighting;Macrocosm;RainOverhaul;RealisticSky;RedSunAndRealisticSky" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false"/>
+
+		<DoNotPublicize Include="CoolerMenu:System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute"/>
 	</ItemGroup>
 
 </Project>

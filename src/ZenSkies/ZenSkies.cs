@@ -1,6 +1,5 @@
 ﻿using Daybreak.Common.Features.Authorship;
 using Daybreak.Common.Features.ModPanel;
-using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content.Sources;
 using System;
 using System.IO;
@@ -8,7 +7,6 @@ using System.Linq;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using ZenSkies.Core;
 using ZenSkies.Core.ModCall;
 using ZenSkies.Core.Net;
 using ZenSkies.GeneratedAssets.AssetReaders;
@@ -52,7 +50,7 @@ public sealed class ZenSkies : Mod, IHasCustomAuthorMessage
     public override IContentSource CreateDefaultContentSource()
     {
         if (!Main.dedServ)
-            AddContent(new OBJModelReader());
+            AddContent(new ObjModelReader());
 
         return base.CreateDefaultContentSource();
     }

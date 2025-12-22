@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.ModLoader;
-using static ZenSkies.GeneratedAssets.Textures.Authorship.Textures;
+using static ZenSkies.GeneratedAssets.Assets.Textures.Authorship.Textures;
 
 namespace ZenSkies.Common.Authorship;
 
