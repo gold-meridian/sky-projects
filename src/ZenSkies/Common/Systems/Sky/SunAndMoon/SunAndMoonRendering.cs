@@ -459,7 +459,7 @@ public static class SunAndMoonRendering
 
     private static void DrawSunAndMoonToSky(On_Main.orig_DrawSunAndMoon orig, Main self, Main.SceneArea sceneArea, Color moonColor, Color sunColor, float tempMushroomInfluence)
     {
-        if (!ZenSkies.CanDrawSky)
+        if (!ModImpl.CanDrawSky)
         {
             orig(self, sceneArea, moonColor, sunColor, tempMushroomInfluence);
             return;

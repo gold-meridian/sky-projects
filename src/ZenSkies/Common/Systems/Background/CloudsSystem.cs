@@ -96,7 +96,7 @@ public sealed class CloudsSystem : ModSystem
             c.EmitDelegate((bool canDrawClouds) =>
             {
                 CanDrawClouds =
-                    ZenSkies.CanDrawSky &&
+                    ModImpl.CanDrawSky &&
                     canDrawClouds &&
                     (Main.numClouds > 0 || Main.cloudBGAlpha > 0) &&
                     Main.screenPosition.Y < Main.worldSurface * 16 + 16 &&

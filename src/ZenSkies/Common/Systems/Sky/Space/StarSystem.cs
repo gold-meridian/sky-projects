@@ -142,7 +142,7 @@ public sealed class StarSystem : ModSystem, IPacketHandler
 
     private void DisableVanillaStars(On_Star.orig_UpdateStars orig)
     {
-        if (ZenSkies.CanDrawSky)
+        if (ModImpl.CanDrawSky)
             return;
 
         orig();

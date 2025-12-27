@@ -60,7 +60,7 @@ public interface ILockedConfigElement
 
         if (!TargetMember.IsStatic)
         {
-            if (ConfigManager.Configs.TryGetValue(ModContent.GetInstance<ZenSkies>(), out List<ModConfig>? value))
+            if (ConfigManager.Configs.TryGetValue(ModContent.GetInstance<ModImpl>(), out List<ModConfig>? value))
                 TargetInstance = value.Find(c => c.Name == type.Name);
             else if (Utilities.TryGetInstance(type, out object? instance))
                 TargetInstance = instance;

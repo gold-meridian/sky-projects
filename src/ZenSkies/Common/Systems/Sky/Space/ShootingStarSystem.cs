@@ -125,7 +125,7 @@ public sealed class ShootingStarSystem : ModSystem
 
     private void ModifyFallingStarSpawn(On_Star.orig_StarFall orig, float positionX)
     {
-        if (!ZenSkies.CanDrawSky || !ShowShootingStars)
+        if (!ModImpl.CanDrawSky || !ShowShootingStars)
         {
             orig(positionX);
             return;

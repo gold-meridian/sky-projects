@@ -25,7 +25,7 @@ public sealed class ShootingStarRendering : ModSystem
 
     private static void DrawShootingStarsPostSunAndMoon(SpriteBatch spriteBatch, in SpriteBatchSnapshot snapshot)
     {
-        if (!ZenSkies.CanDrawSky || !ShowShootingStars)
+        if (!ModImpl.CanDrawSky || !ShowShootingStars)
         {
             ShowShootingStars = true;
             return;

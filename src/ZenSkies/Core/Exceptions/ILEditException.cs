@@ -8,7 +8,7 @@ namespace ZenSkies.Core.Exceptions;
 public class ILEditException : Exception
 {
     public ILEditException(ILContext il, Exception? inner)
-        : this(ModContent.GetInstance<ZenSkies>(), il, inner)
+        : this(ModContent.GetInstance<ModImpl>(), il, inner)
     { }
 
     public ILEditException(Mod mod, ILContext il, Exception? inner)

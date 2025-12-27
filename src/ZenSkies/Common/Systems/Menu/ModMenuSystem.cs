@@ -143,7 +143,7 @@ public sealed class ModMenuSystem : ModSystem
 
     private static void DrawLighting(SpriteBatch spriteBatch, Vector2 logoDrawCenter, Color color, float logoRotation, float logoScale2)
     {
-        if (!ZenSkies.CanDrawSky ||
+        if (!ModImpl.CanDrawSky ||
             MenuLoader.currentMenu.Logo.Value != ModMenu.modLoaderLogo.Value ||
             !UIEffects.LogoNormals.IsReady)
             return;

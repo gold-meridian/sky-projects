@@ -128,7 +128,7 @@ public static class StarRendering
 
     private static void DrawStarsInBackground(On_Main.orig_DrawStarsInBackground orig, Main self, Main.SceneArea sceneArea, bool artificial)
     {
-        if (!ZenSkies.CanDrawSky ||
+        if (!ModImpl.CanDrawSky ||
             artificial)
         {
             orig(self, sceneArea, artificial);

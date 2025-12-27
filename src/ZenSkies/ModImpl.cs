@@ -15,7 +15,7 @@ using ZenSkies.GeneratedAssets.AssetReaders;
 
 namespace ZenSkies;
 
-public sealed class ZenSkies : Mod, IHasCustomAuthorMessage
+public sealed class ModImpl : Mod, IHasCustomAuthorMessage
 {
     #region Public Properties
 

@@ -70,7 +70,7 @@ public sealed class CaptureInMenuSystem : ModSystem
             c.MoveAfterLabels();
 
             c.EmitDelegate(() =>
-                ZenSkies.Unloading);
+                ModImpl.Unloading);
 
             c.EmitStloc(menuCaptureFlagIndex);
 

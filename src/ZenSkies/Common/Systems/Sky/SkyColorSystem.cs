@@ -226,7 +226,7 @@ public sealed class SkyColorSystem : ModSystem
 
     public override void ModifySunLightColor(ref Color tileColor, ref Color backgroundColor)
     {
-        if (!ZenSkies.CanDrawSky ||
+        if (!ModImpl.CanDrawSky ||
             !SkyConfig.Instance.PitchBlackBackground ||
             DarkSurfaceSystem.IsEnabled)
             return;
