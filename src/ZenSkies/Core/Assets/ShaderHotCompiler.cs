@@ -33,7 +33,6 @@ public static class ShaderHotCompiler
 
     private readonly static Mod mod = ModContent.GetInstance<ModImpl>();
 
-
     [OnLoad]
     private static void Load()
     {
