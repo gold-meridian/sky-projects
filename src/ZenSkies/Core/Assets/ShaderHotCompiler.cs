@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Terraria.ModLoader;
-using static System.IO.WatcherChangeTypes;
 
 namespace ZenSkies.Core.Assets;
 
@@ -76,7 +75,7 @@ public static class ShaderHotCompiler
 
     private static void EffectChanged(object sender, FileSystemEventArgs e)
     {
-        if (e.ChangeType.HasFlag(Created))
+        if (e.ChangeType.HasFlag(WatcherChangeTypes.Created))
             return;
 
         string effectPath = e.FullPath.Replace('\\', '/');
@@ -85,8 +84,8 @@ public static class ShaderHotCompiler
 
         shortPath = Path.ChangeExtension(shortPath, null).Replace('\\', '/');
 
-        if (e.ChangeType.HasFlag(Deleted) ||
-            e.ChangeType.HasFlag(Renamed))
+        if (e.ChangeType.HasFlag(WatcherChangeTypes.Deleted) ||
+            e.ChangeType.HasFlag(WatcherChangeTypes.Renamed))
         {
             mod.Logger.Warn($"Effect at {shortPath} was removed or renamed!");
             return;
