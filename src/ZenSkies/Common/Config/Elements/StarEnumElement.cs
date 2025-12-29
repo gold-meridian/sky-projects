@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Daybreak.Common.Features.TmlConfig;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using System;
 using System.Reflection;
@@ -13,13 +14,12 @@ using Star = ZenSkies.Common.Systems.Sky.Space.Star;
 
 namespace ZenSkies.Common.Config.Elements;
 
-public sealed class StarEnumElement : ConfigElement<StarVisual>
+[ProvidesConfigElementFor<StarVisual>]
+internal sealed class StarEnumElement : ConfigElement<StarVisual>
 {
-    #region Private Fields
+    private const float time_multiplier = 1.2f;
 
-    private const float TimeMultiplier = 1.2f;
-
-    private Star DisplayStar = new() 
+    private Star display_star = new() 
     { 
         Position = Vector2.Zero,
         Color = Color.White,
@@ -30,39 +30,29 @@ public sealed class StarEnumElement : ConfigElement<StarVisual>
         IsActive = true
     };
 
-    private string[]? EnumNames;
-
-    #endregion
-
-    #region Initialization
+    private string[]? enumNames;
 
     public override void OnBind()
     {
         base.OnBind();
 
-        OnLeftClick += (_, _) =>
-            Value = Value.NextEnum();
+        OnLeftClick += (_, _) => Value = Value.NextEnum();
 
-        OnRightClick += (_, _) =>
-            Value = Value.PreviousEnum();
+        OnRightClick += (_, _) => Value = Value.PreviousEnum();
 
-        EnumNames = Enum.GetNames(typeof(StarVisual));
+        enumNames = Enum.GetNames(typeof(StarVisual));
 
-        for (int i = 0; i < EnumNames.Length; i++)
+        for (int i = 0; i < enumNames.Length; i++)
         {
-            FieldInfo? enumFieldFieldInfo = MemberInfo.Type.GetField(EnumNames[i]);
+            FieldInfo? enumFieldFieldInfo = MemberInfo.Type.GetField(enumNames[i]);
 
             if (enumFieldFieldInfo is null)
                 continue;
 
             string name = ConfigManager.GetLocalizedLabel(new(enumFieldFieldInfo));
-            EnumNames[i] = name;
+            enumNames[i] = name;
         }
     }
-
-    #endregion
-
-    #region Drawing
 
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
@@ -70,31 +60,29 @@ public sealed class StarEnumElement : ConfigElement<StarVisual>
 
         Rectangle dims = this.Dimensions;
 
-        string text = EnumNames?[(int)Value] ?? string.Empty;
+        string text = enumNames?[(int)Value] ?? string.Empty;
 
         DynamicSpriteFont font = FontAssets.ItemStack.Value;
 
         Vector2 textSize = font.MeasureString(text);
         Vector2 origin = new(textSize.X, 0);
+        {
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, font, text, new Vector2(dims.X + dims.Width - 36f, dims.Y + 8f), Color.White, 0f, origin, new(0.8f));
+        }
 
-        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, font, text, new Vector2(dims.X + dims.Width - 36f, dims.Y + 8f), Color.White, 0f, origin, new(0.8f));
+        {
+            DrawPanel2(spriteBatch, new(dims.X + dims.Width - dims.Height, dims.Y + 2), TextureAssets.SettingsPanel.Value, dims.Height - 4, dims.Height - 4, Color.Black);
 
-        DisplayStar.Position = new(dims.X + dims.Width - (dims.Height * .5f) - 2, dims.Y + (dims.Height * .5f));
+            display_star.Position = new(dims.X + dims.Width - (dims.Height * .5f) - 2, dims.Y + (dims.Height * .5f));
 
-        DrawPanel2(spriteBatch, new(dims.X + dims.Width - dims.Height, dims.Y + 2), TextureAssets.SettingsPanel.Value, dims.Height - 4, dims.Height - 4, Color.Black);
+            StarVisual style = Value;
 
-        DrawStar(spriteBatch);
+            if (Value == StarVisual.Random)
+            {
+                style = (StarVisual)((int)(Main.GlobalTimeWrappedHourly * time_multiplier) % 3) + 1;
+            }
+
+            StarRendering.DrawStar(spriteBatch, 1, 0f, display_star, style);
+        }
     }
-
-    private void DrawStar(SpriteBatch spriteBatch)
-    {
-        StarVisual style = Value;
-
-        if (Value == StarVisual.Random)
-            style = (StarVisual)((int)(Main.GlobalTimeWrappedHourly * TimeMultiplier) % 3) + 1;
-
-        StarRendering.DrawStar(spriteBatch, 1, 0f, DisplayStar, style);
-    }
-
-    #endregion
 }

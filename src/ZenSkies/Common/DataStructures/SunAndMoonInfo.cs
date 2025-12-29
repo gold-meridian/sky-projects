@@ -2,8 +2,6 @@
 
 public readonly record struct SunAndMoonInfo
 {
-    #region Public Properties
-
     public Vector2 SunPosition { get; init; }
     public Color SunColor { get; init; }
     public float SunRotation { get; init; }
@@ -14,11 +12,8 @@ public readonly record struct SunAndMoonInfo
     public float MoonRotation { get; init; }
     public float MoonScale { get; init; }
 
-    #endregion
-
-    #region Public Constructors
-
-    public SunAndMoonInfo(Vector2 sunPosition, Color sunColor, float sunRotation, float sunScale,
+    public SunAndMoonInfo(
+        Vector2 sunPosition, Color sunColor, float sunRotation, float sunScale,
         Vector2 moonPosition, Color moonColor, float moonRotation, float moonScale)
     {
         SunPosition = sunPosition;
@@ -44,6 +39,4 @@ public readonly record struct SunAndMoonInfo
         MoonRotation = rotation;
         MoonScale = scale;
     }
-
-    #endregion
 }

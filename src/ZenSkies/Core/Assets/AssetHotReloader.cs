@@ -159,7 +159,7 @@ internal static class AssetReloader
 
     internal sealed class LocalAssetSource : ContentSource
     {
-        private string ModSource { get; init; }
+        private readonly string modSource;
 
         public string[] AssetPaths
         {
@@ -169,14 +169,14 @@ internal static class AssetReloader
 
         public LocalAssetSource(string modSource) : base()
         {
-            ModSource = modSource;
+            this.modSource = modSource;
 
             assetPaths = [];
         }
 
         public override Stream OpenStream(string fullAssetName)
         {
-            return File.OpenRead(Path.Combine(ModSource, fullAssetName));
+            return File.OpenRead(Path.Combine(modSource, fullAssetName));
         }
 
         public void AddAssetPath(string path)

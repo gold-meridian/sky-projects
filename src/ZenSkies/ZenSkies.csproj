@@ -1,6 +1,6 @@
 ﻿<Project>
 	
-	<Import Project="..\Mod.targets"/>
+	<Import Project="..\Mod.targets" />
 
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
@@ -9,12 +9,11 @@
 
 	<!-- Publicizer -->
 	<ItemGroup>
-		<Publicize Include="tModLoader;ReLogic;FNA" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false"/>
+		<Publicize Include="tModLoader;ReLogic;FNA" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
 
 		<!-- Mods with difficult to access types -->
-		<Publicize Include="BetterNightSky;CoolerMenu;FancyLighting;Macrocosm;RainOverhaul;RealisticSky;RedSunAndRealisticSky" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false"/>
+		<Publicize Include="BetterNightSky;FancyLighting;Macrocosm;RainOverhaul;RealisticSky;RedSunAndRealisticSky" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
 
-		<DoNotPublicize Include="CoolerMenu:System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute"/>
 	</ItemGroup>
 
 </Project>

@@ -6,10 +6,8 @@ using ZenSkies.Core.Utils;
 
 namespace ZenSkies.Common.Config.Elements;
 
-public class SkyGradientElement : GradientElement
+internal class SkyGradientElement : GradientElement
 {
-    #region Drop Down
-
     protected override void OnExpand()
     {
         base.OnExpand();
@@ -17,19 +15,16 @@ public class SkyGradientElement : GradientElement
         Slider?.OnUpdate += UpdateSlider;
     }
 
-    #endregion
-
-    #region Updating
-
     private void UpdateSlider(UIElement affectedElement)
     {
-        if (affectedElement is not GradientSlider slider || !slider.IsHeld)
+        if (affectedElement is not GradientSlider slider
+            || !slider.IsHeld)
+        {
             return;
+        }
 
         string tooltip = Utilities.GetReadableTime(slider.TargetSegment.Position * 24f);
 
         UIModConfig.Tooltip = tooltip;
     }
-
-    #endregion
 }

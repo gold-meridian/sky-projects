@@ -2,146 +2,221 @@
 using Daybreak.Common.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoMod.RuntimeDetour;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 using ZenSkies.Common.Config;
-using ZenSkies.Common.DataStructures;
 using ZenSkies.Common.Systems.Sky.Space;
+using ZenSkies.Common.Systems.Weather;
 using ZenSkies.Core.Particles;
 using ZenSkies.Core.Utils;
-using static System.Reflection.BindingFlags;
 using Star = ZenSkies.Common.Systems.Sky.Space.Star;
 
 namespace ZenSkies.Common.ModPanels;
 
-/// <summary>
-/// Edits and Hooks:
-/// <list type="bullet">
-///     <see cref="ReorderUIModList"/><br/>
-///     Reorders <see cref="UIMods.modList"/> to be placed after all buttons.
-/// </list>
-/// </summary>
 public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
 {
-    #region Private Fields
+    private record struct SakuraLeafParticle : IParticle
+    {
+        private const int frametime = 8;
+        private const int frames = 4;
 
-    private delegate void orig_OnInitialize(UIMods self);
-    private static Hook? PatchOnInitialize;
+        private const float lifetime_increment = .003f;
 
-    private static readonly Color PanelOutlineColor = new(76, 76, 76, 76);
-    private static readonly Color PanelHoverOutlineColor = new(100, 80, 90, 0);
+        private const float wind_speed = 6.5f;
 
-    private static readonly Color BackgroundColor = new(78, 62, 130);
-    private static readonly Color BackgroundGradientColor = new(64, 48, 22, 0);
+        public Vector2 Position { get; set; }
 
-    private static readonly Vector2 BranchPosition = new(-14, 10);
-    private static readonly Vector2 BranchOrigin = new(-12, 47);
+        public float Rotation { get; set; }
 
-    private const float BranchRotationFrequency = 2.1f;
-    private const float BranchRotationAmplitude = .06f;
+        public Vector2 Velocity { get; set; }
 
-    private static readonly Color ForegroundGradientColor = new(117, 81, 47, 0);
+        public int Frametimer { get; set; }
 
-    #region Particles
+        public int Frame { get; set; }
 
-        // Leaves.
-    private const int LeafCount = 55;
-    private static readonly ParticleHandler<SakuraLeafParticle> Leaves = new(LeafCount);
+        public float Lifetime { get; set; }
 
-    private const int LeafSpawnChance = 30;
+        public bool IsActive { get; set; }
 
-    private const float LeafSpawnOffsetXMin = -100f;
-    private const float LeafSpawnOffsetXMax = -13f;
+        public SakuraLeafParticle(Vector2 position, Vector2? velocity = null)
+        {
+            Position = position;
+            Velocity = velocity ?? Vector2.Zero;
+            Frametimer = 0;
+            Frame = 0;
+            Lifetime = 0f;
+            IsActive = true;
+        }
 
-        // Hover Leaves.
-    private const int LeafHoverTime = 135;
-    private static int LeafHoverTimer;
+        void IParticle.Update()
+        {
+            Lifetime += lifetime_increment;
 
-    private const int LeafHoverCountMin = 4;
-    private const int LeafHoverCountMax = 12;
+            if (Lifetime >= 1)
+            {
+                IsActive = false;
+            }
 
-    private static readonly Vector2 LeafHoverVelocity = new(28, 0);
+            if (++Frametimer >= frametime)
+            {
+                Frametimer = 0;
 
-        // Wind.
-    private const int WindCount = 45;
-    private static readonly ParticleHandler<WindParticle> Winds = new(WindCount);
+                if (++Frame >= frames)
+                {
+                    Frame = 0;
+                }
+            }
 
-    private const int WindSpawnChance = 55;
+            // Modified vanilla tree leaf logic
+            Vector2 newVelocity = Velocity;
+            Vector2 newPosition = Position;
 
-    private const float WindSpawnOffsetXMin = -1000f;
-    private const float WindSpawnOffsetXMax = -400f;
+            Vector2 vector = Position + new Vector2(12f) / 2f - new Vector2(4f) / 2f;
 
-    #endregion
+            vector.Y -= 4f;
 
-    #region Stars
+            Vector2 vector2 = Position - vector;
 
-    private const int StarCount = 240;
-    private static readonly Star[] Stars = new Star[StarCount];
+            if (newVelocity.Y < 0f)
+            {
+                Vector2 vector3 = new(newVelocity.X, -.2f);
 
-    private static bool GeneratedStars = false;
+                newVelocity.Y = .1f;
 
-    private const float StarRotationIncrement = .00045f;
-    private static float StarRotation;
+                vector3.X *= .94f;
 
-    #endregion
+                newVelocity.X = vector3.X;
+                newPosition.X += newVelocity.X;
+                return;
+            }
 
-    #region Bird
+            newVelocity.Y += MathF.PI / 180f;
 
-    private static BirdState BirdState;
+            Vector2 vector4 = Vector2.UnitY.RotatedBy(newVelocity.Y);
 
-    private static readonly Vector2 BirdBranchOffset = new(35, 44);
-    private static readonly Vector2 BirdOrigin = new(15, 22);
+            vector4.X += wind_speed;
 
-    private static Vector2 BirdPosition;
+            newPosition += vector2;
 
-    private const float BirdVelocityMultiplier = 1.07f;
-    private const float BirdMaxVelocitySqr = 12f * 12f;
-    private static readonly Vector2 BirdDirection = new(.9f, -1.5f);
-    private static Vector2 BirdVelocity;
+            newPosition += vector4;
 
-    private const int BirdFrames = 5;
-    private const int BirdFlyingFrames = 4;
-    private const int BirdFrameTime = 6;
-    private static int BirdFrame;
-    private static int BirdFrameTimer;
+            float newRotation = vector4.ToRotation() + MathHelper.PiOver2;
 
-    #endregion
+            Velocity = newVelocity;
+            Position = newPosition;
+            Rotation = newRotation;
+        }
 
-    #endregion
+        readonly void IParticle.Draw(SpriteBatch spriteBatch, GraphicsDevice device)
+        {
+            Texture2D texture = PanelStyleTextures.Leaf;
 
-    #region Loading
+            Rectangle frame = texture.Frame(1, frames, 0, Frame);
+
+            Vector2 origin = frame.Size() * .5f;
+
+            spriteBatch.Draw(PanelStyleTextures.Leaf, Position, frame, Color.White, Rotation, origin, 1f, SpriteEffects.None, 0f);
+        }
+    }
+
+    private enum BirdState : byte
+    {
+        None,
+        Idle,
+        Flying
+    }
+
+    private static readonly Color panel_outline = new(76, 76, 76, 76);
+    private static readonly Color panel_hover_outline = new(100, 80, 90, 0);
+
+    private static readonly Color background = new(78, 62, 130);
+    private static readonly Color background_gradient = new(64, 48, 22, 0);
+
+    private static readonly Vector2 branch_position = new(-14, 10);
+    private static readonly Vector2 branch_origin = new(-12, 47);
+
+    private const float branch_rotation_frequency = 2.1f;
+    private const float branch_rotation_amplitude = .06f;
+
+    private static readonly Color foreground_gradient = new(117, 81, 47, 0);
+
+    // Leaves
+    private const int leaf_count = 55;
+    private static readonly ParticleHandler<SakuraLeafParticle> leaves = new(leaf_count);
+
+    private const int leaf_spawn_chance = 30;
+
+    private const float leaf_spawn_offset_min = -100f;
+    private const float leaf_spawn_offset_max = -13f;
+
+    // Leaves on hover
+    private const int leaf_hover_wait = 135;
+    private static int leafHoverTimer;
+
+    private const int leaf_hover_count_min = 4;
+    private const int leaf_hover_count_max = 12;
+
+    private static readonly Vector2 leaf_hover_velocity = new(28, 0);
+
+    // Wind
+    private const int wind_count = 45;
+    private static readonly ParticleHandler<WindParticle> winds = new(wind_count);
+
+    private const int wind_spawn_chance = 55;
+
+    private const float wind_spawn_offset_min = -1000f;
+    private const float wind_spawn_offset_max = -400f;
+
+    private const int star_count = 240;
+    private static readonly Star[] stars = new Star[star_count];
+
+    private static bool hasGeneratedStars = false;
+
+    private const float star_rotation_speed = .00045f;
+    private static float starRotation;
+
+    // Bird
+    private static BirdState birdState;
+
+    private static readonly Vector2 bird_branch_offset = new(35, 44);
+    private static readonly Vector2 bird_origin = new(15, 22);
+
+    private static Vector2 birdPosition;
+
+    private const float bird_velocity_multiplier = 1.07f;
+    private const float bird_max_velocity_sqr = 12f * 12f;
+    private static readonly Vector2 bird_fly_direction = new(.9f, -1.5f);
+    private static Vector2 birdVelocity;
+
+    private const int bird_frames = 5;
+    private const int bird_flying_frames = 4;
+    private const int bird_frametime = 6;
+    private static int birdFrame;
+    private static int birdFrameTimer;
 
     public override void Load()
     {
-        MethodInfo? onInitialize = typeof(UIMods).GetMethod(nameof(UIMods.OnInitialize), Instance | Public);
-
-        if (onInitialize is not null)
-            PatchOnInitialize = new(onInitialize,
-                ReorderUIModList);
+        MonoModHooks.Add(
+            typeof(UIMods).GetMethod(nameof(UIMods.OnInitialize), BindingFlags.Instance | BindingFlags.Public),
+            OnInitialize_Reorder
+        );
     }
 
-    public override void Unload() =>
-        PatchOnInitialize?.Dispose();
-
-    private static void ReorderUIModList(orig_OnInitialize orig, UIMods self)
+    private static void OnInitialize_Reorder(Action<UIMods> orig, UIMods self)
     {
         orig(self);
 
-            // Move the mod list to the front to have it drawn after certain buttons.
+        // Move the mod list to the front to have it drawn after filtering buttons.
         self.uIPanel.RemoveChild(self.modList);
         self.uIPanel.Append(self.modList);
     }
-
-    #endregion
-
-    #region Initialization
 
     public override void PostInitialize(UIModItem element)
     {
@@ -150,30 +225,26 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
 
         ResetBird();
 
-        GeneratedStars = false;
+        hasGeneratedStars = false;
     }
 
     private static void ResetBird()
     {
-        BirdState = Main.rand.NextBool() ? BirdState.None : BirdState.Idle;
-        BirdVelocity = Vector2.Zero;
-        BirdFrame = BirdFrames - 1;
-        BirdFrameTimer = 0;
+        birdState = Main.rand.NextBool() ? BirdState.None : BirdState.Idle;
+        birdVelocity = Vector2.Zero;
+        birdFrame = bird_frames - 1;
+        birdFrameTimer = 0;
     }
-
-    #endregion
-
-    #region Color/Texture Changes
 
     public override bool PreSetHoverColors(UIModItem element, bool hovered)
     {
-            // Use the default blue because it looks nicer.
+        // Use the default blue because it looks nicer.
         element.BackgroundColor = hovered ? UICommon.DefaultUIBlueMouseOver : UICommon.DefaultUIBlue;
 
         return false;
     }
 
-        // Remove the panel behind the enable toggle.
+    // Remove the panel behind the enable toggle.
     public override Dictionary<TextureKind, Asset<Texture2D>> TextureOverrides { get; } = new()
          {
              {TextureKind.InnerPanel, MiscTextures.Invis},
@@ -181,10 +252,6 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
          };
 
     public override UIImage? ModifyModIcon(UIModItem element, UIImage modIcon, ref int modIconAdjust) => null;
-
-    #endregion
-
-    #region Updating
 
     private static void Update(UIElement element)
     {
@@ -198,149 +265,159 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
         UpdateBird(element);
     }
 
-    #region Particles
-
     private static void UpdateLeafs(Vector2 size)
     {
-        Leaves.Update();
+        leaves.Update();
 
-        if (LeafHoverTimer > 0)
-            LeafHoverTimer--;
+        if (leafHoverTimer > 0)
+        {
+            leafHoverTimer--;
+        }
 
-        if (!Main.rand.NextBool(LeafSpawnChance))
+        if (!Main.rand.NextBool(leaf_spawn_chance))
+        {
             return;
+        }
 
         SpawnLeaf(size);
     }
 
-    private static void UpdateWinds(Vector2 size)
+    private static void SpawnLeaf(Vector2 size, Vector2? velocity = null)
     {
-        Winds.Update();
-
-        if (!Main.rand.NextBool(WindSpawnChance))
-            return;
-
         Vector2 position =
-            new(Main.rand.NextFloat(WindSpawnOffsetXMin, WindSpawnOffsetXMax),
-            Main.rand.NextFloat(-size.Y * .1f, size.Y * 1.1f));
+            new(Main.rand.NextFloat(leaf_spawn_offset_min, leaf_spawn_offset_max),
+            Main.rand.NextFloat(-size.Y * .3f, size.Y));
 
-        Winds.Spawn(new(position, .6f, false));
+        leaves.Spawn(new(position, velocity));
     }
 
-    #endregion
+    private static void UpdateWinds(Vector2 size)
+    {
+        winds.Update();
 
-    #region Stars
+        if (!Main.rand.NextBool(wind_spawn_chance))
+        {
+            return;
+        }
+
+        Vector2 position =
+            new(Main.rand.NextFloat(wind_spawn_offset_min, wind_spawn_offset_max),
+            Main.rand.NextFloat(-size.Y * .1f, size.Y * 1.1f));
+
+        winds.Spawn(new(position, .6f, false));
+    }
 
     private static void UpdateStars(Vector2 size)
     {
-        StarRotation += StarRotationIncrement;
-        StarRotation %= MathHelper.TwoPi;
+        starRotation += star_rotation_speed;
+        starRotation %= MathHelper.TwoPi;
 
-            // Regenerate stars if applicable.
-        if (GeneratedStars)
+        if (hasGeneratedStars)
+        {
             return;
+        }
 
-        GeneratedStars = true;
+        hasGeneratedStars = true;
 
         Vector2 center = new(size.X * .5f, size.Y);
 
         float radius = center.Length() * Main.UIScale;
 
-        for (int i = 0; i < StarCount; i++)
-            Stars[i] = new(Main.rand, radius);
+        for (int i = 0; i < star_count; i++)
+        {
+            stars[i] = new(Main.rand, radius);
+        }
     }
-
-    #endregion
-
-    #region Bird
 
     private static void UpdateBird(UIElement element)
     {
-        BirdState = BirdState switch
+        birdState = birdState switch
         {
             BirdState.Idle => UpdateIdle(element),
             BirdState.Flying => UpdatingFlying(),
             _ => BirdState.None
         };
-    }
 
-    private static BirdState UpdateIdle(UIElement element)
-    {
-            // Update the base position.
-        Vector2 position = element.Dimensions.Position() * Main.UIScale;
-        Vector2 size = element.Dimensions.Size() * Main.UIScale;
-
-        Vector2 branchPosition =
-            position +
-            BranchPosition +
-            (Vector2.UnitY * size.Y * .5f);
-
-        float branchRotation = MathF.Sin(Main.GlobalTimeWrappedHourly * BranchRotationFrequency) * BranchRotationAmplitude;
-
-        BirdPosition = BirdBranchOffset - BranchOrigin;
-        BirdPosition = BirdPosition.RotatedBy(branchRotation);
-
-        BirdPosition += branchPosition;
-
-            // Only allow transitioning to flying if fully on screen.
-        if (!BirdOnScreen(element) ||
-            !element.IsMouseHovering)
-            return BirdState.Idle;
-
-        BirdFrame = 0;
-
-        BirdVelocity = BirdDirection;
-
-        return BirdState.Flying;
-    }
-
-    private static bool BirdOnScreen(UIElement element)
-    {
-        Texture2D texture = PanelStyleTextures.Bird;
-
-        Rectangle rectangle = texture.Frame(1, BirdFrames, 0, 0);
-
-        Vector2 position = BirdPosition - BirdOrigin;
-        rectangle.X += (int)position.X;
-        rectangle.Y += (int)position.Y;
-
-        UIElement? innerList = element.Parent?.Parent;
-
-        if (innerList is null)
-            return false;
-
-        Rectangle parentRectangle = innerList.DimensionsFromParent.Multiply(Main.UIScale);
-
-        return parentRectangle.Contains(rectangle);
-    }
-
-    private static BirdState UpdatingFlying()
-    {
-        if (++BirdFrameTimer >= BirdFrameTime)
+        static BirdState UpdateIdle(UIElement element)
         {
-            BirdFrameTimer = 0;
+            Vector2 position = element.Dimensions.Position() * Main.UIScale;
+            Vector2 size = element.Dimensions.Size() * Main.UIScale;
 
-            if (++BirdFrame >= BirdFlyingFrames)
-                BirdFrame = 0;
+            Vector2 branchPosition =
+                position +
+                branch_position +
+                (Vector2.UnitY * size.Y * .5f);
+
+            float branchRotation = MathF.Sin(Main.GlobalTimeWrappedHourly * branch_rotation_frequency) * branch_rotation_amplitude;
+
+            birdPosition = bird_branch_offset - branch_origin;
+            birdPosition = birdPosition.RotatedBy(branchRotation);
+
+            birdPosition += branchPosition;
+
+            // Only allow transitioning to flying if the bird is not cutoff.
+            if (!BirdOnScreen(element) ||
+                !element.IsMouseHovering)
+            {
+                return BirdState.Idle;
+            }
+
+            birdFrame = 0;
+
+            birdVelocity = bird_fly_direction;
+
+            return BirdState.Flying;
         }
 
-            // Make the bird only move so fast
-        if (BirdVelocity.LengthSquared() <= BirdMaxVelocitySqr)
-            BirdVelocity *= BirdVelocityMultiplier;
+        static BirdState UpdatingFlying()
+        {
+            if (++birdFrameTimer >= bird_frametime)
+            {
+                birdFrameTimer = 0;
 
-        BirdPosition += BirdVelocity;
+                if (++birdFrame >= bird_flying_frames)
+                {
+                    birdFrame = 0;
+                }
+            }
 
-        if (BirdPosition.Y <= 0)
-            BirdState = BirdState.None;
+            if (birdVelocity.LengthSquared() <= bird_max_velocity_sqr)
+            {
+                birdVelocity *= bird_velocity_multiplier;
+            }
 
-        return BirdState.Flying;
+            birdPosition += birdVelocity;
+
+            if (birdPosition.Y <= 0)
+            {
+                birdState = BirdState.None;
+            }
+
+            return BirdState.Flying;
+        }
+
+        static bool BirdOnScreen(UIElement element)
+        {
+            Texture2D texture = PanelStyleTextures.Bird;
+
+            Rectangle rectangle = texture.Frame(1, bird_frames, 0, 0);
+
+            Vector2 position = birdPosition - bird_origin;
+            rectangle.X += (int)position.X;
+            rectangle.Y += (int)position.Y;
+
+            UIElement? innerList = element.Parent?.Parent;
+
+            if (innerList is null)
+            {
+                return false;
+            }
+
+            Rectangle parentRectangle = innerList.DimensionsFromParent.Multiply(Main.UIScale);
+
+            return parentRectangle.Contains(rectangle);
+        }
     }
-
-    #endregion
-
-    #endregion
-
-    #region Interactions
 
     private static void OnHover(UIMouseEvent evt, UIElement element)
     {
@@ -349,28 +426,22 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
         SpawnLeavesHover(size);
     }
 
-    #region Particles
-
     private static void SpawnLeavesHover(Vector2 size)
     {
-        if (LeafHoverTimer > 0)
+        if (leafHoverTimer > 0)
+        {
             return;
+        }
 
-        LeafHoverTimer = LeafHoverTime;
+        leafHoverTimer = leaf_hover_wait;
 
-        int count = Main.rand.Next(LeafHoverCountMin, LeafHoverCountMax);
+        int count = Main.rand.Next(leaf_hover_count_min, leaf_hover_count_max);
 
         for (int i = 0; i < count; i++)
-            SpawnLeaf(size, LeafHoverVelocity);
+        {
+            SpawnLeaf(size, leaf_hover_velocity);
+        }
     }
-
-    #endregion
-
-    #endregion
-
-    #region Drawing
-
-    #region Panel
 
     public override bool PreDrawPanel(UIModItem element, SpriteBatch spriteBatch, ref bool drawDivider)
     {
@@ -380,167 +451,170 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
             element.LoadTextures();
         }
 
-        if (!UIEffects.Panel.IsReady)
-            return true;
-
         GraphicsDevice device = Main.instance.GraphicsDevice;
 
         Rectangle dims = element.Dimensions;
 
-            // Make sure the panel draws correctly on any scale.
         Vector2 size = Vector2.Transform(dims.Size(), Main.UIScaleMatrix);
         Vector2 position = Vector2.Transform(dims.Position(), Main.UIScaleMatrix);
 
-        Rectangle source = new((int)position.X, (int)position.Y, 
-            (int)size.X, (int)size.Y);
+        Rectangle source = new((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
 
-        spriteBatch.End(out var snapshot);
+        var snapshot = new SpriteBatchSnapshot(spriteBatch);
+        using (spriteBatch.Scope())
+        {
+            RenderTargetLease nextLease = RenderTargetPool.Shared.Rent(device, (int)size.X, (int)size.Y, RenderTargetDescriptor.Default);
 
-            // Lease a target from the pool.
-        RenderTargetLease leasedTarget = RenderTargetPool.Shared.Rent(device, (int)size.X, (int)size.Y, RenderTargetDescriptor.Default);
+            // Background
+            {
+                using (nextLease.Scope(clearColor: Color.Transparent))
+                {
+                    DrawPanelBackground(spriteBatch, size);
+                }
+                DrawAsPanel(nextLease.Target);
+            }
 
-            // BG.
-        using (new RenderTargetScope(leasedTarget.Target, true, Color.Transparent))
-            DrawPanelBackground(spriteBatch, size);
+            // that fucking bird that i hate
+            DrawBird(spriteBatch, snapshot, device, element);
 
-        DrawAsPanel(spriteBatch, snapshot, device, leasedTarget.Target, source, element);
+            // Foreground
+            {
+                using (new RenderTargetScope(nextLease.Target, true, Color.Transparent))
+                {
+                    DrawPanelForeground(spriteBatch, device, size);
+                }
 
-            // That fucking bird that I hate.
-        DrawBird(spriteBatch, snapshot, device, element);
+                DrawAsPanel(nextLease.Target, Color.Transparent);
+            }
 
-            // FG.
-        using (new RenderTargetScope(leasedTarget.Target, true, Color.Transparent))
-            DrawPanelForeground(spriteBatch, device, size);
-        
-        DrawAsPanel(spriteBatch, snapshot, device, leasedTarget.Target, source, element, Color.Transparent);
+            nextLease.Dispose();
+        }
 
-            // Return it to the pool.
-        leasedTarget.Dispose();
+        // Border
+        {
+            Color borderColor =
+                element.IsMouseHovering ?
+                panel_hover_outline :
+                panel_outline;
 
-            // Return to the base spriteBatch params* (I don't trust the game to use the correct BlendState.)
-        spriteBatch.Begin(snapshot with { BlendState = BlendState.AlphaBlend });
+            element.DrawPanel(spriteBatch, element._borderTexture.Value, borderColor);
+        }
 
-            // Additional border that stands out more.
-        Color borderColor =
-            element.IsMouseHovering ?
-            PanelHoverOutlineColor :
-            PanelOutlineColor;
+        // Divider
+        {
+            drawDivider = false;
 
-        element.DrawPanel(spriteBatch, element._borderTexture.Value, borderColor);
+            Rectangle innerDimensions = element.InnerDimensions;
 
-            // Faded divider.
-        drawDivider = false;
+            Rectangle dividerSize = new(
+                innerDimensions.X + 5 + element._modIconAdjust, innerDimensions.Y + 30,
+                innerDimensions.Width - 10 - element._modIconAdjust, 4);
 
-        Rectangle innerDimensions = element.InnerDimensions;
-
-        Rectangle dividerSize = new(
-            innerDimensions.X + 5 + element._modIconAdjust, innerDimensions.Y + 30,
-            innerDimensions.Width - 10 - element._modIconAdjust, 4);
-
-        spriteBatch.Draw(PanelStyleTextures.Divider, dividerSize, Color.White);
-
-        spriteBatch.Restart(in snapshot);
+            spriteBatch.Draw(PanelStyleTextures.Divider, dividerSize, Color.White);
+        }
 
         return false;
+
+        void DrawAsPanel(Texture2D texture, Color? color = null)
+        {
+            spriteBatch.Begin(snapshot with { SortMode = SpriteSortMode.Immediate });
+
+            UIEffects.Panel.Source = new(source.Width, source.Height, source.X, source.Y);
+
+            UIEffects.Panel.Apply();
+
+            device.Textures[1] = texture;
+            device.SamplerStates[1] = SamplerState.PointClamp;
+
+            element.DrawPanel(spriteBatch, element._backgroundTexture.Value, color ?? element.BackgroundColor);
+            element.DrawPanel(spriteBatch, element._borderTexture.Value, color ?? element.BorderColor);
+
+            spriteBatch.End();
+        }
     }
-
-    private static void DrawAsPanel(SpriteBatch spriteBatch, SpriteBatchSnapshot snapshot, GraphicsDevice device, Texture2D texture, Rectangle frame, UIPanel element, Color? color = null)
-    {
-        spriteBatch.Begin(snapshot with { SortMode = SpriteSortMode.Immediate });
-
-        UIEffects.Panel.Source = new(frame.Width, frame.Height, frame.X, frame.Y);
-
-        UIEffects.Panel.Apply();
-
-        device.Textures[1] = texture;
-        device.SamplerStates[1] = SamplerState.PointClamp;
-
-        element.DrawPanel(spriteBatch, element._backgroundTexture.Value, color ?? element.BackgroundColor);
-        element.DrawPanel(spriteBatch, element._borderTexture.Value, color ?? element.BorderColor);
-
-        spriteBatch.End();
-    }
-
-    #endregion
-
-    #region Background
 
     private static void DrawPanelBackground(SpriteBatch spriteBatch, Vector2 size)
     {
+        // Background gradient
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
+        {
+            Rectangle background = new(0, 0, (int)size.X, (int)size.Y);
 
-        Rectangle background = new(0, 0, (int)size.X, (int)size.Y);
-
-            // Vauge sunset gradient.
-        spriteBatch.Draw(MiscTextures.Pixel, background, BackgroundColor);
-        spriteBatch.Draw(SkyTextures.SkyGradient, background, BackgroundGradientColor);
-
-            // Draw background stars.
+            spriteBatch.Draw(MiscTextures.Pixel, background, ZenSkiesPanelStyle.background);
+            spriteBatch.Draw(SkyTextures.SkyGradient, background, background_gradient);
+        }
         spriteBatch.End(out var snapshot);
-        spriteBatch.Begin(snapshot with { TransformMatrix = RotationMatrix(size) });
 
-        StarRendering.DrawStars(spriteBatch, .2f, -StarRotation, Stars, SkyConfig.Instance.StarStyle);
-
-        spriteBatch.Restart(snapshot with { SamplerState = SamplerState.PointClamp });
-
-            // Branch that rotates around an origin out of frame.
-        Vector2 branchPosition = BranchPosition + (Vector2.UnitY * size.Y * .5f);
-
-        float branchRotation = MathF.Sin(Main.GlobalTimeWrappedHourly * BranchRotationFrequency) * BranchRotationAmplitude;
-
-        spriteBatch.Draw(PanelStyleTextures.Branch, branchPosition, null, Color.White, branchRotation, BranchOrigin, 1f, SpriteEffects.None, 0f);
-
+        // Stars
+        spriteBatch.Begin(snapshot with { TransformMatrix = StarMatrix(size) });
+        {
+            StarRendering.DrawStars(spriteBatch, .2f, -starRotation, stars, SkyConfig.Instance.StarStyle);
+        }
         spriteBatch.End();
+
+        // Branch
+        spriteBatch.Begin(snapshot with { SamplerState = SamplerState.PointClamp });
+        {
+            Vector2 branchPosition = branch_position + (Vector2.UnitY * size.Y * .5f);
+
+            float branchRotation = MathF.Sin(Main.GlobalTimeWrappedHourly * branch_rotation_frequency) * branch_rotation_amplitude;
+
+            spriteBatch.Draw(PanelStyleTextures.Branch, branchPosition, null, Color.White, branchRotation, branch_origin, 1f, SpriteEffects.None, 0f);
+        }
+        spriteBatch.End();
+
+        static Matrix StarMatrix(Vector2 size)
+        {
+            Matrix rotation = Matrix.CreateRotationZ(starRotation);
+            Matrix offset = Matrix.CreateTranslation(new(size.X * .5f, size.Y, 0f));
+
+            return Matrix.Identity * rotation * offset;
+        }
     }
-
-    #endregion
-
-    #region Foreground
 
     private static void DrawPanelForeground(SpriteBatch spriteBatch, GraphicsDevice device, Vector2 size)
     {
+        // Leaves
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
-
-            // Draw the falling leaves.
-        Leaves.Draw(spriteBatch, device);
-
-            // And faint wind particles.
+        {
+            leaves.Draw(spriteBatch, device);
+        }
         spriteBatch.End(out var snapshot);
 
-        device.Textures[0] = SkyTextures.SunBloom;
-        device.SamplerStates[0] = SamplerState.LinearClamp;
-
-            // TODO: Not this.
+        // Wind
         Color oldSkyColor = Main.ColorOfTheSkies;
         Main.ColorOfTheSkies = Color.White;
+        {
+            device.Textures[0] = SkyTextures.SunBloom;
+            device.SamplerStates[0] = SamplerState.LinearClamp;
 
-        Winds.Draw(spriteBatch, device);
-
+            winds.Draw(spriteBatch, device);
+        }
         Main.ColorOfTheSkies = oldSkyColor;
 
+        // Foreground light
         spriteBatch.Begin(snapshot with { SamplerState = SamplerState.LinearClamp });
+        {
+            Rectangle background = new(0, 0, (int)size.X, (int)size.Y);
 
-        Rectangle background = new(0, 0, (int)size.X, (int)size.Y);
-
-            // Vauge foreground light.
-        spriteBatch.Draw(SkyTextures.SkyGradient, background, ForegroundGradientColor);
-
+            spriteBatch.Draw(SkyTextures.SkyGradient, background, foreground_gradient);
+        }
         spriteBatch.End();
     }
 
-    #endregion
-
-    #region Bird
-
     private static void DrawBird(SpriteBatch spriteBatch, SpriteBatchSnapshot snapshot, GraphicsDevice device, UIPanel panel)
     {
-        if (BirdState == BirdState.None)
+        if (birdState == BirdState.None)
+        {
             return;
+        }
 
         Rectangle scissor = device.ScissorRectangle;
 
-        if (BirdState == BirdState.Flying)
+        if (birdState == BirdState.Flying)
+        {
             device.ScissorRectangle = device.Viewport.Bounds;
+        }
 
         spriteBatch.Begin(snapshot with
         {
@@ -548,40 +622,15 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
             SamplerState = SamplerState.PointClamp,
             TransformMatrix = Matrix.Identity
         });
+        {
+            Texture2D texture = PanelStyleTextures.Bird;
 
-        Texture2D texture = PanelStyleTextures.Bird;
+            Rectangle frame = texture.Frame(1, bird_frames, 0, birdFrame);
 
-        Rectangle frame = texture.Frame(1, BirdFrames, 0, BirdFrame);
-
-        spriteBatch.Draw(texture, BirdPosition, frame, Color.White, 0f, BirdOrigin, 1f, SpriteEffects.None, 0f);
-
+            spriteBatch.Draw(texture, birdPosition, frame, Color.White, 0f, bird_origin, 1f, SpriteEffects.None, 0f);
+        }
         spriteBatch.End();
 
         device.ScissorRectangle = scissor;
     }
-
-    #endregion
-
-    #endregion
-
-    #region Private Methods
-
-    private static void SpawnLeaf(Vector2 size, Vector2? velocity = null)
-    {
-        Vector2 position =
-            new(Main.rand.NextFloat(LeafSpawnOffsetXMin, LeafSpawnOffsetXMax),
-            Main.rand.NextFloat(-size.Y * .3f, size.Y));
-
-        Leaves.Spawn(new(position, velocity));
-    }
-
-    private static Matrix RotationMatrix(Vector2 size)
-    {
-        Matrix rotation = Matrix.CreateRotationZ(StarRotation);
-        Matrix offset = Matrix.CreateTranslation(new(size.X * .5f, size.Y, 0f));
-
-        return Matrix.Identity * rotation * offset;
-    }
-
-    #endregion
 }

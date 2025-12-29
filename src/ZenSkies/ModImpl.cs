@@ -17,8 +17,6 @@ namespace ZenSkies;
 
 public sealed class ModImpl : Mod, IHasCustomAuthorMessage
 {
-    #region Public Properties
-
     public static bool CanDrawSky
     {
         get => field && !ModLoader.isLoading;
@@ -27,64 +25,50 @@ public sealed class ModImpl : Mod, IHasCustomAuthorMessage
 
     public static bool Unloading { get; private set; }
 
-    #endregion
-
-    #region Loading
-
     public override void Close()
     {
-            // Technically redundant.
         CanDrawSky = false;
         Unloading = true;
 
         base.Close();
     }
 
-    public override void PostSetupContent() =>
-        CanDrawSky = true;
-
-    #endregion
-
-    #region Content
+    public override void PostSetupContent() => CanDrawSky = true;
 
     public override IContentSource CreateDefaultContentSource()
     {
         if (!Main.dedServ)
+        {
             AddContent(new ObjModelReader());
+        }
 
         return base.CreateDefaultContentSource();
     }
 
-    #endregion
+    private const string authorship_header_key = "Mods.ZenSkies.AuthorTags.Header";
 
-    #region Authorshp
+    string IHasCustomAuthorMessage.GetAuthorText()
+    {
+        return AuthorText.GetAuthorTooltip(this, Language.GetTextValue(authorship_header_key));
+    }
 
-    private const string AuthorshipHeaderKey = "Mods.ZenSkies.AuthorTags.Header";
-
-    string IHasCustomAuthorMessage.GetAuthorText() =>
-        AuthorText.GetAuthorTooltip(this, Language.GetTextValue(AuthorshipHeaderKey));
-
-    #endregion
-
-    #region Packets
-
-    public override void HandlePacket(BinaryReader reader, int whoAmI) =>
+    public override void HandlePacket(BinaryReader reader, int whoAmI)
+    {
         PacketSystem.Handle(this, reader, whoAmI);
-
-    #endregion
-
-    #region ModCall
+    }
 
     public override object Call(params object[] args)
     {
         if (args.Length <= 0)
+        {
             throw new ArgumentException("Zero arguments provided!");
+        }
 
         if (args[0] is not string name)
+        {
             throw new ArgumentException("First argument was not of type string!");
+        }
 
         return ModCallSystem.HandleCall(name, [.. args.Skip(1)]);
     }
-
-    #endregion
 }

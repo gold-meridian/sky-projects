@@ -86,7 +86,7 @@ public sealed class ShootingStarSystem : ModSystem
 
             c.MoveAfterLabels();
 
-            c.EmitCall(SpawnShootingStar);
+            c.EmitDelegate(SpawnShootingStar);
 
             c.EmitBr(starFallSkipTarget);
         }
@@ -112,7 +112,7 @@ public sealed class ShootingStarSystem : ModSystem
 
             c.MoveAfterLabels();
 
-            c.EmitCall(SpawnShootingStar);
+            c.EmitDelegate(SpawnShootingStar);
 
             c.EmitBr(starFallSkipTarget);
         }

@@ -13,7 +13,6 @@ namespace ZenSkies.Common.Config;
 
 public sealed class SkyConfig : ModConfig
 {
-        // 'ConfigManager.Add' Automatically sets public fields named 'Instance' to the ModConfig's type.
     public static SkyConfig Instance;
 
     public override ConfigScope Mode =>
@@ -45,7 +44,6 @@ public sealed class SkyConfig : ModConfig
     [Header("Stars")]
 
     [DefaultValue(StarVisual.Random)]
-    [CustomModConfigItem(typeof(StarEnumElement))]
     public StarVisual StarStyle;
 
     [DefaultValue(true)]
@@ -147,7 +145,7 @@ public sealed class SkyConfig : ModConfig
 
         // -- Background --
     private bool PitchBlackBackgroundLocked =>
-        DarkSurfaceSystem.IsEnabled;
+        DarkSurfaceCompat.IsEnabled;
 
         // -- Clouds --
     private bool UseCloudGodraysLocked =>

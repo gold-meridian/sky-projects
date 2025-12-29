@@ -6,24 +6,16 @@ namespace ZenSkies.Common.Authorship;
 
 public class ZoeyTag : ZenSkiesAuthorTag
 {
-    #region Private Fields
-
-    private static readonly Color GlowColor = new(179, 133, 255);
-
-    #endregion
-
-    #region Drawing
+    private static readonly Color glow_color = new(179, 133, 255);
 
     public override void DrawIcon(SpriteBatch spriteBatch, Vector2 position)
     {
-        Vector2 glowPosition = new((int)position.X - 4, (int)position.Y - 6);
-
-        Color glowColor = GlowColor * MathF.Sin(Main.GlobalTimeWrappedHourly);
-
-        spriteBatch.Draw(AuthorshipTextures.ZoeyGlow, glowPosition, glowColor);
+        var glowPosition = new Vector2(position.X, position.Y - 2);
+        var glowColor = glow_color * MathF.Sin(Main.GlobalTimeWrappedHourly);
+        {
+            spriteBatch.Draw(AuthorshipTextures.ZoeyGlow, glowPosition, glowColor);
+        }
 
         base.DrawIcon(spriteBatch, position);
     }
-
-    #endregion
 }

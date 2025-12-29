@@ -22,7 +22,7 @@ public record struct ShootingStar
 
     private const float StarScale = .13f;
 
-    private const float LifeTimeIncrement = .007f;
+    private const float LifetimeIncrement = .007f;
 
     private const float MinVelocity = 3.1f;
     private const float MaxVelocity = 6.3f;
@@ -47,7 +47,7 @@ public record struct ShootingStar
 
     public float Rotate { get; init; }
 
-    public float LifeTime { get; set; }
+    public float Lifetime { get; set; }
 
     public bool IsActive { get; set; }
 
@@ -63,7 +63,7 @@ public record struct ShootingStar
         OldPositions = new Vector2[MaxOldPositions];
         Velocity = rand.NextVector2CircularEdge(1f, 1f) * rand.NextFloat(MinVelocity, MaxVelocity);
         Rotate = rand.NextFloat(MinRotate, MaxRotate);
-        LifeTime = 1f;
+        Lifetime = 1f;
         IsActive = true;
         Hit = false;
     }
@@ -84,7 +84,7 @@ public record struct ShootingStar
 
         VertexPositionColorTexture[] vertices = new VertexPositionColorTexture[(positions.Length - 1) * 2];
 
-        Color color = Color.LightGray * alpha * MathF.Sin(LifeTime * MathHelper.Pi);
+        Color color = Color.LightGray * alpha * MathF.Sin(Lifetime * MathHelper.Pi);
         color.A = 0;
 
         for (int i = 0; i < positions.Length - 1; i++)
@@ -123,12 +123,12 @@ public record struct ShootingStar
 
     public void Update()
     {
-        LifeTime -= LifeTimeIncrement;
-        if (LifeTime <= 0f)
+        Lifetime -= LifetimeIncrement;
+        if (Lifetime <= 0f)
             IsActive = false;
 
             // This is a really excessive way to lessen the velocity over time.
-        float exponentialFade = Easings.OutExpo(LifeTime);
+        float exponentialFade = Easings.OutExpo(Lifetime);
         Velocity *= MathHelper.Lerp(1f, VelocityDegrade, exponentialFade);
 
             // Have the shooting star curve slightly

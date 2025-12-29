@@ -9,33 +9,16 @@ using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.ModLoader;
 using ZenSkies.Common.Config;
-using ZenSkies.Common.Systems.Menu;
 using ZenSkies.Common.Systems.Sky;
-using ZenSkies.Common.Systems.Sky.SunAndMoon;
-using ZenSkies.Core;
-using ZenSkies.Core.Exceptions;
 using ZenSkies.Core.Utils;
-using static System.Reflection.BindingFlags;
-using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonSystem;
+using static ZenSkies.Common.Systems.Sky.SunAndMoon;
 
 namespace ZenSkies.Common.Systems.Compat;
 
-/// <summary>
-/// Edits and Hooks:
-/// <list type="bullet">
-///     <see cref="ModifyDrawing"/><br/>
-///     Reapplies <see cref="SunAndMoonSystem.ModifyDrawing"/> on <see cref="GeneralLightingIL.ChangePositionAndDrawDayMoon"/>
-/// </list>
-/// </summary>
-[JITWhenModsEnabled("RedSunAndRealisticSky")]
 [ExtendsFromMod("RedSunAndRealisticSky")]
 [Autoload(Side = ModSide.Client)]
 public sealed class RedSunSystem : ModSystem
 {
-    #region Private Fields
-
-    private static readonly Color SkyColor = new(128, 168, 248);
-
     private const int SunTopBuffer = 50;
 
     private const int SunMoonY = -80;
@@ -47,10 +30,6 @@ public sealed class RedSunSystem : ModSystem
 
     private static readonly bool SkipDrawing = SkyConfig.Instance.UseSunAndMoon;
 
-    #endregion
-
-    #region Public Properties
-
     public static bool IsEnabled { get; private set; }
 
     public static bool FlipSunAndMoon { get; private set; }
@@ -60,10 +39,6 @@ public sealed class RedSunSystem : ModSystem
         [MethodImpl(MethodImplOptions.NoInlining)]
         get => new(GeneralLightingIL.MoonAdjustmentX(), GeneralLightingIL.MoonAdjustmentY());
     }
-
-    #endregion
-
-    #region Loading
 
     public override void Load()
     {
@@ -78,13 +53,8 @@ public sealed class RedSunSystem : ModSystem
         FlipSunAndMoon = ModContent.GetInstance<ClientConfig>().FlipSunAndMoon;
     }
 
-    public override void Unload() =>
-        PatchSunAndMoonDrawing?.Dispose();
-
     public override void PostSetupContent() =>
-        SkyColorSystem.ModifyInMenu += ModContent.GetInstance<GeneralLighting>().ModifySunLightColor;
-
-    #endregion
+        SkyLighting.ModifyInMenu += ModContent.GetInstance<GeneralLighting>().ModifySunLightColor;
 
     #region Drawing
 
@@ -184,7 +154,7 @@ public sealed class RedSunSystem : ModSystem
                 { mult = MathF.Max(mult, MinMoonBrightness); });
 
                 // With the 'FancyLighting' mod enabled the game will attempt to render the moon here with the shader used for the sun.
-            if (FancyLightingSystem.IsEnabled)
+            if (FancyLightingCompat.IsEnabled)
                 c.EmitDelegate(() =>
                     { Main.pixelShader.CurrentTechnique.Passes[0].Apply(); });
 
@@ -250,9 +220,15 @@ public sealed class RedSunSystem : ModSystem
             c.EmitLdloc(moonRotation);
             c.EmitLdloc(moonScale);
 
-            c.EmitLdcI4(0); // This info is not forced.
-
-            c.EmitCall<Action<Vector2, Color, float, float, Vector2, Color, float, float, bool>>(SetInfo);
+            c.EmitDelegate(
+                static (Vector2 sunPosition, Color sunColor, float sunRotation, float sunScale,
+                Vector2 moonPosition, Color moonColor, float moonRotation, float moonScale) =>
+                {
+                    SetInfo(
+                        sunPosition, sunColor, sunRotation, sunScale,
+                        moonPosition, moonColor, moonRotation, moonScale);
+                }
+            );
 
             #region Misc
 
@@ -266,7 +242,7 @@ public sealed class RedSunSystem : ModSystem
 
             c.EmitBrtrue(jumpSunOrMoonGrabbing);
 
-            if (BetterNightSkySystem.IsEnabled)
+            if (BetterNightSkyCompat.IsEnabled)
             {
                 c.GotoPrev(MoveType.After,
                     i => i.MatchLdsfld<Main>(nameof(Main.ForcedMinimumZoom)),
@@ -275,7 +251,7 @@ public sealed class RedSunSystem : ModSystem
 
                 c.EmitLdloca(moonScale);
 
-                c.EmitCall(BetterNightSkySystem.ModifyMoonScale);
+                c.EmitDelegate(BetterNightSkyCompat.ModifyMoonScale);
             }
 
             #endregion

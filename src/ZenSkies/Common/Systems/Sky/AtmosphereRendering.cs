@@ -9,17 +9,14 @@ using static ZenSkies.Common.Systems.Sky.SunAndMoon.SunAndMoonHooks;
 
 namespace ZenSkies.Common.Systems.Sky;
 
+[Autoload(Side = ModSide.Client)]
 public static class AtmosphereRendering
 {
-    #region Loading
-
-    [OnLoad(Side = ModSide.Client)]
-    public static void Load() =>
+    [OnLoad]
+    public static void Load()
+    {
         PostDrawSunAndMoon += AtmospherePostDraw;
-
-    #endregion
-
-    #region Drawing
+    }
 
     private static void AtmospherePostDraw(SpriteBatch spriteBatch, in SpriteBatchSnapshot snapshot)
     {
@@ -28,20 +25,20 @@ public static class AtmosphereRendering
         Color color = GetColor();
 
         spriteBatch.Begin(in snapshot);
-
-        spriteBatch.Draw(gradient, Utilities.ScreenDimensions, color);
-
+        {
+            spriteBatch.Draw(gradient, Utilities.ScreenDimensions, color);
+        }
         spriteBatch.End();
+
+        static Color GetColor()
+        {
+            Color grad = 
+                SkyConfig.Instance.SkyGradient.GetColor(Utilities.TimeRatio) *
+                Easings.InCubic(Main.atmo);
+
+            grad.A = 0;
+
+            return grad;
+        }
     }
-
-    #endregion
-
-    #region Private Methods
-
-    private static Color GetColor() =>
-        (SkyConfig.Instance.SkyGradient.GetColor(Utilities.TimeRatio) *
-        Easings.InCubic(Main.atmo))
-        with { A = 0 };
-
-    #endregion
 }

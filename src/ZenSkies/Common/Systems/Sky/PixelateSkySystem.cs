@@ -2,270 +2,220 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
-using System;
 using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 using ZenSkies.Common.Config;
 using ZenSkies.Core.Utils;
-using ZenSkies.Core.Exceptions;
-using ZenSkies.Core;
+using Daybreak.Common.Features.Hooks;
 
 namespace ZenSkies.Common.Systems.Sky;
 
 [Autoload(Side = ModSide.Client)]
-public sealed class PixelateSkySystem : ModSystem
+public static class PixelateSkySystem
 {
-    #region Private Fields
+    private static RenderTargetLease? rtLease;
+    private static RenderTargetScope? rtScope;
 
-    private static bool HasDrawn;
-
-    private static RenderTarget2D? SkyTarget;
-
-    private static RenderTargetBinding[]? PreviousTargets;
-
-    #endregion
-
-    #region Loading
-
-    public override void Load()
+    [OnLoad]
+    private static void Load()
     {
-        IL_Main.DoDraw += InjectDoDraw;
-        IL_Main.DrawSurfaceBG += InjectDrawSurfaceBG;
+        IL_Main.DoDraw += DoDraw_CaptureSky;
+        IL_Main.DrawSurfaceBG += DrawSurfaceBG_CaptureSky;
 
-        IL_Main.DrawCapture += InjectDrawCapture;
+        IL_Main.DrawCapture += DrawCapture_CaptureSky;
     }
-
-    public override void Unload()
-    {
-        Main.QueueMainThreadAction(() =>
-            SkyTarget?.Dispose());
-
-        IL_Main.DoDraw -= InjectDoDraw;
-        IL_Main.DrawSurfaceBG -= InjectDrawSurfaceBG;
-
-        IL_Main.DrawCapture -= InjectDrawCapture;
-    }
-
-    #endregion
 
     #region DoDraw
 
-    private void InjectDoDraw(ILContext il)
+    private static void DoDraw_CaptureSky(ILContext il)
     {
-        try
-        {
-            ILCursor c = new(il);
+        var c = new ILCursor(il);
 
-                // Swap to our pixelation target.
-            c.GotoNext(MoveType.After,
-                i => i.MatchCall(typeof(TimeLogger).FullName ?? "Terraria.TimeLogger", nameof(TimeLogger.DetailedDrawTime)),
-                i => i.MatchLdsfld<Main>(nameof(Main.spriteBatch)),
-                i => i.MatchCallvirt<SpriteBatch>(nameof(SpriteBatch.End)));
+        // Swap to a seperate target
+        c.GotoNext(
+            MoveType.After,
+            i => i.MatchCall(typeof(TimeLogger), nameof(TimeLogger.DetailedDrawTime)),
+            i => i.MatchLdsfld<Main>(nameof(Main.spriteBatch)),
+            i => i.MatchCallvirt<SpriteBatch>(nameof(SpriteBatch.End))
+        );
 
-            c.EmitCall(PrepareTarget);
+        c.EmitDelegate(StartCapture);
 
-                // Fix the ugly background sampling.
-            c.GotoNext(MoveType.After,
-                i => i.MatchLdsfld<Main>(nameof(Main.spriteBatch)),
-                i => i.MatchLdcI4(0),
-                i => i.MatchLdcI4(0),
-                i => i.MatchCallvirt<OverlayManager>(nameof(OverlayManager.Draw)));
+        // Change the sampler state used for the background
+        c.GotoNext(
+            MoveType.After,
+            i => i.MatchLdsfld<Main>(nameof(Main.spriteBatch)),
+            i => i.MatchLdcI4(0),
+            i => i.MatchLdcI4(0),
+            i => i.MatchCallvirt<OverlayManager>(nameof(OverlayManager.Draw))
+        );
 
-            c.GotoNext(MoveType.After,
-                i => i.MatchLdsfld<SamplerState>(nameof(SamplerState.LinearClamp)));
+        c.GotoNext(
+            MoveType.After,
+            i => i.MatchLdsfld<SamplerState>(nameof(SamplerState.LinearClamp))
+        );
 
-            c.EmitPop();
+        c.EmitPop();
 
-                // Lazy.
-            c.EmitDelegate(() => SamplerState.PointClamp);
+        c.EmitDelegate(() => SamplerState.PointClamp);
 
-                // Now handle a backup case just to make sure that when drawing goes wrong nothing explodes.
-            c.GotoNext(MoveType.After,
-                i => i.MatchLdarg(out _),
-                i => i.MatchCall<Main>(nameof(Main.DrawBG)));
+        // Incase our scopes don't get disposed in DrawBG
+        c.GotoNext(
+            MoveType.After,
+            i => i.MatchLdarg(out _),
+            i => i.MatchCall<Main>(nameof(Main.DrawBG))
+        );
 
-            c.EmitCall(DrawTarget);
-        }
-        catch (Exception e)
-        {
-            throw new ILEditException(il, e);
-        }
-    }
-
-    #endregion
-
-    #region DrawCapture
-
-    private void InjectDrawCapture(ILContext il)
-    {
-        try
-        {
-            ILCursor c = new(il);
-
-                // Swap to our pixelation target,
-            c.GotoNext(MoveType.After,
-                i => i.MatchCall<Main>(nameof(Main.DrawSimpleSurfaceBackground)),
-                i => i.MatchLdsfld<Main>(nameof(Main.tileBatch)),
-                i => i.MatchCallvirt<TileBatch>(nameof(TileBatch.End)));
-
-            c.EmitCall(PrepareTarget);
-
-                // Draw our pixelation target.
-            c.GotoNext(MoveType.After,
-                i => i.MatchCall<Main>(nameof(Main.DrawSurfaceBG)),
-                i => i.MatchLdsfld<Main>(nameof(Main.spriteBatch)),
-                i => i.MatchCallvirt<SpriteBatch>(nameof(SpriteBatch.End)));
-
-            c.EmitCall(DrawTarget);
-        }
-        catch (Exception e)
-        {
-            throw new ILEditException(il, e);
-        }
+        c.EmitDelegate(EndCapture);
     }
 
     #endregion
 
     #region DrawSurfaceBG
 
-    private void InjectDrawSurfaceBG(ILContext il)
+    private static void DrawSurfaceBG_CaptureSky(ILContext il)
     {
-        try
+        var c = new ILCursor(il);
+
+        ILLabel jumpDepthResetTarget = c.DefineLabel();
+
+        // Draw the first CustomSky layer before the first clouds
+        c.GotoNext(
+            MoveType.After,
+            i => i.MatchLdsfld<Main>(nameof(Main.atmo)),
+            i => i.MatchMul(),
+            i => i.MatchStloc(out _)
+        );
+
+        c.EmitDelegate(() =>
         {
-            ILCursor c = new(il);
+            SkyManager.Instance.ResetDepthTracker();
 
-            ILLabel jumpDepthResetTarget = c.DefineLabel();
+            SkyManager.Instance.DrawToDepth(Main.spriteBatch, float.MaxValue * .5f);
 
-                // This is done to ensure that certain modded backgrounds that use CustomSky will still be pixelated correctly; assuming that they're checking for maxDepth >= float.MaxValue.
-            c.GotoNext(MoveType.After,
-                i => i.MatchLdsfld<Main>(nameof(Main.atmo)),
-                i => i.MatchMul(),
-                i => i.MatchStloc(out _));
+            EndCapture();
+        });
 
-            c.EmitDelegate(() =>
+        c.GotoNext(
+            MoveType.Before,
+            i => i.MatchLdsfld<SkyManager>(nameof(SkyManager.Instance)),
+            i => i.MatchCallvirt<SkyManager>(nameof(SkyManager.ResetDepthTracker))
+        );
+
+        c.MoveAfterLabels();
+
+        c.EmitBr(jumpDepthResetTarget);
+
+        c.Index--;
+
+        c.GotoNext(
+            MoveType.After,
+            i => i.MatchLdsfld<SkyManager>(nameof(SkyManager.Instance)),
+            i => i.MatchCallvirt<SkyManager>(nameof(SkyManager.ResetDepthTracker))
+        );
+
+        c.MarkLabel(jumpDepthResetTarget);
+    }
+
+    #endregion
+
+    #region DrawCapture
+
+    private static void DrawCapture_CaptureSky(ILContext il)
+    {
+        var c = new ILCursor(il);
+
+        c.GotoNext(
+            MoveType.After,
+            i => i.MatchCall<Main>(nameof(Main.DrawSimpleSurfaceBackground)),
+            i => i.MatchLdsfld<Main>(nameof(Main.tileBatch)),
+            i => i.MatchCallvirt<TileBatch>(nameof(TileBatch.End))
+        );
+
+        c.EmitDelegate(StartCapture);
+
+        c.GotoNext(
+            MoveType.After,
+            i => i.MatchCall<Main>(nameof(Main.DrawSurfaceBG)),
+            i => i.MatchLdsfld<Main>(nameof(Main.spriteBatch)),
+            i => i.MatchCallvirt<SpriteBatch>(nameof(SpriteBatch.End))
+        );
+
+        c.EmitDelegate(EndCapture);
+    }
+
+    #endregion
+
+    private static void StartCapture()
+    {
+        if (!ModImpl.CanDrawSky ||
+            !SkyConfig.Instance.UsePixelatedSky)
+        {
+            return;
+        }
+
+        SpriteBatch spriteBatch = Main.spriteBatch;
+
+        using (spriteBatch.Scope())
+        {
+            GraphicsDevice device = Main.instance.GraphicsDevice;
+
+            rtLease = ScreenspaceTargetPool.Shared.Rent(device);
+
+            rtScope = rtLease.Scope(clearColor: Color.Transparent);
+        }
+    }
+
+    private static void EndCapture()
+    {
+        if (!ModImpl.CanDrawSky ||
+            !SkyConfig.Instance.UsePixelatedSky ||
+            Main.mapFullscreen ||
+            rtLease is null ||
+            rtScope is null)
+        {
+            return;
+        }
+
+        SpriteBatch spriteBatch = Main.spriteBatch;
+
+        GraphicsDevice device = Main.instance.GraphicsDevice;
+
+        using (spriteBatch.Scope())
+        {
+            rtScope?.Dispose();
+            rtScope = null;
+
+            spriteBatch.Begin(
+                SpriteSortMode.Immediate,
+                BlendState.AlphaBlend,
+                SamplerState.PointClamp,
+                DepthStencilState.Default,
+                RasterizerState.CullCounterClockwise,
+                null,
+                Matrix.Identity);
             {
-                SkyManager.Instance.ResetDepthTracker();
+                Viewport viewport = device.Viewport;
 
-                SkyManager.Instance.DrawToDepth(Main.spriteBatch, float.MaxValue * .5f);
+                Vector2 screenSize = new(viewport.Width, viewport.Height);
 
-                DrawTarget();
-            });
+                SkyEffects.PixelateAndQuantize.ScreenSize = screenSize;
+                SkyEffects.PixelateAndQuantize.PixelSize = new(2);
 
-                // Now jump over vanilla reseting it after clouds draw, just to avoid drawing backgrounds twice.
-            c.GotoNext(MoveType.Before, 
-                i => i.MatchLdsfld<SkyManager>(nameof(SkyManager.Instance)),
-                i => i.MatchCallvirt<SkyManager>(nameof(SkyManager.ResetDepthTracker)));
+                SkyEffects.PixelateAndQuantize.Steps = SkyConfig.Instance.ColorSteps;
 
-            c.MoveAfterLabels();
+                int pass = (SkyConfig.Instance.ColorSteps == 255).ToInt();
 
-            c.EmitBr(jumpDepthResetTarget);
+                SkyEffects.PixelateAndQuantize.Apply(pass);
 
-            c.Index--;
-
-            c.GotoNext(MoveType.After,
-                i => i.MatchLdsfld<SkyManager>(nameof(SkyManager.Instance)),
-                i => i.MatchCallvirt<SkyManager>(nameof(SkyManager.ResetDepthTracker)));
-
-            c.MarkLabel(jumpDepthResetTarget);
-        }
-        catch (Exception e)
-        {
-            throw new ILEditException(il, e);
-        }
-    }
-
-    #endregion
-
-    #region Private Methods
-
-    private static void PrepareTarget()
-    {
-        if (!ModImpl.CanDrawSky ||
-            !SkyConfig.Instance.UsePixelatedSky || !SkyEffects.PixelateAndQuantize.IsReady)
-            return;
-
-        HasDrawn = false;
-
-        SpriteBatch spriteBatch = Main.spriteBatch;
-
-        bool beginCalled = spriteBatch.beginCalled;
-
-        SpriteBatchSnapshot snapshot = new();
-
-        if (beginCalled)
-            spriteBatch.End(out snapshot);
-
-        GraphicsDevice device = Main.instance.GraphicsDevice;
-
-        PreviousTargets = device.GetRenderTargets();
-
-            // Set the default RenderTargetUsage to PreserveContents to prevent causing black screens when swaping targets.
-        foreach (RenderTargetBinding oldTarg in PreviousTargets)
-            if (oldTarg.RenderTarget is RenderTarget2D rt)
-                rt.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-
-        device.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-
-        Viewport viewport = device.Viewport;
-
-        Utilities.ReintializeTarget(ref SkyTarget, device, viewport.Width, viewport.Height);
-
-        device.SetRenderTarget(SkyTarget);
-        device.Clear(Color.Transparent);
-
-        if (beginCalled)
-            spriteBatch.Begin(in snapshot);
-    }
-
-    private static void DrawTarget()
-    {
-        if (!ModImpl.CanDrawSky ||
-            !SkyConfig.Instance.UsePixelatedSky || 
-            SkyTarget is null ||
-            !SkyEffects.PixelateAndQuantize.IsReady || 
-            Main.mapFullscreen || 
-            HasDrawn)
-            return;
-
-        HasDrawn = true;
-
-        SpriteBatch spriteBatch = Main.spriteBatch;
-
-        bool beginCalled = spriteBatch.beginCalled;
-
-        SpriteBatchSnapshot snapshot = new();
-
-        if (beginCalled)
-            spriteBatch.End(out snapshot);
-
-        GraphicsDevice device = Main.instance.GraphicsDevice;
-
-        device.SetRenderTargets(PreviousTargets);
-
-        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, Matrix.Identity);
-
-        Viewport viewport = device.Viewport;
-
-        Vector2 screenSize = new(viewport.Width, viewport.Height);
-
-        SkyEffects.PixelateAndQuantize.ScreenSize = screenSize;
-        SkyEffects.PixelateAndQuantize.PixelSize = new(2);
-
-        SkyEffects.PixelateAndQuantize.Steps = SkyConfig.Instance.ColorSteps;
-
-        int pass = (SkyConfig.Instance.ColorSteps == 255).ToInt();
-
-        SkyEffects.PixelateAndQuantize.Apply(pass);
-
-        spriteBatch.Draw(SkyTarget, viewport.Bounds, Color.White);
-
-        if (beginCalled)
-            spriteBatch.Restart(in snapshot);
-        else
+                spriteBatch.Draw(rtLease.Target, Vector2.Zero, Color.White);
+            }
             spriteBatch.End();
-    }
 
-    #endregion
+            rtLease.Dispose();
+            rtLease = null;
+        }
+    }
 }
