@@ -18,7 +18,7 @@ using ZenSkies.Core.Particles;
 using ZenSkies.Core.Utils;
 using Star = ZenSkies.Common.Systems.Sky.Space.Star;
 
-namespace ZenSkies.Common.ModPanels;
+namespace ZenSkies.Content.UI;
 
 public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
 {
@@ -413,7 +413,7 @@ public sealed class ZenSkiesPanelStyle : ModPanelStyleExt
                 return false;
             }
 
-            Rectangle parentRectangle = innerList.DimensionsFromParent.Multiply(Main.UIScale);
+            Rectangle parentRectangle = innerList.ParentRelativeDimensions.Multiply(Main.UIScale);
 
             return parentRectangle.Contains(rectangle);
         }

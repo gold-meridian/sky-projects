@@ -9,16 +9,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.GameInput;
-using static ZenSkies.Core.Utils.InputCancellationType;
 
-namespace ZenSkies.Core.Utils;
+namespace ZenSkies.Core;
 
-/// <summary>
-/// Simpler input system based on Vanilla's <see cref="Main.GetInputText"/>;
-/// with logic for input cancellation via the <see cref="InputCancellationType"/> enum.
-/// </summary>
+[Obsolete("Move to DAYBREAK's implementation")]
 public static class Input
 {
+    public enum CancellationType : byte
+    {
+        None,
+        Escaped,
+        Confirmed
+    }
+
     #region Private Fields
 
     private const int MaxStrokeLength = 20;
@@ -113,10 +116,10 @@ public static class Input
     ///     <item/>
     ///     Black-listing/white-listing of specific characters with <paramref name="blacklistedChars"/>, and <paramref name="whitelistedChars"/>.
     ///     <item/>
-    ///     Better input cancellation system using <see cref="InputCancellationType"/>.
+    ///     Better input cancellation system using <see cref="CancellationType"/>.
     /// </list>
     /// </summary>
-    public static InputCancellationType GetInput(
+    public static CancellationType GetInput(
         string input,
         out string output,
         bool allowLineBreaks = false,
@@ -133,7 +136,7 @@ public static class Input
         WritingText &= Main.hasFocus;
 
         if (!WritingText)
-            return None;
+            return CancellationType.None;
 
         Main.instance.HandleIME();
 
@@ -266,18 +269,18 @@ public static class Input
         {
                 // Definitly sketchy, but is designed to prevent UI from vanishing whilst typing.
             PlayerInput.WritingText = false;
-            return Escaped;
+            return CancellationType.Escaped;
         }
 
         if (Keys.Enter.JustPressed)
         {
             WritingText = false;
-            return Confirmed;
+            return CancellationType.Confirmed;
         }
 
         #endregion
 
-        return None;
+        return CancellationType.None;
     }
 
     private static string GetPaste(string input, bool allowLineBreaks) =>

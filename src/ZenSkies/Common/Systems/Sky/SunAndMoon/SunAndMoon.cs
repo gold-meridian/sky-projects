@@ -3,13 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
 using ReLogic.Content;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 using ZenSkies.Common.Config;
 using ZenSkies.Common.DataStructures;
 using ZenSkies.Core;
-using ZenSkies.Core.ModCall;
-using ZenSkies.Core.Utils;
 
 namespace ZenSkies.Common.Systems.Sky;
 
@@ -46,6 +45,11 @@ public static partial class SunAndMoon
         [ModCall($"Set{nameof(ShowMoon)}")]
         set;
     } = true;
+
+    /// <summary>
+    /// Additional moon styles based on <see cref="Main.moonType"/>.
+    /// </summary>
+    public static Dictionary<int, Asset<Texture2D>> ExtraMoonStyles { get; private set; } = [];
 
     public static SunAndMoonInfo Info { get; private set; }
 

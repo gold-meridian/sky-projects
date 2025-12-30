@@ -295,7 +295,7 @@ public sealed class CloudsSystem : ModSystem
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 
-            spriteBatch.Draw(BackgroundTarget, Utilities.ScreenDimensions, Color.White);
+            spriteBatch.Draw(BackgroundTarget, Vector2.Zero, Color.White);
 
                 // Restart with no effects applied.
             spriteBatch.End();

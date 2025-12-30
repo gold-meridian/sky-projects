@@ -1,62 +1,16 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI.Chat;
 
-namespace ZenSkies.Core.Utils;
+namespace ZenSkies.Core;
 
 public static partial class Utilities
 {
-    #region Private Fields
-
-    private const float SliderWidth = 167f;
-
-    #endregion
-
-    #region RenderTargets
-
-    /// <summary>
-    /// Reinitializes <paramref name="target"/> if needed.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void ReintializeTarget(
-        [NotNull] ref RenderTarget2D? target, 
-        GraphicsDevice device,
-        int width,
-        int height,
-        bool mipMap = false,
-        SurfaceFormat preferredFormat = SurfaceFormat.Color,
-        DepthFormat preferredDepthFormat = DepthFormat.None,
-        int preferredMultiSampleCount = 0,
-        RenderTargetUsage usage = RenderTargetUsage.PreserveContents)
-    {
-        if (target is null ||
-            target.IsDisposed ||
-            target.Width != width ||
-            target.Height != height)
-        {
-            target?.Dispose();
-            target = new(device,
-                width,
-                height,
-                mipMap,
-                preferredFormat,
-                preferredDepthFormat,
-                preferredMultiSampleCount,
-                usage);
-        }
-    }
-
-    #endregion
-
-    #region Color
-
     /// <summary>
     /// Converts a <see cref="Color"/> to a <see cref="Vector3"/> with normalized components in the HSV (Hue, Saturation, Value) colorspace
     /// — not to be confused with HSL/HSB (Hue, Saturation, Lightness/Brightness), see <see href="https://en.wikipedia.org/wiki/HSL_and_HSV">here</see>, for more information. —
@@ -102,17 +56,16 @@ public static partial class Utilities
     public static Color HSVToColor(float hue, float sat = 1f, float val = 1f) =>
         HSVToColor(new(hue, sat, val));
 
-    #endregion
-
-    #region UI
-
     /// <summary>
     /// Draws a slider similar to <see cref="RangeElement"/>'s, but without drawing the inner texture nor the dial.
     /// </summary>
     /// <param name="ratio">Value between 0-1 based on where the mouse is on the slider.</param>
     /// <param name="inner">The rectangle that can be used to draw the innermost texture; usually a gradient.</param>
+    [Obsolete("Obsolete following Configuration being merged into DAYBREAK")]
     public static void DrawVanillaSlider(SpriteBatch spriteBatch, Color color, bool isHovering, out float ratio, out Rectangle destinationRectangle, out Rectangle inner)
     {
+        const float slider_width = 167f;
+
         Texture2D colorBar = TextureAssets.ColorBar.Value;
         Texture2D colorBarHighlight = TextureAssets.ColorHighlight.Value;
 
@@ -124,7 +77,7 @@ public static partial class Utilities
 
         spriteBatch.Draw(colorBar, rectangle, color);
 
-        inner = new((int)x, (int)y, (int)SliderWidth + 2, 8);
+        inner = new((int)x, (int)y, (int)slider_width + 2, 8);
 
         rectangle.Inflate(-5, 2);
 
@@ -134,6 +87,7 @@ public static partial class Utilities
         ratio = Saturate((Main.mouseX - rectangle.X) / (float)rectangle.Width);
     }
 
+    [Obsolete("Obsolete following Configuration being merged into DAYBREAK")]
     public static void DrawSplitConfigPanel(SpriteBatch spriteBatch, Color color, Rectangle dims, int split = 15)
     {
         Texture2D texture = TextureAssets.SettingsPanel.Value;
@@ -151,10 +105,7 @@ public static partial class Utilities
         spriteBatch.Draw(texture, new Rectangle(dims.X + 2, dims.Y + split, dims.Width - 4, dims.Height - split - 2), new(2, 16, 1, 1), color);
     }
 
-    #endregion
-
-    #region Text
-
+    [Obsolete("Obsolete following Input being merged into DAYBREAK")]
     public static void DrawString(this SpriteBatch spriteBatch,
         DynamicSpriteFont font,
         string text,
@@ -165,6 +116,7 @@ public static partial class Utilities
         Vector2 scale) =>
         spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
 
+    [Obsolete("Obsolete following Input being merged into DAYBREAK")]
     public static void DrawStringWithShadow(this SpriteBatch spriteBatch,
         DynamicSpriteFont font,
         string text,
@@ -184,6 +136,4 @@ public static partial class Utilities
 
         spriteBatch.DrawString(font, text, position, color, rotation, origin, scale, SpriteEffects.None, 0f);
     }
-
-    #endregion
 }

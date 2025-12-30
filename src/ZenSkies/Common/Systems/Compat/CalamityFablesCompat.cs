@@ -12,9 +12,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 using ZenSkies.Common.Config;
-using static System.Reflection.BindingFlags;
-using static ZenSkies.Common.Systems.Sky.SunAndMoonHooks;
-using static ZenSkies.Common.Systems.Sky.SunAndMoon;
+using ZenSkies.Common.Systems.Sky;
 
 namespace ZenSkies.Common.Systems.Compat;
 
@@ -57,7 +55,7 @@ public static class CalamityFablesCompat
 
         Debug.Assert(moddedMoons is not null);
 
-        FieldInfo? vanillaMoonCount = moddedMoons?.GetField("VanillaMoonCount", Public | Static);
+        FieldInfo? vanillaMoonCount = moddedMoons?.GetField("VanillaMoonCount", BindingFlags.Public | BindingFlags.Static);
 
         Debug.Assert(vanillaMoonCount is not null);
 
@@ -71,8 +69,6 @@ public static class CalamityFablesCompat
         {
             AddMoonStyle(PriorMoonStyles + i, FablesTextures.Moon[i]);
         }
-
-        PreDrawMoonExtras += PreDrawMoonExtras_CalamityFables;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -81,7 +77,9 @@ public static class CalamityFablesCompat
         return edge_case_styles.Contains(Main.moonType - PriorMoonStyles);
     }
 
-    private static bool PreDrawMoonExtras_CalamityFables(
+    [SunAndMoonHooks.PreDrawMoonExtras]
+    private static bool FablesExtras(
+        GraphicsDevice device,
         SpriteBatch spriteBatch,
         ref Asset<Texture2D> moon,
         ref Vector2 position,
@@ -90,8 +88,7 @@ public static class CalamityFablesCompat
         ref float scale,
         ref Color moonColor,
         ref Color shadowColor,
-        bool eventMoon,
-        GraphicsDevice device
+        bool eventMoon
     )
     {
         if (eventMoon || !IsEdgeCase())

@@ -143,10 +143,7 @@ public sealed class ShootingStarSystem : ModSystem
         if (index == -1)
             return;
 
-        Vector2 screensize = Utilities.ScreenSize;
-
-        Rectangle spawn = new(0, 0,
-            (int)screensize.X, (int)screensize.Y);
+        Rectangle spawn = Utilities.ScreenDimensions;
 
         spawn.Inflate(Margin, Margin);
 

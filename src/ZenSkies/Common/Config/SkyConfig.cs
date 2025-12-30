@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Terraria.ModLoader.Config;
 using ZenSkies.Common.Config.Elements;
 using ZenSkies.Common.Systems.Compat;
@@ -11,6 +12,7 @@ using ZenSkies.Core.DataStructures;
 
 namespace ZenSkies.Common.Config;
 
+[Obsolete("Obsolete following Configuration being merged into DAYBREAK")]
 public sealed class SkyConfig : ModConfig
 {
     public static SkyConfig Instance;

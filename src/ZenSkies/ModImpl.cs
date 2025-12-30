@@ -69,6 +69,6 @@ public sealed class ModImpl : Mod, IHasCustomAuthorMessage
             throw new ArgumentException("First argument was not of type string!");
         }
 
-        return ModCallSystem.HandleCall(name, [.. args.Skip(1)]);
+        return ModCallLoader.HandleCall(name, [.. args.Skip(1)]);
     }
 }

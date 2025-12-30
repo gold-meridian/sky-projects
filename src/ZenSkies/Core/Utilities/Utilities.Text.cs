@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using ReLogic.Graphics;
+﻿using ReLogic.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,28 +6,21 @@ using Terraria;
 using Terraria.Localization;
 using static ReLogic.Graphics.DynamicSpriteFont;
 
-namespace ZenSkies.Core.Utils;
+namespace ZenSkies.Core;
 
 public static partial class Utilities
 {
-    #region Lang
-
     /// <summary>
     /// Retrieves the text value for a specified localization key with glyph support via <see cref="Lang.SupportGlyphs"/>; e.g. <c>&lt;left&gt;</c> and <c>&lt;right&gt;</c>. <br/>
     /// The text returned will be for the currently selected language.
     /// </summary>
-    public static string GetTextValueWithGlyphs(string key) =>
-        Lang.SupportGlyphs(Language.GetTextValue(key));
-
-    #endregion
-
-    #region Strings
-
-    /// <returns><paramref name="value"/> clamped to <paramref name="maxLength"/> with the attached <paramref name="suffix"/>.</returns>
-    public static string Truncate(this string value, int maxLength, string suffix = "") =>
-        value[..Math.Min(value.Length, maxLength)] + suffix;
+    public static string GetTextValueWithGlyphs(string key)
+    {
+        return Lang.SupportGlyphs(Language.GetTextValue(key));
+    }
 
     /// <inheritdoc cref="string.Replace(string, string?)"/>
+    [Obsolete("Obsolete following Input being merged into DAYBREAK")]
     public static string Replace(this string input, IEnumerable<char> oldValue, string newValue)
     {
         string output = input;
@@ -39,13 +31,11 @@ public static partial class Utilities
         return output;
     }
 
+    [Obsolete("Obsolete following Input being merged into DAYBREAK")]
     public static string Only(this string input, IEnumerable<char> allowedChars) =>
         new([.. input.Where(c => allowedChars.Contains(c))]);
 
-    #endregion
-
-    #region Fonts
-
+    [Obsolete("Obsolete following Input being merged into DAYBREAK")]
     public static Vector2 MeasureChar(this DynamicSpriteFont font, char c, bool firstChar, float lastKerning, out float kerningZ)
     {
         Vector2 output = Vector2.Zero;
@@ -69,6 +59,4 @@ public static partial class Utilities
 
         return output;
     }
-
-    #endregion
 }

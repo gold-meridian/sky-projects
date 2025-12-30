@@ -1,58 +1,92 @@
 ﻿using Microsoft.Xna.Framework;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
-namespace ZenSkies.Core.Utils;
+namespace ZenSkies.Core;
 
 public static class Easings
 {
-    #region Mapping
-
-    public delegate float EasingFunction(float t);
-
-    public readonly static Dictionary<EasingStyle, EasingFunction> EasingFunctions = new()
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum Style : byte
     {
-        { EasingStyle.Linear, Linear },
+        Linear,
 
-        { EasingStyle.InCubic, InCubic },
-        { EasingStyle.OutCubic, OutCubic },
-        { EasingStyle.InOutCubic, InOutCubic },
+        InCubic,
+        OutCubic,
+        InOutCubic,
 
-        { EasingStyle.InQuart, InQuart },
-        { EasingStyle.OutQuart, OutQuart },
-        { EasingStyle.InOutQuart, InOutQuart },
+        InQuart,
+        OutQuart,
+        InOutQuart,
 
-        { EasingStyle.InQuint, InQuint },
-        { EasingStyle.OutQuint, OutQuint },
-        { EasingStyle.InOutQuint, InOutQuint },
+        InQuint,
+        OutQuint,
+        InOutQuint,
 
-        { EasingStyle.InSine, InSine },
-        { EasingStyle.OutSine, OutSine },
-        { EasingStyle.InOutSine, InOutSine },
+        InSine,
+        OutSine,
+        InOutSine,
 
-        { EasingStyle.InExpo, InExpo },
-        { EasingStyle.OutExpo, OutExpo },
-        { EasingStyle.InOutExpo, InOutExpo },
+        InExpo,
+        OutExpo,
+        InOutExpo,
 
-        { EasingStyle.InCirc, InCirc },
-        { EasingStyle.OutCirc, OutCirc },
-        { EasingStyle.InOutCirc, InOutCirc },
+        InCirc,
+        OutCirc,
+        InOutCirc,
 
-        { EasingStyle.InElastic, InElastic },
-        { EasingStyle.OutElastic, OutElastic },
-        { EasingStyle.InOutElastic, InOutElastic },
+        InElastic,
+        OutElastic,
+        InOutElastic,
 
-        { EasingStyle.InBack, InBack },
-        { EasingStyle.OutBack, OutBack },
-        { EasingStyle.InOutBack, InOutBack }
+        InBack,
+        OutBack,
+        InOutBack
+    }
+
+    private readonly static Dictionary<Style, Func<float, float>> easing_functions = new()
+    {
+        { Style.Linear, Linear },
+
+        { Style.InCubic, InCubic },
+        { Style.OutCubic, OutCubic },
+        { Style.InOutCubic, InOutCubic },
+
+        { Style.InQuart, InQuart },
+        { Style.OutQuart, OutQuart },
+        { Style.InOutQuart, InOutQuart },
+
+        { Style.InQuint, InQuint },
+        { Style.OutQuint, OutQuint },
+        { Style.InOutQuint, InOutQuint },
+
+        { Style.InSine, InSine },
+        { Style.OutSine, OutSine },
+        { Style.InOutSine, InOutSine },
+
+        { Style.InExpo, InExpo },
+        { Style.OutExpo, OutExpo },
+        { Style.InOutExpo, InOutExpo },
+
+        { Style.InCirc, InCirc },
+        { Style.OutCirc, OutCirc },
+        { Style.InOutCirc, InOutCirc },
+
+        { Style.InElastic, InElastic },
+        { Style.OutElastic, OutElastic },
+        { Style.InOutElastic, InOutElastic },
+
+        { Style.InBack, InBack },
+        { Style.OutBack, OutBack },
+        { Style.InOutBack, InOutBack }
     };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float Ease(EasingStyle style, float t) =>
-        EasingFunctions[style](t);
-
-    #endregion
+    public static float Ease(Style style, float t) =>
+        easing_functions[style](t);
 
     #region Linear
 

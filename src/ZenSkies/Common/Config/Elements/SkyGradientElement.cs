@@ -1,11 +1,13 @@
-﻿using Terraria.ModLoader.Config.UI;
+﻿using System;
+using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
+using ZenSkies.Core;
 using ZenSkies.Core.Config.Elements;
 using ZenSkies.Core.UI;
-using ZenSkies.Core.Utils;
 
 namespace ZenSkies.Common.Config.Elements;
 
+[Obsolete("Obsolete following Configuration being merged into DAYBREAK")]
 internal class SkyGradientElement : GradientElement
 {
     protected override void OnExpand()

@@ -13,7 +13,6 @@ using ZenSkies.Core;
 using ZenSkies.Core.ModCall;
 using ZenSkies.Core.Utils;
 using static ZenSkies.Common.Systems.Sky.SunAndMoonHooks;
-using static ZenSkies.Common.Systems.Sky.SunAndMoon;
 
 namespace ZenSkies.Common.Systems.Sky;
 

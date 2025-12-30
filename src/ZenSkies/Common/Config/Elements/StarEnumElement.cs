@@ -9,12 +9,13 @@ using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI.Chat;
 using ZenSkies.Common.Systems.Sky.Space;
-using ZenSkies.Core.Utils;
+using ZenSkies.Core;
 using Star = ZenSkies.Common.Systems.Sky.Space.Star;
 
 namespace ZenSkies.Common.Config.Elements;
 
 [ProvidesConfigElementFor<StarVisual>]
+[Obsolete("Obsolete following Configuration being merged into DAYBREAK")]
 internal sealed class StarEnumElement : ConfigElement<StarVisual>
 {
     private const float time_multiplier = 1.2f;
